@@ -12,21 +12,9 @@ class FileReader(object):
 
   def __init__(self):
     """Initializes a file reader."""
+    super(FileReader, self).__init__()
     self._file = None
     self._line = None
-
-  def Open(self, filename):
-    """Opens the file.
-
-    Args:
-      filename (str): path of the file.
-    """
-    # For reading these files we don't care about the actual end of lines.
-    self._file = open(filename, 'r')
-
-  def Close(self):
-    """Closes the file."""
-    self._file.close()
 
   def _ReadLine(self, look_ahead=False):
     """Reads a line.
@@ -52,6 +40,19 @@ class FileReader(object):
         self._line = line
 
     return line
+
+  def Close(self):
+    """Closes the file."""
+    self._file.close()
+
+  def Open(self, filename):
+    """Opens the file.
+
+    Args:
+      filename (str): path of the file.
+    """
+    # For reading these files we don't care about the actual end of lines.
+    self._file = open(filename, 'r')
 
 
 class VSProjectFileReader(FileReader):

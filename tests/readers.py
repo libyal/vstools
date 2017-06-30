@@ -61,8 +61,8 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     file_reader = readers.VS2008ProjectFileReader()
 
-    file_data = '\n'.join(test_data)
-    file_reader._file = io.StringIO(file_data)
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
     file_reader._ReadProjectInformation(project_information)
 
   def testReadHeader(self):
@@ -75,36 +75,36 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     file_reader = readers.VS2008ProjectFileReader()
 
-    file_data = '\n'.join(test_data)
-    file_reader._file = io.StringIO(file_data)
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
     result = file_reader.ReadHeader()
     self.assertTrue(result)
 
     test_data[3] = ''
 
-    file_data = '\n'.join(test_data)
-    file_reader._file = io.StringIO(file_data)
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
     test_data[2] = ''
 
-    file_data = '\n'.join(test_data)
-    file_reader._file = io.StringIO(file_data)
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
     test_data[1] = ''
 
-    file_data = '\n'.join(test_data)
-    file_reader._file = io.StringIO(file_data)
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
     test_data[0] = ''
 
-    file_data = '\n'.join(test_data)
-    file_reader._file = io.StringIO(file_data)
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 

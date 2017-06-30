@@ -9,13 +9,15 @@ import re
 class FileWriter(object):
   """File writer."""
 
-  def __init__(self, end_of_line='\r\n'):
+  def __init__(self, encoding='utf-8', end_of_line='\r\n'):
     """Initializes a Visual Studio project configuration.
 
     Args:
+      encoding (str): encoding.
       end_of_line (str): end of line.
     """
     super(FileWriter, self).__init__()
+    self._encoding = encoding
     self._end_of_line = end_of_line
     self._file = None
 
@@ -43,7 +45,7 @@ class FileWriter(object):
   def WriteLine(self, line):
     """Writes a line."""
     line = ''.join([line, self._end_of_line])
-    line = line.encode('utf-8')
+    line = line.encode(self._encoding)
     self.WriteBinaryData(line)
 
   def WriteLines(self, lines):

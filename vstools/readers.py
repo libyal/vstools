@@ -5,15 +5,21 @@ from __future__ import unicode_literals
 import abc
 import re
 
+from vstools import py2to3
 from vstools import resources
 
 
 class FileReader(object):
   """File reader."""
 
-  def __init__(self):
-    """Initializes a file reader."""
+  def __init__(self, encoding='utf-8'):
+    """Initializes a file reader.
+
+    Args:
+      encoding (str): encoding.
+    """
     super(FileReader, self).__init__()
+    self._encoding = encoding
     self._file = None
     self._line = None
 
@@ -39,6 +45,9 @@ class FileReader(object):
         line = line.strip()
       if look_ahead:
         self._line = line
+
+    if isinstance(line, py2to3.BYTES_TYPE):
+      line = line.decode(self._encoding)
 
     return line
 

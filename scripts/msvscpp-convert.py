@@ -23,6 +23,7 @@ Currently supported output formats:
 # TODO: add vs2017 writer.
 
 from __future__ import print_function
+from __future__ import unicode_literals
 import argparse
 import logging
 import os
@@ -775,8 +776,8 @@ class LibyalSourceVSSolution(VSSolution):
 
           elif line.endswith('\\'):
             logging.warning((
-                u'Detected missing space before \\ in line: {0:d} '
-                u'"{1:s}" ({2:s})').format(
+                'Detected missing space before \\ in line: {0:d} '
+                '"{1:s}" ({2:s})').format(
                     index, original_line, makefile_am_path))
             line = line[:-1]
 
@@ -822,8 +823,8 @@ class LibyalSourceVSSolution(VSSolution):
 
           elif line.endswith('\\'):
             logging.warning((
-                u'Detected missing space before \\ in line: {0:d} '
-                u'"{1:s}" ({2:s})').format(
+                'Detected missing space before \\ in line: {0:d} '
+                '"{1:s}" ({2:s})').format(
                     index, original_line, makefile_am_path))
             line = line[:-1]
 
@@ -858,7 +859,7 @@ class LibyalSourceVSSolution(VSSolution):
             dependency_name = dependency_name[:-3]
           else:
             logging.warning(
-                u'Unuspported dependency definition: {0:s}'.format(line))
+                'Unuspported dependency definition: {0:s}'.format(line))
             dependency_name = ''
 
           if dependency_name:
@@ -887,8 +888,8 @@ class LibyalSourceVSSolution(VSSolution):
 
           elif line.endswith('\\'):
             logging.warning((
-                u'Detected missing space before \\ in line: {0:d} '
-                u'"{1:s}" ({2:s})').format(
+                'Detected missing space before \\ in line: {0:d} '
+                '"{1:s}" ({2:s})').format(
                     index, original_line, makefile_am_path))
             line = line[:-1]
 
@@ -919,7 +920,7 @@ class LibyalSourceVSSolution(VSSolution):
             dependency_name = dependency_name[:-3]
           else:
             logging.warning(
-                u'Unuspported dependency definition: {0:s}'.format(line))
+                'Unuspported dependency definition: {0:s}'.format(line))
             dependency_name = ''
 
           if dependency_name:
@@ -1086,7 +1087,7 @@ class LibyalSourceVSSolution(VSSolution):
     """
     configure_ac_path = os.path.join(input_directory, 'configure.ac')
     if not os.path.exists(configure_ac_path):
-      logging.warning(u'No such file: {0:s}.'.format(configure_ac_path))
+      logging.warning('No such file: {0:s}.'.format(configure_ac_path))
       return False
 
     solution_name = None
@@ -1108,7 +1109,7 @@ class LibyalSourceVSSolution(VSSolution):
     file_object.close()
 
     if not solution_name:
-      logging.warning(u'Unable to determine solution name.')
+      logging.warning('Unable to determine solution name.')
       return False
 
     # Use the existing msvscpp solution file to determine the project
@@ -1153,7 +1154,7 @@ class LibyalSourceVSSolution(VSSolution):
       makefile_am_path = os.path.join(
           input_directory, directory_entry, 'Makefile.am')
       if not os.path.exists(makefile_am_path):
-        logging.warning(u'No such file: {0:s}.'.format(makefile_am_path))
+        logging.warning('No such file: {0:s}.'.format(makefile_am_path))
         continue
 
       if (directory_entry in ('src', 'tests') or
@@ -1345,7 +1346,7 @@ def Main():
     return False
 
   logging.basicConfig(
-      level=logging.INFO, format=u'[%(levelname)s] %(message)s')
+      level=logging.INFO, format='[%(levelname)s] %(message)s')
 
   if os.path.isdir(options.solution_file):
     input_solution = LibyalSourceVSSolution()

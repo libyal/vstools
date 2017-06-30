@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
 """Project and solution file writer classes."""
 
+from __future__ import unicode_literals
 import abc
 import re
 
 
-class VSProjectFileWriter(object):
-  """Visual Studio project file writer."""
+class FileWriter(object):
+  """File writer."""
 
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(VSProjectFileWriter, self).__init__()
+  def __init__(self, end_of_line='\r\n'):
+    """Initializes a Visual Studio project configuration.
+
+    Args:
+      end_of_line (str): end of line.
+    """
+    super(FileWriter, self).__init__()
+    self._end_of_line = end_of_line
     self._file = None
+
+  def Close(self):
+    """Closes the project file."""
+    self._file.close()
 
   def Open(self, filename):
     """Opens the project file.
@@ -22,27 +32,40 @@ class VSProjectFileWriter(object):
     # Using binary mode to make sure to write Windows/DOS end of lines.
     self._file = open(filename, 'wb')
 
-  def Close(self):
-    """Closes the project file."""
-    self._file.close()
+  def WriteBinaryData(self, data):
+    """Writes binary data.
+
+    Args:
+      data (bytes): binary data.
+    """
+    self._file.write(data)
 
   def WriteLine(self, line):
     """Writes a line."""
-    # TODO: handle encoding properly.
-    self._file.write('{0:s}\r\n'.format(line))
+    line = ''.join([line, self._end_of_line])
+    line = line.encode('utf-8')
+    self.WriteBinaryData(line)
 
   def WriteLines(self, lines):
     """Writes lines."""
     for line in lines:
       self.WriteLine(line)
 
-  @abc.abstractmethod
-  def WriteHeader(self):
-    """Writes a file header."""
+
+class VSProjectFileWriter(FileWriter):
+  """Visual Studio project file writer."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project file writer."""
+    super(VSProjectFileWriter, self).__init__(end_of_line='')
 
   @abc.abstractmethod
   def WriteFooter(self):
     """Writes a file footer."""
+
+  @abc.abstractmethod
+  def WriteHeader(self):
+    """Writes a file header."""
 
 
 class VS2008ProjectFileWriter(VSProjectFileWriter):
@@ -52,58 +75,6 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """Initializes a Visual Studio project file writer."""
     super(VS2008ProjectFileWriter, self).__init__()
     self._version = 2008
-
-  def WriteHeader(self):
-    """Writes a file header."""
-    self.WriteLine('<?xml version="1.0" encoding="Windows-1252"?>')
-
-  def WriteProjectConfigurations(self, unused_project_configurations):
-    """Writes the project configurations.
-
-    Args:
-      project_configurations (VSConfigurations): configurations.
-    """
-    return
-
-  def WriteProjectInformation(self, project_information):
-    """Writes the project information.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-    """
-    self.WriteLines([
-        '<VisualStudioProject',
-        '\tProjectType="Visual C++"',
-        '\tVersion="9,00"'])
-
-    self.WriteLine('\tName="{0:s}"'.format(project_information.name))
-
-    self.WriteLine('\tProjectGUID="{{{0:s}}}"'.format(
-        project_information.guid.upper()))
-
-    self.WriteLine(
-        '\tRootNamespace="{0:s}"'.format(project_information.root_name_space))
-
-    if project_information.keyword:
-      self.WriteLine(
-          '\tKeyword="{0:s}"'.format(project_information.keyword))
-
-    # Also seen 196613.
-    self.WriteLines([
-        '\tTargetFrameworkVersion="131072"',
-        '\t>'])
-
-    # TODO: handle platforms.
-    self.WriteLines([
-        '\t<Platforms>',
-        '\t\t<Platform',
-        '\t\t\tName="Win32"',
-        '\t\t/>',
-        '\t</Platforms>'])
-
-    self.WriteLines([
-        '\t<ToolFiles>',
-        '\t</ToolFiles>'])
 
   def _WriteConfiguration(self, project_configuration):
     """Writes the project configuration.
@@ -339,47 +310,6 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     self.WriteLine('\t\t</Configuration>')
 
-  def WriteConfigurations(self, project_configurations):
-    """Writes the configurations.
-
-    Args:
-      project_configurations (VSConfigurations): configurations.
-    """
-    self.WriteLine('\t<Configurations>')
-
-    for project_configuration in project_configurations.GetSorted():
-      self._WriteConfiguration(project_configuration)
-
-    self.WriteLine('\t</Configurations>')
-
-    self.WriteLines([
-        '\t<References>',
-        '\t</References>'])
-
-  def _WriteSourceFiles(self, source_files):
-    """Writes the source files.
-
-    Args:
-      source_files (list[str]): source filenames.
-    """
-    self.WriteLines([
-        '\t\t<Filter',
-        '\t\t\tName="Source Files"',
-        '\t\t\tFilter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"',
-        '\t\t\tUniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"',
-        '\t\t\t>'])
-
-    for filename in source_files:
-      self.WriteLine('\t\t\t<File')
-
-      self.WriteLine('\t\t\t\tRelativePath="{0:s}"'.format(filename))
-
-      self.WriteLines([
-          '\t\t\t\t>',
-          '\t\t\t</File>'])
-
-    self.WriteLine('\t\t</Filter>')
-
   def _WriteHeaderFiles(self, header_files):
     """Writes the header files.
 
@@ -429,6 +359,58 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     self.WriteLine('\t\t</Filter>')
 
+  def _WriteSourceFiles(self, source_files):
+    """Writes the source files.
+
+    Args:
+      source_files (list[str]): source filenames.
+    """
+    self.WriteLines([
+        '\t\t<Filter',
+        '\t\t\tName="Source Files"',
+        '\t\t\tFilter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"',
+        '\t\t\tUniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"',
+        '\t\t\t>'])
+
+    for filename in source_files:
+      self.WriteLine('\t\t\t<File')
+
+      self.WriteLine('\t\t\t\tRelativePath="{0:s}"'.format(filename))
+
+      self.WriteLines([
+          '\t\t\t\t>',
+          '\t\t\t</File>'])
+
+    self.WriteLine('\t\t</Filter>')
+
+  def WriteConfigurations(self, project_configurations):
+    """Writes the configurations.
+
+    Args:
+      project_configurations (VSConfigurations): configurations.
+    """
+    self.WriteLine('\t<Configurations>')
+
+    for project_configuration in project_configurations.GetSorted():
+      self._WriteConfiguration(project_configuration)
+
+    self.WriteLine('\t</Configurations>')
+
+    self.WriteLines([
+        '\t<References>',
+        '\t</References>'])
+
+  def WriteDependencies(
+      self, unused_dependencies, unused_solution_projects_by_guid):
+    """Writes the dependencies.
+
+    Args:
+      dependencies (list[str]): GUIDs of the dependencies.
+      solution_projects_by_guid (dict[str, VSSolutionProject]): projects
+          per lower case GUID.
+    """
+    return
+
   def WriteFiles(self, source_files, header_files, resource_files):
     """Writes the files.
 
@@ -449,20 +431,61 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t<Globals>',
         '\t</Globals>'])
 
-  def WriteDependencies(
-      self, unused_dependencies, unused_solution_projects_by_guid):
-    """Writes the dependencies.
-
-    Args:
-      dependencies (list[str]): GUIDs of the dependencies.
-      solution_projects_by_guid (dict[str, VSSolutionProject]): projects
-          per lower case GUID.
-    """
-    return
-
   def WriteFooter(self):
     """Writes a file footer."""
     self.WriteLine('</VisualStudioProject>')
+
+  def WriteHeader(self):
+    """Writes a file header."""
+    self.WriteLine('<?xml version="1.0" encoding="Windows-1252"?>')
+
+  def WriteProjectConfigurations(self, unused_project_configurations):
+    """Writes the project configurations.
+
+    Args:
+      project_configurations (VSConfigurations): configurations.
+    """
+    return
+
+  def WriteProjectInformation(self, project_information):
+    """Writes the project information.
+
+    Args:
+      project_information (VSProjectInformation): project information.
+    """
+    self.WriteLines([
+        '<VisualStudioProject',
+        '\tProjectType="Visual C++"',
+        '\tVersion="9,00"'])
+
+    self.WriteLine('\tName="{0:s}"'.format(project_information.name))
+
+    self.WriteLine('\tProjectGUID="{{{0:s}}}"'.format(
+        project_information.guid.upper()))
+
+    self.WriteLine(
+        '\tRootNamespace="{0:s}"'.format(project_information.root_name_space))
+
+    if project_information.keyword:
+      self.WriteLine(
+          '\tKeyword="{0:s}"'.format(project_information.keyword))
+
+    # Also seen 196613.
+    self.WriteLines([
+        '\tTargetFrameworkVersion="131072"',
+        '\t>'])
+
+    # TODO: handle platforms.
+    self.WriteLines([
+        '\t<Platforms>',
+        '\t\t<Platform',
+        '\t\t\tName="Win32"',
+        '\t\t/>',
+        '\t</Platforms>'])
+
+    self.WriteLines([
+        '\t<ToolFiles>',
+        '\t</ToolFiles>'])
 
 
 class VS2010ProjectFileWriter(VSProjectFileWriter):
@@ -1460,26 +1483,8 @@ class VS2015ProjectFileWriter(VS2012ProjectFileWriter):
       self.WriteLine('  </PropertyGroup>')
 
 
-class VSSolutionFileWriter(object):
+class VSSolutionFileWriter(FileWriter):
   """Visual Studio solution file writer."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(VSSolutionFileWriter, self).__init__()
-    self._file = None
-
-  def Open(self, filename):
-    """Opens the solution file.
-
-    Args:
-      filename (str): path of the solution file.
-    """
-    # Using binary mode to make sure to write Windows/DOS end of lines.
-    self._file = open(filename, 'wb')
-
-  def Close(self):
-    """Closes the solution file."""
-    self._file.close()
 
   @abc.abstractmethod
   def WriteHeader(self):
@@ -1492,15 +1497,6 @@ class VSSolutionFileWriter(object):
     Args:
       solution_project (VSSolutionProject): project.
     """
-
-  def WriteLine(self, line):
-    """Writes a line."""
-    self._file.write('{0:s}\r\n'.format(line))
-
-  def WriteLines(self, lines):
-    """Writes lines."""
-    for line in lines:
-      self.WriteLine(line)
 
   def WriteProjects(self, solution_projects):
     """Writes the projects.
@@ -1514,40 +1510,6 @@ class VSSolutionFileWriter(object):
 
 class VS2008SolutionFileWriter(VSSolutionFileWriter):
   """Visual Studio 2008 solution file writer."""
-
-  def WriteHeader(self):
-    """Writes a file header."""
-    self.WriteLines([
-        '\xef\xbb\xbf',
-        'Microsoft Visual Studio Solution File, Format Version 10.00',
-        '# Visual C++ Express 2008'])
-
-  def WriteProject(self, solution_project):
-    """Writes a project section.
-
-    Args:
-      solution_project (VSSolutionProject): project.
-    """
-    solution_project_filename = '{0:s}.vcproj'.format(
-        solution_project.filename)
-
-    self.WriteLine((
-        'Project("{{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}}") = "{0:s}", '
-        '"{1:s}", "{{{2:s}}}"').format(
-            solution_project.name, solution_project_filename,
-            solution_project.guid.upper()))
-
-    if len(solution_project.dependencies) > 0:
-      self.WriteLine(
-          '\tProjectSection(ProjectDependencies) = postProject')
-
-      for dependency_guid in solution_project.dependencies:
-        self.WriteLine('\t\t{{{0:s}}} = {{{0:s}}}'.format(
-            dependency_guid.upper()))
-
-      self.WriteLine('\tEndProjectSection')
-
-    self.WriteLine('EndProject')
 
   def WriteConfigurations(self, solution_configurations, solution_projects):
     """Writes the configurations.
@@ -1600,16 +1562,12 @@ class VS2008SolutionFileWriter(VSSolutionFileWriter):
         '\tEndGlobalSection',
         'EndGlobal'])
 
-
-class VS2010SolutionFileWriter(VSSolutionFileWriter):
-  """Visual Studio 2010 solution file writer."""
-
   def WriteHeader(self):
     """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
     self.WriteLines([
-        '\xef\xbb\xbf',
-        'Microsoft Visual Studio Solution File, Format Version 11.00',
-        '# Visual C++ Express 2010'])
+        'Microsoft Visual Studio Solution File, Format Version 10.00',
+        '# Visual C++ Express 2008'])
 
   def WriteProject(self, solution_project):
     """Writes a project section.
@@ -1617,7 +1575,7 @@ class VS2010SolutionFileWriter(VSSolutionFileWriter):
     Args:
       solution_project (VSSolutionProject): project.
     """
-    solution_project_filename = '{0:s}.vcxproj'.format(
+    solution_project_filename = '{0:s}.vcproj'.format(
         solution_project.filename)
 
     self.WriteLine((
@@ -1626,7 +1584,21 @@ class VS2010SolutionFileWriter(VSSolutionFileWriter):
             solution_project.name, solution_project_filename,
             solution_project.guid.upper()))
 
+    if len(solution_project.dependencies) > 0:
+      self.WriteLine(
+          '\tProjectSection(ProjectDependencies) = postProject')
+
+      for dependency_guid in solution_project.dependencies:
+        self.WriteLine('\t\t{{{0:s}}} = {{{0:s}}}'.format(
+            dependency_guid.upper()))
+
+      self.WriteLine('\tEndProjectSection')
+
     self.WriteLine('EndProject')
+
+
+class VS2010SolutionFileWriter(VSSolutionFileWriter):
+  """Visual Studio 2010 solution file writer."""
 
   def WriteConfigurations(self, solution_configurations, solution_projects):
     """Writes the configurations.
@@ -1678,14 +1650,38 @@ class VS2010SolutionFileWriter(VSSolutionFileWriter):
         '\tEndGlobalSection',
         'EndGlobal'])
 
+  def WriteHeader(self):
+    """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
+    self.WriteLines([
+        'Microsoft Visual Studio Solution File, Format Version 11.00',
+        '# Visual C++ Express 2010'])
+
+  def WriteProject(self, solution_project):
+    """Writes a project section.
+
+    Args:
+      solution_project (VSSolutionProject): project.
+    """
+    solution_project_filename = '{0:s}.vcxproj'.format(
+        solution_project.filename)
+
+    self.WriteLine((
+        'Project("{{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}}") = "{0:s}", '
+        '"{1:s}", "{{{2:s}}}"').format(
+            solution_project.name, solution_project_filename,
+            solution_project.guid.upper()))
+
+    self.WriteLine('EndProject')
+
 
 class VS2012SolutionFileWriter(VS2010SolutionFileWriter):
   """Visual Studio 2012 solution file writer."""
 
   def WriteHeader(self):
     """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
     self.WriteLines([
-        '\xef\xbb\xbf',
         'Microsoft Visual Studio Solution File, Format Version 12.00',
         '# Visual Studio Express 2012 for Windows Desktop'])
 
@@ -1717,11 +1713,11 @@ class VS2013SolutionFileWriter(VS2010SolutionFileWriter):
 
   def WriteHeader(self):
     """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
     self.WriteLines([
-        '\xef\xbb\xbf',
         'Microsoft Visual Studio Solution File, Format Version 12.00',
         '# Visual Studio Express 2013 for Windows Desktop',
-        'VisualStudioVersion = 12.0.21005.1'
+        'VisualStudioVersion = 12.0.21005.1',
         'MinimumVisualStudioVersion = 10.0.40219.1'])
 
 
@@ -1730,8 +1726,8 @@ class VS2015SolutionFileWriter(VS2010SolutionFileWriter):
 
   def WriteHeader(self):
     """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
     self.WriteLines([
-        '\xef\xbb\xbf',
         'Microsoft Visual Studio Solution File, Format Version 12.00',
         '# Visual Studio 14',
         'VisualStudioVersion = 14.0.25420.1',

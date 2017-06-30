@@ -542,7 +542,7 @@ class VSSolutionFileReader(FileReader):
     """Checks the format version.
 
     Args:
-      line (bytes): line containing the Visual Studio format version.
+      line (str): line containing the Visual Studio format version.
 
     Returns:
       bool: True if successful or false otherwise.
@@ -717,7 +717,7 @@ class VS2008SolutionFileReader(VSSolutionFileReader):
     """Checks the format version.
 
     Args:
-      line (bytes): line containing the Visual Studio format version.
+      line (str): line containing the Visual Studio format version.
 
     Returns:
       bool: True if successful or false otherwise.
@@ -732,7 +732,7 @@ class VS2010SolutionFileReader(object):
     """Checks the format version.
 
     Args:
-      line (bytes): line containing the Visual Studio format version.
+      line (str): line containing the Visual Studio format version.
 
     Returns:
       bool: True if successful or false otherwise.
@@ -747,7 +747,7 @@ class VS2012SolutionFileReader(object):
     """Checks the format version.
 
     Args:
-      line (bytes): line containing the Visual Studio format version.
+      line (str): line containing the Visual Studio format version.
 
     Returns:
       bool: True if successful or false otherwise.

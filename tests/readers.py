@@ -26,7 +26,7 @@ class FileReaderTest(test_lib.BaseTestCase):
     path = self._GetTestFilePath(['2008.vcproj'])
     file_reader.Open(path)
 
-    file_reader._ReadLine()
+    line = file_reader._ReadLine()
 
     file_reader.Close()
 
@@ -61,8 +61,8 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     file_reader = readers.VS2008ProjectFileReader()
 
-    file_data = u'\n'.join(test_data).encode('utf-8')
-    file_reader._file = io.BytesIO(file_data)
+    file_data = '\n'.join(test_data)
+    file_reader._file = io.StringIO(file_data)
     file_reader._ReadProjectInformation(project_information)
 
   def testReadHeader(self):
@@ -75,36 +75,36 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     file_reader = readers.VS2008ProjectFileReader()
 
-    file_data = u'\n'.join(test_data).encode('utf-8')
-    file_reader._file = io.BytesIO(file_data)
+    file_data = '\n'.join(test_data)
+    file_reader._file = io.StringIO(file_data)
     result = file_reader.ReadHeader()
     self.assertTrue(result)
 
     test_data[3] = ''
 
-    file_data = u'\n'.join(test_data).encode('utf-8')
-    file_reader._file = io.BytesIO(file_data)
+    file_data = '\n'.join(test_data)
+    file_reader._file = io.StringIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
     test_data[2] = ''
 
-    file_data = u'\n'.join(test_data).encode('utf-8')
-    file_reader._file = io.BytesIO(file_data)
+    file_data = '\n'.join(test_data)
+    file_reader._file = io.StringIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
     test_data[1] = ''
 
-    file_data = u'\n'.join(test_data).encode('utf-8')
-    file_reader._file = io.BytesIO(file_data)
+    file_data = '\n'.join(test_data)
+    file_reader._file = io.StringIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
     test_data[0] = ''
 
-    file_data = u'\n'.join(test_data).encode('utf-8')
-    file_reader._file = io.BytesIO(file_data)
+    file_data = '\n'.join(test_data)
+    file_reader._file = io.StringIO(file_data)
     result = file_reader.ReadHeader()
     self.assertFalse(result)
 
@@ -144,11 +144,11 @@ class VS2008SolutionFileReaderTest(test_lib.BaseTestCase):
     """Tests the _CheckFormatVersion function."""
     file_reader = readers.VS2008SolutionFileReader()
 
-    line = b'Microsoft Visual Studio Solution File, Format Version 10.00'
+    line = 'Microsoft Visual Studio Solution File, Format Version 10.00'
     result = file_reader._CheckFormatVersion(line)
     self.assertTrue(result)
 
-    line = b'Microsoft Visual Studio Solution File, Format Version BOGUS'
+    line = 'Microsoft Visual Studio Solution File, Format Version BOGUS'
     result = file_reader._CheckFormatVersion(line)
     self.assertFalse(result)
 
@@ -160,11 +160,11 @@ class VS2010SolutionFileReaderTest(test_lib.BaseTestCase):
     """Tests the _CheckFormatVersion function."""
     file_reader = readers.VS2010SolutionFileReader()
 
-    line = b'Microsoft Visual Studio Solution File, Format Version 11.00'
+    line = 'Microsoft Visual Studio Solution File, Format Version 11.00'
     result = file_reader._CheckFormatVersion(line)
     self.assertTrue(result)
 
-    line = b'Microsoft Visual Studio Solution File, Format Version BOGUS'
+    line = 'Microsoft Visual Studio Solution File, Format Version BOGUS'
     result = file_reader._CheckFormatVersion(line)
     self.assertFalse(result)
 
@@ -176,11 +176,11 @@ class VS2012SolutionFileReaderTest(test_lib.BaseTestCase):
     """Tests the _CheckFormatVersion function."""
     file_reader = readers.VS2012SolutionFileReader()
 
-    line = b'Microsoft Visual Studio Solution File, Format Version 12.00'
+    line = 'Microsoft Visual Studio Solution File, Format Version 12.00'
     result = file_reader._CheckFormatVersion(line)
     self.assertTrue(result)
 
-    line = b'Microsoft Visual Studio Solution File, Format Version BOGUS'
+    line = 'Microsoft Visual Studio Solution File, Format Version BOGUS'
     result = file_reader._CheckFormatVersion(line)
     self.assertFalse(result)
 

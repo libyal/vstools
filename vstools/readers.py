@@ -479,38 +479,22 @@ class VS2008ProjectFileReader(VSProjectFileReader):
     Returns:
       bool: True if successful or false otherwise.
     """
-    line = self._ReadLine()
-
-    if not line:
-      return False
-
-    if not line.startswith('<?xml version="1.0"'):
-      return False
-
     # TODO check encoding?
 
     line = self._ReadLine()
-
-    if not line:
-      return False
-
-    if not line.startswith('<VisualStudioProject'):
+    if not line or not line.startswith('<?xml version="1.0"'):
       return False
 
     line = self._ReadLine()
-
-    if not line:
-      return False
-
-    if not line.startswith('ProjectType="Visual C++"'):
+    if not line or not line.startswith('<VisualStudioProject'):
       return False
 
     line = self._ReadLine()
-
-    if not line:
+    if not line or not line.startswith('ProjectType="Visual C++"'):
       return False
 
-    if not line.startswith('Version="9,00"'):
+    line = self._ReadLine()
+    if not line or not line.startswith('Version="9,00"'):
       return False
 
     return True
@@ -564,6 +548,53 @@ class VSSolutionFileReader(FileReader):
       bool: True if successful or false otherwise.
     """
 
+  def ReadConfigurations(self):
+    """Reads the configurations.
+
+    Returns:
+      VSConfigurations: configurations.
+    """
+    solution_configurations = resources.VSConfigurations()
+
+    line = self._ReadLine(look_ahead=True)
+
+    if not line:
+      return None
+
+    if line != 'Global':
+      return None
+
+    found_section = False
+
+    line = self._ReadLine()
+
+    while line and line != 'EndGlobal':
+      line = self._ReadLine()
+
+      if found_section:
+        if line == 'EndGlobalSection':
+          found_section = False
+
+        else:
+          # For more than 1 match findall will return a list with a tuple.
+          values = re.findall('([^|]*)[|]([^ ]*) = ([^|]*)[|]([^ ]*)', line)
+
+          if len(values) == 1:
+            values = values[0]
+            if (len(values) == 4 and values[0] == values[2] and
+                values[1] == values[3]):
+              configuration = resources.VSSolutionConfiguration()
+              configuration.name = values[0]
+              configuration.platform = values[1]
+
+              solution_configurations.Append(configuration)
+
+      elif line == ('GlobalSection(SolutionConfigurationPlatforms) = '
+                    'preSolution'):
+        found_section = True
+
+    return solution_configurations
+
   def ReadHeader(self):
     """Reads a file header.
 
@@ -571,29 +602,35 @@ class VSSolutionFileReader(FileReader):
       bool: True if successful or false otherwise.
     """
     line = self._ReadLine()
-
-    if not line:
-      return False
-
-    if line != '\xef\xbb\xbf':
+    if not line or line != '\xef\xbb\xbf':
       return False
 
     line = self._ReadLine()
-
-    if not line:
-      return False
-
-    if not line.startswith(
+    if not line or not line.startswith(
         'Microsoft Visual Studio Solution File, Format Version '):
       return False
 
     if not self._CheckFormatVersion(line):
       return False
 
-    line = self._ReadLine(look_ahead=True)
+    visual_studio_version_line = None
 
-    if line and line.startswith('# Visual C++ '):
-      line = self._ReadLine()
+    line = self._ReadLine(look_ahead=True)
+    while line:
+      if line.startswith('# Visual C++ '):
+        self._ReadLine()
+
+      elif line.startswith('VisualStudioVersion = '):
+        visual_studio_version_line = self._ReadLine()
+
+      else:
+        break
+
+      line = self._ReadLine(look_ahead=True)
+
+    if visual_studio_version_line:
+      # TODO: add check for VisualStudioVersion
+      pass
 
     return True
 
@@ -603,13 +640,10 @@ class VSSolutionFileReader(FileReader):
     Returns:
       VSSolutionProject: project if successful or None otherwise.
     """
-    line = self._ReadLine(look_ahead=True)
-
-    if not line:
-      return None
-
     # 8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942 is a Visual C++ related GUID.
-    if not line.startswith(
+
+    line = self._ReadLine(look_ahead=True)
+    if not line or not line.startswith(
         'Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = '):
       return None
 
@@ -675,53 +709,6 @@ class VSSolutionFileReader(FileReader):
 
     return solution_projects
 
-  def ReadConfigurations(self):
-    """Reads the configurations.
-
-    Returns:
-      VSConfigurations: configurations.
-    """
-    solution_configurations = resources.VSConfigurations()
-
-    line = self._ReadLine(look_ahead=True)
-
-    if not line:
-      return None
-
-    if line != 'Global':
-      return None
-
-    found_section = False
-
-    line = self._ReadLine()
-
-    while line and line != 'EndGlobal':
-      line = self._ReadLine()
-
-      if found_section:
-        if line == 'EndGlobalSection':
-          found_section = False
-
-        else:
-          # For more than 1 match findall will return a list with a tuple.
-          values = re.findall('([^|]*)[|]([^ ]*) = ([^|]*)[|]([^ ]*)', line)
-
-          if len(values) == 1:
-            values = values[0]
-            if (len(values) == 4 and values[0] == values[2] and
-                values[1] == values[3]):
-              configuration = resources.VSSolutionConfiguration()
-              configuration.name = values[0]
-              configuration.platform = values[1]
-
-              solution_configurations.Append(configuration)
-
-      elif line == ('GlobalSection(SolutionConfigurationPlatforms) = '
-                    'preSolution'):
-        found_section = True
-
-    return solution_configurations
-
 
 class VS2008SolutionFileReader(VSSolutionFileReader):
   """Visual Studio 2008 solution file reader."""
@@ -755,14 +742,26 @@ class VS2010SolutionFileReader(object):
 
 class VS2012SolutionFileReader(object):
   """Visual Studio 2012 solution file reader."""
-  # TODO: implement.
+
+  def _CheckFormatVersion(self, line):
+    """Checks the format version.
+
+    Args:
+      line (bytes): line containing the Visual Studio format version.
+
+    Returns:
+      bool: True if successful or false otherwise.
+    """
+    return line.endswith(' 12.00')
 
 
-class VS2013SolutionFileReader(object):
+class VS2013SolutionFileReader(VS2012SolutionFileReader):
   """Visual Studio 2013 solution file reader."""
-  # TODO: implement.
+
+  # TODO: add check for VisualStudioVersion
 
 
-class VS2015SolutionFileReader(object):
+class VS2015SolutionFileReader(VS2012SolutionFileReader):
   """Visual Studio 2015 solution file reader."""
-  # TODO: implement.
+
+  # TODO: add check for VisualStudioVersion

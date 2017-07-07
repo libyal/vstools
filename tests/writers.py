@@ -282,6 +282,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
+
     expected_output_data = b'</VisualStudioProject>'
     self.assertEqual(output_data, expected_output_data)
 
@@ -338,7 +339,58 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
   # pylint: disable=protected-access
 
   # TODO: add tests for _WriteClCompileSection function.
-  # TODO: add tests for _WriteConfigurationPropertyGroup function.
+
+  def testWriteConfigurationPropertyGroup(self):
+    """Tests the _WriteConfigurationPropertyGroup function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationPropertyGroup(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'|\'"'
+        b' Label="Configuration">'
+        b'    <ConfigurationType></ConfigurationType>'
+        b'  </PropertyGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationPropertyGroupFooter(self):
+    """Tests the _WriteConfigurationPropertyGroupFooter function."""
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationPropertyGroupFooter()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'  </PropertyGroup>'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationPropertyGroupHeader(self):
+    """Tests the _WriteConfigurationPropertyGroupHeader function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationPropertyGroupHeader(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'|\'" '
+        b'Label="Configuration">')
+    self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeaderFiles(self):
     """Tests the _WriteHeaderFiles function."""
@@ -359,7 +411,65 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         b'  </ItemGroup>')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteItemDefinitionGroup function.
+  def testWriteItemDefinitionGroup(self):
+    """Tests the _WriteItemDefinitionGroup function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteItemDefinitionGroup(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <ItemDefinitionGroup'
+        b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">'
+        b'    <ClCompile>'
+        b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
+        b'</AdditionalIncludeDirectories>'
+        b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
+        b'</PreprocessorDefinitions>'
+        b'      <RuntimeLibrary></RuntimeLibrary>'
+        b'      <WarningLevel></WarningLevel>'
+        b'    </ClCompile>'
+        b'  </ItemDefinitionGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteItemDefinitionGroupFooter(self):
+    """Tests the _WriteItemDefinitionGroupFooter function."""
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteItemDefinitionGroupFooter()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'  </ItemDefinitionGroup>'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteItemDefinitionGroupHeader(self):
+    """Tests the _WriteItemDefinitionGroupHeader function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteItemDefinitionGroupHeader(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <ItemDefinitionGroup'
+        b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">')
+    self.assertEqual(output_data, expected_output_data)
+
   # TODO: add tests for _WriteLibrarianSection function.
   # TODO: add tests for _WriteLinkerSection function.
   # TODO: add tests for _WriteOutIntDirConditions function.
@@ -403,8 +513,39 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         b'  </ItemGroup>')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for WriteConfigurations function.
-  # TODO: add tests for WriteDependencies function.
+  def testWriteConfigurations(self):
+    """Tests the WriteConfigurations function."""
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteConfigurations(project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertTrue(output_data.startswith(
+        b'  <Import Project="$(VCTargetsPath)\\'
+        b'Microsoft.Cpp.Default.props" />'))
+    self.assertTrue(output_data.endswith(b'  </PropertyGroup>'))
+
+  def testWriteDependencies(self):
+    """Tests the WriteDependencies function."""
+    dependencies = []
+    solution_projects_by_guid = {}
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteDependencies(dependencies, solution_projects_by_guid)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
 
   def testWriteFiles(self):
     """Tests the WriteFiles function."""
@@ -424,7 +565,18 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     self.assertTrue(output_data.startswith(b'  <ItemGroup>'))
     self.assertTrue(output_data.endswith(b'  </ItemGroup>'))
 
-  # TODO: add tests for WriteFooter function.
+  def testWriteFooter(self):
+    """Tests the WriteFooter function."""
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteFooter()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertTrue(output_data.endswith(b'</Project>'))
 
   def testWriteHeader(self):
     """Tests the WriteHeader function."""
@@ -443,8 +595,43 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         b'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for WriteProjectConfigurations function.
-  # TODO: add tests for WriteProjectInformation function.
+  def testWriteProjectConfigurations(self):
+    """Tests the WriteProjectConfigurations function."""
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteProjectConfigurations(project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <ItemGroup Label="ProjectConfigurations">'
+        b'  </ItemGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteProjectInformation(self):
+    """Tests the WriteProjectInformation function."""
+    project_information = resources.VSProjectInformation()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteProjectInformation(project_information)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <PropertyGroup Label="Globals">'
+        b'    <ProjectGuid>{}</ProjectGuid>'
+        b'    <RootNamespace></RootNamespace>'
+        b'  </PropertyGroup>')
+    self.assertEqual(output_data, expected_output_data)
 
 
 class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
@@ -453,10 +640,30 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
   # pylint: disable=protected-access
 
   # TODO: add tests for _WriteClCompileSection function.
-  # TODO: add tests for _WriteConfigurationPropertyGroup function.
 
-  def testWriteConfigurations(self):
-    """Tests the WriteConfigurations function."""
+  def testWriteConfigurationPropertyGroup(self):
+    """Tests the _WriteConfigurationPropertyGroup function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2012ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationPropertyGroup(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'|\'"'
+        b' Label="Configuration">'
+        b'    <ConfigurationType></ConfigurationType>'
+        b'    <PlatformToolset>v110</PlatformToolset>'
+        b'  </PropertyGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteItemDefinitionGroup(self):
+    """Tests the _WriteItemDefinitionGroup function."""
     project_configuration = resources.VSProjectConfiguration()
 
     file_writer = writers.VS2012ProjectFileWriter()
@@ -468,10 +675,19 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    self.assertTrue(output_data.startswith(
-        b'  <ItemDefinitionGroup Condition="'
-        b'\'$(Configuration)|$(Platform)\'==\'|\'">'))
-    self.assertTrue(output_data.endswith(b'  </ItemDefinitionGroup>'))
+    expected_output_data = (
+        b'  <ItemDefinitionGroup '
+        b'Condition="\'$(Configuration)|$(Platform)\'==\'|\'">'
+        b'    <ClCompile>'
+        b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
+        b'</AdditionalIncludeDirectories>'
+        b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
+        b'</PreprocessorDefinitions>'
+        b'      <RuntimeLibrary></RuntimeLibrary>'
+        b'      <WarningLevel></WarningLevel>'
+        b'    </ClCompile>'
+        b'  </ItemDefinitionGroup>')
+    self.assertEqual(output_data, expected_output_data)
 
   # TODO: add tests for _WriteLibrarianSection function.
   # TODO: add tests for _WriteLinkerSection function.

@@ -680,10 +680,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    self.WriteLine((
-        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
-            project_configuration.name, project_configuration.platform))
+    self._WriteConfigurationPropertyGroupHeader(project_configuration)
 
     self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
         project_configuration.output_type_string))
@@ -706,7 +703,22 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
       self.WriteLine('    <PlatformToolset>{0:s}</PlatformToolset>'.format(
           platform_toolset))
 
+    self._WriteConfigurationPropertyGroupFooter()
+
+  def _WriteConfigurationPropertyGroupFooter(self):
+    """Writes the configuration property group footer."""
     self.WriteLine('  </PropertyGroup>')
+
+  def _WriteConfigurationPropertyGroupHeader(self, project_configuration):
+    """Writes the configuration property group header.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine((
+        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
+            project_configuration.name, project_configuration.platform))
 
   def _WriteHeaderFiles(self, header_files):
     """Writes the header files.
@@ -728,10 +740,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    self.WriteLine((
-        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
-        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
-            project_configuration.name, project_configuration.platform))
+    self._WriteItemDefinitionGroupHeader(project_configuration)
 
     # Write the compiler specific section.
     self._WriteClCompileSection(project_configuration)
@@ -744,7 +753,22 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     if project_configuration.linker_values_set:
       self._WriteLinkerSection(project_configuration)
 
+    self._WriteItemDefinitionGroupFooter()
+
+  def _WriteItemDefinitionGroupFooter(self):
+    """Writes the item definition group header."""
     self.WriteLine('  </ItemDefinitionGroup>')
+
+  def _WriteItemDefinitionGroupHeader(self, project_configuration):
+    """Writes the item definition group header.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine((
+        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
+        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
+            project_configuration.name, project_configuration.platform))
 
   def _WriteLibrarianSection(self, project_configuration):
     """Writes the librarian section.
@@ -1084,7 +1108,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
         '  </ImportGroup>'])
 
     # The last line has no \r\n.
-    self._file.write('</Project>')
+    self._file.write(b'</Project>')
 
   def WriteHeader(self):
     """Writes a file header."""
@@ -1252,10 +1276,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    self.WriteLine((
-        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
-            project_configuration.name, project_configuration.platform))
+    self._WriteConfigurationPropertyGroupHeader(project_configuration)
 
     self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
         project_configuration.output_type_string))
@@ -1278,7 +1299,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
           '</WholeProgramOptimization>').format(
               project_configuration.whole_program_optimization_string))
 
-    self.WriteLine('  </PropertyGroup>')
+    self._WriteConfigurationPropertyGroupFooter()
 
   def _WriteItemDefinitionGroup(self, project_configuration):
     """Writes the item definition group.
@@ -1286,10 +1307,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    self.WriteLine((
-        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
-        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
-            project_configuration.name, project_configuration.platform))
+    self._WriteItemDefinitionGroupHeader(project_configuration)
 
     # Write the compiler specific section.
     self._WriteClCompileSection(project_configuration)
@@ -1302,7 +1320,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     if project_configuration.linker_values_set:
       self._WriteLinkerSection(project_configuration)
 
-    self.WriteLine('  </ItemDefinitionGroup>')
+    self._WriteItemDefinitionGroupFooter()
 
   def _WriteLibrarianSection(self, project_configuration):
     """Writes the librarian section.

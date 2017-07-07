@@ -1047,7 +1047,20 @@ class VSSolutionFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for WriteProjects
+  def testWriteProjects(self):
+    """Tests the WriteProjects function."""
+    solution_project = resources.VSSolutionProject('name', 'file', 'guid')
+
+    file_writer = writers.VSSolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteProjects([solution_project])
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
 
 
 class VS2008SolutionFileWriter(test_lib.BaseTestCase):
@@ -1055,7 +1068,27 @@ class VS2008SolutionFileWriter(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for WriteConfigurations
+  def testWriteConfigurations(self):
+    """Tests the WriteConfigurations function."""
+    solution_configurations = resources.VSConfigurations()
+    solution_project = resources.VSSolutionProject('name', 'filename', 'guid')
+
+    file_writer = writers.VS2008SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteConfigurations(solution_configurations, [solution_project])
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'Global\r\n'
+        b'\tGlobalSection(SolutionProperties) = preSolution\r\n'
+        b'\t\tHideSolutionNode = FALSE\r\n'
+        b'\tEndGlobalSection\r\n'
+        b'EndGlobal\r\n')
+    self.assertEqual(output_data, expected_output_data)
 
 
 class VS2010SolutionFileWriter(test_lib.BaseTestCase):
@@ -1063,9 +1096,63 @@ class VS2010SolutionFileWriter(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for WriteConfigurations
-  # TODO: add tests for WriteHeader
-  # TODO: add tests for WriteProject
+  def testWriteConfigurations(self):
+    """Tests the WriteConfigurations function."""
+    solution_configurations = resources.VSConfigurations()
+    solution_project = resources.VSSolutionProject('name', 'filename', 'guid')
+
+    file_writer = writers.VS2010SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteConfigurations(solution_configurations, [solution_project])
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'Global\r\n'
+        b'\tGlobalSection(SolutionProperties) = preSolution\r\n'
+        b'\t\tHideSolutionNode = FALSE\r\n'
+        b'\tEndGlobalSection\r\n'
+        b'EndGlobal\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteHeader(self):
+    """Tests the WriteHeader function."""
+    file_writer = writers.VS2010SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteHeader()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\xef\xbb\xbf\r\n'
+        b'Microsoft Visual Studio Solution File, Format Version 11.00\r\n'
+        b'# Visual C++ Express 2010\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteProject(self):
+    """Tests the WriteProject function."""
+    solution_project = resources.VSSolutionProject('name', 'filename', 'guid')
+
+    file_writer = writers.VS2010SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteProject(solution_project)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "name",'
+        b' "filename.vcxproj", "{GUID}"\r\n'
+        b'EndProject\r\n')
+    self.assertEqual(output_data, expected_output_data)
 
 
 class VS2012SolutionFileWriterTest(test_lib.BaseTestCase):
@@ -1091,12 +1178,12 @@ class VS2012SolutionFileWriterTest(test_lib.BaseTestCase):
 
   def testWriteProject(self):
     """Tests the WriteProject function."""
+    solution_project = resources.VSSolutionProject('name', 'filename', 'guid')
+
     file_writer = writers.VS2012SolutionFileWriter()
 
     file_writer._file = io.BytesIO()
 
-    solution_project = resources.VSSolutionProject(
-        'name', 'filename', 'guid')
     file_writer.WriteProject(solution_project)
 
     file_writer._file.seek(0, os.SEEK_SET)

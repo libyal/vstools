@@ -218,8 +218,40 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     expected_output_data = b'\t\t\t\tSmallerTypeCheck="true"'
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteConfigurationType function.
-  # TODO: add tests for _WriteConfigurationWholeProgramOptimization function.
+  def testWriteConfigurationType(self):
+    """Tests the _WriteConfigurationType function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.output_type = '2'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationType(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\tConfigurationType="2"'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationWholeProgramOptimization(self):
+    """Tests the _WriteConfigurationWholeProgramOptimization function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.whole_program_optimization = '0'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationWholeProgramOptimization(
+        project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\tWholeProgramOptimization="0"'
+    self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeaderFiles(self):
     """Tests the _WriteHeaderFiles function."""
@@ -436,7 +468,29 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for _WriteClCompileSection function.
+  def testWriteClCompileSection(self):
+    """Tests the _WriteClCompileSection function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteClCompileSection(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'    <ClCompile>'
+        b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
+        b'</AdditionalIncludeDirectories>'
+        b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
+        b'</PreprocessorDefinitions>'
+        b'      <RuntimeLibrary></RuntimeLibrary>'
+        b'      <WarningLevel></WarningLevel>'
+        b'    </ClCompile>')
+    self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationPropertyGroup(self):
     """Tests the _WriteConfigurationPropertyGroup function."""
@@ -807,7 +861,29 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for _WriteClCompileSection function.
+  def testWriteClCompileSection(self):
+    """Tests the _WriteClCompileSection function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2012ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteClCompileSection(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'    <ClCompile>'
+        b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
+        b'</AdditionalIncludeDirectories>'
+        b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
+        b'</PreprocessorDefinitions>'
+        b'      <RuntimeLibrary></RuntimeLibrary>'
+        b'      <WarningLevel></WarningLevel>'
+        b'    </ClCompile>')
+    self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationPropertyGroup(self):
     """Tests the _WriteConfigurationPropertyGroup function."""
@@ -966,9 +1042,30 @@ class VS2015ProjectFileWriterTest(test_lib.BaseTestCase):
     self.assertEqual(output_data, b'')
 
 
-# TODO: add tests for VSSolutionFileWriter
-# TODO: add tests for VS2008SolutionFileWriter
-# TODO: add tests for VS2010SolutionFileWriter
+class VSSolutionFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio solution file writer test."""
+
+  # pylint: disable=protected-access
+
+  # TODO: add tests for WriteProjects
+
+
+class VS2008SolutionFileWriter(test_lib.BaseTestCase):
+  """Visual Studio 2008 solution file writer test."""
+
+  # pylint: disable=protected-access
+
+  # TODO: add tests for WriteConfigurations
+
+
+class VS2010SolutionFileWriter(test_lib.BaseTestCase):
+  """Visual Studio 2010 solution file writer test."""
+
+  # pylint: disable=protected-access
+
+  # TODO: add tests for WriteConfigurations
+  # TODO: add tests for WriteHeader
+  # TODO: add tests for WriteProject
 
 
 class VS2012SolutionFileWriterTest(test_lib.BaseTestCase):

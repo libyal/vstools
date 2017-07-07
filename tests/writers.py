@@ -182,8 +182,42 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     expected_output_data = b'\t\t\t\tOptimization="0"'
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteConfigurationPreprocessorDefinitions function.
-  # TODO: add tests for _WriteConfigurationSmallerTypeCheck function.
+  def testWriteConfigurationPreprocessorDefinitions(self):
+    """Tests the _WriteConfigurationPreprocessorDefinitions function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.preprocessor_definitions = '_CRT_SECURE_NO_DEPRECATE'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationPreprocessorDefinitions(
+        project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\t\t\t\tPreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationSmallerTypeCheck(self):
+    """Tests the _WriteConfigurationSmallerTypeCheck function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.smaller_type_check = 'true'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationSmallerTypeCheck(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\t\tSmallerTypeCheck="true"'
+    self.assertEqual(output_data, expected_output_data)
+
   # TODO: add tests for _WriteConfigurationType function.
   # TODO: add tests for _WriteConfigurationWholeProgramOptimization function.
 
@@ -573,8 +607,41 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         b'    </Link>')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteOutIntDirConditions function.
-  # TODO: add tests for _WriteOutIntDirPropertyGroups function.
+  def testWriteOutIntDirConditions(self):
+    """Tests the _WriteOutIntDirConditions function."""
+    configuration_name = 'Release'
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteOutIntDirConditions(
+        configuration_name, project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
+
+  def testWriteOutIntDirPropertyGroups(self):
+    """Tests the _WriteOutIntDirPropertyGroups function."""
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteOutIntDirPropertyGroups(project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <PropertyGroup>'
+        b'    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>'
+        b'  </PropertyGroup>')
+    self.assertEqual(output_data, expected_output_data)
 
   def testWriteResourceFiles(self):
     """Tests the _WriteResourceFiles function."""
@@ -814,7 +881,7 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
     """Tests the _WriteLinkerSection function."""
     project_configuration = resources.VSProjectConfiguration()
 
-    file_writer = writers.VS2010ProjectFileWriter()
+    file_writer = writers.VS2012ProjectFileWriter()
 
     file_writer._file = io.BytesIO()
 
@@ -828,8 +895,41 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
         b'    </Link>')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteOutIntDirConditions function.
-  # TODO: add tests for _WriteOutIntDirPropertyGroups function.
+  def testWriteOutIntDirConditions(self):
+    """Tests the _WriteOutIntDirConditions function."""
+    configuration_name = 'Release'
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2012ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteOutIntDirConditions(
+        configuration_name, project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
+
+  def testWriteOutIntDirPropertyGroups(self):
+    """Tests the _WriteOutIntDirPropertyGroups function."""
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2012ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteOutIntDirPropertyGroups(project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <PropertyGroup>'
+        b'    <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>'
+        b'  </PropertyGroup>')
+    self.assertEqual(output_data, expected_output_data)
 
 
 class VS2013ProjectFileWriterTest(test_lib.BaseTestCase):
@@ -848,7 +948,22 @@ class VS2015ProjectFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for _WriteOutIntDirConditions function.
+  def testWriteOutIntDirConditions(self):
+    """Tests the _WriteOutIntDirConditions function."""
+    configuration_name = 'Release'
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2015ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteOutIntDirConditions(
+        configuration_name, project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
 
 
 # TODO: add tests for VSSolutionFileWriter

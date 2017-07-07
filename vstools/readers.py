@@ -2,6 +2,7 @@
 """Project and solution file reader classes."""
 
 from __future__ import unicode_literals
+
 import abc
 import re
 

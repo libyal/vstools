@@ -2,6 +2,7 @@
 """Project and solution file writer classes."""
 
 from __future__ import unicode_literals
+
 import abc
 import re
 
@@ -129,23 +130,11 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t<Tool',
         '\t\t\t\tName="VCCLCompilerTool"'])
 
-    if project_configuration.optimization:
-      self.WriteLine('\t\t\t\tOptimization="{0:s}"'.format(
-          project_configuration.optimization))
-
-    self.WriteLine('\t\t\t\tAdditionalIncludeDirectories="{0:s}"'.format(
-        project_configuration.include_directories))
-
-    self.WriteLine('\t\t\t\tPreprocessorDefinitions="{0:s}"'.format(
-        project_configuration.preprocessor_definitions))
-
-    if project_configuration.basic_runtime_checks:
-      self.WriteLine('\t\t\t\tBasicRuntimeChecks="{0:s}"'.format(
-          project_configuration.basic_runtime_checks))
-
-    if project_configuration.smaller_type_check:
-      self.WriteLine('\t\t\t\tSmallerTypeCheck="{0:s}"'.format(
-          project_configuration.smaller_type_check))
+    self._WriteConfigurationOptimization(project_configuration)
+    self._WriteConfigurationAdditionalIncludeDirectories(project_configuration)
+    self._WriteConfigurationPreprocessorDefinitions(project_configuration)
+    self._WriteConfigurationBasicRuntimeChecks(project_configuration)
+    self._WriteConfigurationSmallerTypeCheck(project_configuration)
 
     self.WriteLine('\t\t\t\tRuntimeLibrary="{0:s}"'.format(
         project_configuration.runtime_library))
@@ -303,6 +292,26 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     self.WriteLine('\t\t</Configuration>')
 
+  def _WriteConfigurationAdditionalIncludeDirectories(
+      self, project_configuration):
+    """Writes the project configuration additional include directories.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tAdditionalIncludeDirectories="{0:s}"'.format(
+        project_configuration.include_directories))
+
+  def _WriteConfigurationBasicRuntimeChecks(self, project_configuration):
+    """Writes the project configuration basic runtime checks.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.basic_runtime_checks:
+      self.WriteLine('\t\t\t\tBasicRuntimeChecks="{0:s}"'.format(
+          project_configuration.basic_runtime_checks))
+
   def _WriteConfigurationCharacterSet(self, project_configuration):
     """Writes the project configuration character set.
 
@@ -322,6 +331,35 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
       self.WriteLine('\t\t\tManagedExtensions="{0:s}"'.format(
           project_configuration.managed_extensions))
 
+  def _WriteConfigurationOptimization(self, project_configuration):
+    """Writes the project configuration optimization.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.optimization:
+      self.WriteLine('\t\t\t\tOptimization="{0:s}"'.format(
+          project_configuration.optimization))
+
+  def _WriteConfigurationPreprocessorDefinitions(self, project_configuration):
+    """Writes the project configuration preprocessor definitions.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tPreprocessorDefinitions="{0:s}"'.format(
+        project_configuration.preprocessor_definitions))
+
+  def _WriteConfigurationSmallerTypeCheck(self, project_configuration):
+    """Writes the project configuration smaller type check.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.smaller_type_check:
+      self.WriteLine('\t\t\t\tSmallerTypeCheck="{0:s}"'.format(
+          project_configuration.smaller_type_check))
+
   def _WriteConfigurationType(self, project_configuration):
     """Writes the project configuration type.
 
@@ -332,7 +370,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         project_configuration.output_type))
 
   def _WriteConfigurationWholeProgramOptimization(self, project_configuration):
-    """Writes the project configuration wholde program optimization.
+    """Writes the project configuration whole program optimization.
 
     Args:
       project_configuration (VSProjectConfiguration): configuration.

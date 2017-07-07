@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Tests for the project and solution classes."""
 
+from __future__ import unicode_literals
+
 import unittest
 
 from vstools import resources
@@ -81,7 +83,7 @@ class VSSolutionProjectTest(test_lib.BaseTestCase):
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    solution_project = resources.VSSolutionProject(u'name', u'file', u'guid')
+    solution_project = resources.VSSolutionProject('name', 'file', 'guid')
     self.assertIsNotNone(solution_project)
 
   # TODO: add tests for AddDependency function

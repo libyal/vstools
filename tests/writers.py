@@ -94,72 +94,38 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = (
-        b'\t\t<Configuration'
-        b'\t\t\tName="|"'
-        b'\t\t\tOutputDirectory="$(SolutionDir)$(ConfigurationName)"'
-        b'\t\t\tIntermediateDirectory="$(ConfigurationName)"'
-        b'\t\t\tConfigurationType=""'
-        b'\t\t\tCharacterSet=""'
-        b'\t\t\t>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCPreBuildEventTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCCustomBuildTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCXMLDataGeneratorTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCWebServiceProxyGeneratorTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCMIDLTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCCLCompilerTool"'
-        b'\t\t\t\tAdditionalIncludeDirectories=""'
-        b'\t\t\t\tPreprocessorDefinitions=""'
-        b'\t\t\t\tRuntimeLibrary=""'
-        b'\t\t\t\tWarningLevel=""'
-        b'\t\t\t\tCompileAs=""'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCManagedResourceCompilerTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCResourceCompilerTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCPreLinkEventTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCALinkTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCXDCMakeTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCBscMakeTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCFxCopTool"'
-        b'\t\t\t/>'
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCPostBuildEventTool"'
-        b'\t\t\t/>'
-        b'\t\t</Configuration>')
+    self.assertTrue(output_data.startswith(b'\t\t<Configuration'))
+    self.assertTrue(output_data.endswith(b'\t\t</Configuration>'))
+
+  def testWriteConfigurationAdditionalIncludeDirectories(self):
+    """Tests the _WriteConfigurationAdditionalIncludeDirectories function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationAdditionalIncludeDirectories(
+        project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\t\tAdditionalIncludeDirectories=""'
     self.assertEqual(output_data, expected_output_data)
 
+  # TODO: add tests for _WriteConfigurationBasicRuntimeChecks function.
   # TODO: add tests for _WriteConfigurationCharacterSet function.
   # TODO: add tests for _WriteConfigurationManagedExtensions function.
+  # TODO: add tests for _WriteConfigurationOptimization function.
+  # TODO: add tests for _WriteConfigurationPreprocessorDefinitions function.
+  # TODO: add tests for _WriteConfigurationSmallerTypeCheck function.
   # TODO: add tests for _WriteConfigurationType function.
   # TODO: add tests for _WriteConfigurationWholeProgramOptimization function.
 
   def testWriteHeaderFiles(self):
     """Tests the _WriteHeaderFiles function."""
-    header_files = [u'test.h']
+    header_files = ['test.h']
 
     file_writer = writers.VS2008ProjectFileWriter()
 
@@ -185,7 +151,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
   def testWriteResourceFiles(self):
     """Tests the _WriteResourceFiles function."""
-    resource_files = [u'test.rc']
+    resource_files = ['test.rc']
 
     file_writer = writers.VS2008ProjectFileWriter()
 
@@ -212,7 +178,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
   def testWriteSourceFiles(self):
     """Tests the _WriteSourceFiles function."""
-    source_files = [u'test.c']
+    source_files = ['test.c']
 
     file_writer = writers.VS2008ProjectFileWriter()
 
@@ -287,9 +253,9 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
   def testWriteFiles(self):
     """Tests the WriteFiles function."""
-    header_files = [u'test.h']
-    resource_files = [u'test.rc']
-    source_files = [u'test.c']
+    header_files = ['test.h']
+    resource_files = ['test.rc']
+    source_files = ['test.c']
 
     file_writer = writers.VS2008ProjectFileWriter()
 

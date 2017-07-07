@@ -114,10 +114,74 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     expected_output_data = b'\t\t\t\tAdditionalIncludeDirectories=""'
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteConfigurationBasicRuntimeChecks function.
-  # TODO: add tests for _WriteConfigurationCharacterSet function.
-  # TODO: add tests for _WriteConfigurationManagedExtensions function.
-  # TODO: add tests for _WriteConfigurationOptimization function.
+  def testWriteConfigurationBasicRuntimeChecks(self):
+    """Tests the _WriteConfigurationBasicRuntimeChecks function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.basic_runtime_checks = '3'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationBasicRuntimeChecks(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\t\tBasicRuntimeChecks="3"'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationCharacterSet(self):
+    """Tests the _WriteConfigurationCharacterSet function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.character_set = '1'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationCharacterSet(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\tCharacterSet="1"'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationManagedExtensions(self):
+    """Tests the _WriteConfigurationManagedExtensions function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.managed_extensions = '.test'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationManagedExtensions(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\tManagedExtensions=".test"'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationOptimization(self):
+    """Tests the _WriteConfigurationOptimization function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.optimization = '0'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationOptimization(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\t\tOptimization="0"'
+    self.assertEqual(output_data, expected_output_data)
+
   # TODO: add tests for _WriteConfigurationPreprocessorDefinitions function.
   # TODO: add tests for _WriteConfigurationSmallerTypeCheck function.
   # TODO: add tests for _WriteConfigurationType function.
@@ -470,8 +534,45 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteLibrarianSection function.
-  # TODO: add tests for _WriteLinkerSection function.
+  def testWriteLibrarianSection(self):
+    """Tests the _WriteLibrarianSection function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteLibrarianSection(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'    <Lib>'
+        b'      <OutputFile></OutputFile>'
+        b'      <ModuleDefinitionFile>'
+        b'      </ModuleDefinitionFile>'
+        b'    </Lib>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteLinkerSection(self):
+    """Tests the _WriteLinkerSection function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteLinkerSection(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'    <Link>'
+        b'    </Link>')
+    self.assertEqual(output_data, expected_output_data)
+
   # TODO: add tests for _WriteOutIntDirConditions function.
   # TODO: add tests for _WriteOutIntDirPropertyGroups function.
 
@@ -689,8 +790,44 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
         b'  </ItemDefinitionGroup>')
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for _WriteLibrarianSection function.
-  # TODO: add tests for _WriteLinkerSection function.
+  def testWriteLibrarianSection(self):
+    """Tests the _WriteLibrarianSection function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2012ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteLibrarianSection(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'    <Lib>'
+        b'      <OutputFile></OutputFile>'
+        b'      <ModuleDefinitionFile />'
+        b'    </Lib>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteLinkerSection(self):
+    """Tests the _WriteLinkerSection function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteLinkerSection(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'    <Link>'
+        b'    </Link>')
+    self.assertEqual(output_data, expected_output_data)
+
   # TODO: add tests for _WriteOutIntDirConditions function.
   # TODO: add tests for _WriteOutIntDirPropertyGroups function.
 

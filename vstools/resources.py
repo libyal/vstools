@@ -152,7 +152,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def basic_runtime_checks_string(self):
     """str: basic runtime checks formatted as a string."""
-    basic_runtime_checks = int(self.basic_runtime_checks, 10)
+    try:
+      basic_runtime_checks = int(self.basic_runtime_checks, 10)
+    except ValueError:
+      return ''
+
     if basic_runtime_checks == 0:
       return 'Default'
     elif basic_runtime_checks == 3:
@@ -162,7 +166,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def character_set_string(self):
     """str: character set formatted as a string."""
-    character_set = int(self.character_set, 10)
+    try:
+      character_set = int(self.character_set, 10)
+    except ValueError:
+      return ''
+
     if character_set == 1:
       return 'Unicode'
     return ''
@@ -170,7 +178,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def compile_as_string(self):
     """str: compile formatted as a string."""
-    compile_as = int(self.compile_as, 10)
+    try:
+      compile_as = int(self.compile_as, 10)
+    except ValueError:
+      return ''
+
     if compile_as == 1:
       return 'CompileAsC'
     elif compile_as == 2:
@@ -180,7 +192,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def data_execution_prevention_string(self):
     """str: data execution prevention formatted as a string."""
-    data_execution_prevention = int(self.data_execution_prevention, 10)
+    try:
+      data_execution_prevention = int(self.data_execution_prevention, 10)
+    except ValueError:
+      return ''
+
     if data_execution_prevention == 1:
       return 'false'
     if data_execution_prevention == 2:
@@ -190,7 +206,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def debug_information_format_string(self):
     """str: debug information formatted as a string."""
-    debug_information_format = int(self.debug_information_format, 10)
+    try:
+      debug_information_format = int(self.debug_information_format, 10)
+    except ValueError:
+      return ''
+
     if debug_information_format == 3:
       return 'ProgramDatabase'
     return ''
@@ -198,7 +218,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def enable_comdat_folding_string(self):
     """str: enable comdat folding formatted as a string."""
-    enable_comdat_folding = int(self.enable_comdat_folding, 10)
+    try:
+      enable_comdat_folding = int(self.enable_comdat_folding, 10)
+    except ValueError:
+      return ''
+
     if enable_comdat_folding == 2:
       return 'true'
     return ''
@@ -206,7 +230,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def link_incremental_string(self):
     """str: link incremental formatted as a string."""
-    link_incremental = int(self.link_incremental, 10)
+    try:
+      link_incremental = int(self.link_incremental, 10)
+    except ValueError:
+      return ''
+
     if link_incremental == 1:
       return 'false'
     return ''
@@ -214,7 +242,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def optimize_references_string(self):
     """str: optimize references formatted as a string."""
-    optimize_references = int(self.optimize_references, 10)
+    try:
+      optimize_references = int(self.optimize_references, 10)
+    except ValueError:
+      return ''
+
     if optimize_references == 2:
       return 'true'
     return ''
@@ -222,7 +254,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def optimization_string(self):
     """str: optimization formatted as a string."""
-    optimization = int(self.optimization, 10)
+    try:
+      optimization = int(self.optimization, 10)
+    except ValueError:
+      return ''
+
     if optimization == 0:
       return 'Disabled'
     elif optimization == 2:
@@ -232,7 +268,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def output_type_string(self):
     """str: output type formatted as a string."""
-    output_type = int(self.output_type, 10)
+    try:
+      output_type = int(self.output_type, 10)
+    except ValueError:
+      return ''
+
     if output_type == 1:
       return 'Application'
     elif output_type == 2:
@@ -244,14 +284,22 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def precompiled_header_string(self):
     """str: precompiled header formatted as a string."""
-    _ = int(self.precompiled_header, 10)
+    try:
+      _ = int(self.precompiled_header, 10)
+    except ValueError:
+      return ''
+
     # TODO: do something with precompiled_header.
     return ''
 
   @property
   def randomized_base_address_string(self):
     """str: randomized base address formatted as a string."""
-    randomized_base_address = int(self.randomized_base_address, 10)
+    try:
+      randomized_base_address = int(self.randomized_base_address, 10)
+    except ValueError:
+      return ''
+
     if randomized_base_address == 1:
       return 'false'
     elif randomized_base_address == 2:
@@ -261,7 +309,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def runtime_librarian_string(self):
     """str: runtime librarian formatted as a string."""
-    runtime_library = int(self.runtime_library, 10)
+    try:
+      runtime_library = int(self.runtime_library, 10)
+    except ValueError:
+      return ''
+
     if runtime_library == 2:
       return 'MultiThreadedDLL'
     if runtime_library == 3:
@@ -271,7 +323,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def sub_system_string(self):
     """str: sub system formatted as a string."""
-    sub_system = int(self.sub_system, 10)
+    try:
+      sub_system = int(self.sub_system, 10)
+    except ValueError:
+      return ''
+
     if sub_system == 0:
       return 'NotSet'
     elif sub_system == 1:
@@ -281,7 +337,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def target_machine_string(self):
     """str: target machine formatted as a string."""
-    target_machine = int(self.target_machine, 10)
+    try:
+      target_machine = int(self.target_machine, 10)
+    except ValueError:
+      return ''
+
     if target_machine == 1:
       return 'MachineX86'
     # TODO: assuming here that 2 is x64.
@@ -292,7 +352,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def warning_level_string(self):
     """str: warning level formatted as a string."""
-    warning_level = int(self.warning_level, 10)
+    try:
+      warning_level = int(self.warning_level, 10)
+    except ValueError:
+      return ''
+
     if warning_level == 3:
       return 'Level3'
     elif warning_level == 4:
@@ -302,7 +366,11 @@ class VSProjectConfiguration(VSConfiguration):
   @property
   def whole_program_optimization_string(self):
     """str: whole program optimization formatted as a string."""
-    whole_program_optimization = int(self.whole_program_optimization, 10)
+    try:
+      whole_program_optimization = int(self.whole_program_optimization, 10)
+    except ValueError:
+      return ''
+
     if whole_program_optimization == 0:
       return 'false'
     elif whole_program_optimization == 1:

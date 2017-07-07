@@ -332,10 +332,172 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     self.assertEqual(output_data, expected_output_data)
 
 
-# TODO: add tests for VS2010ProjectFileWriter
-# TODO: add tests for VS2012ProjectFileWriter
-# TODO: add tests for VS2013ProjectFileWriter
-# TODO: add tests for VS2015ProjectFileWriter
+class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2010 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  # TODO: add tests for _WriteClCompileSection function.
+  # TODO: add tests for _WriteConfigurationPropertyGroup function.
+
+  def testWriteHeaderFiles(self):
+    """Tests the _WriteHeaderFiles function."""
+    header_files = ['test.h']
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteHeaderFiles(header_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <ItemGroup>'
+        b'    <ClInclude Include="test.h" />'
+        b'  </ItemGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  # TODO: add tests for _WriteItemDefinitionGroup function.
+  # TODO: add tests for _WriteLibrarianSection function.
+  # TODO: add tests for _WriteLinkerSection function.
+  # TODO: add tests for _WriteOutIntDirConditions function.
+  # TODO: add tests for _WriteOutIntDirPropertyGroups function.
+
+  def testWriteResourceFiles(self):
+    """Tests the _WriteResourceFiles function."""
+    resource_files = ['test.rc']
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteResourceFiles(resource_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <ItemGroup>'
+        b'    <ResourceCompile Include="test.rc" />'
+        b'  </ItemGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteSourceFiles(self):
+    """Tests the _WriteSourceFiles function."""
+    source_files = ['test.c']
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteSourceFiles(source_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'  <ItemGroup>'
+        b'    <ClCompile Include="test.c" />'
+        b'  </ItemGroup>')
+    self.assertEqual(output_data, expected_output_data)
+
+  # TODO: add tests for WriteConfigurations function.
+  # TODO: add tests for WriteDependencies function.
+
+  def testWriteFiles(self):
+    """Tests the WriteFiles function."""
+    header_files = ['test.h']
+    resource_files = ['test.rc']
+    source_files = ['test.c']
+
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteFiles(source_files, header_files, resource_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertTrue(output_data.startswith(b'  <ItemGroup>'))
+    self.assertTrue(output_data.endswith(b'  </ItemGroup>'))
+
+  # TODO: add tests for WriteFooter function.
+
+  def testWriteHeader(self):
+    """Tests the WriteHeader function."""
+    file_writer = writers.VS2010ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteHeader()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\xef\xbb\xbf<?xml version="1.0" encoding="utf-8"?>'
+        b'<Project DefaultTargets="Build" ToolsVersion="4.0" '
+        b'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">')
+    self.assertEqual(output_data, expected_output_data)
+
+  # TODO: add tests for WriteProjectConfigurations function.
+  # TODO: add tests for WriteProjectInformation function.
+
+
+class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2012 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  # TODO: add tests for _WriteClCompileSection function.
+  # TODO: add tests for _WriteConfigurationPropertyGroup function.
+
+  def testWriteConfigurations(self):
+    """Tests the WriteConfigurations function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2012ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteItemDefinitionGroup(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertTrue(output_data.startswith(
+        b'  <ItemDefinitionGroup Condition="'
+        b'\'$(Configuration)|$(Platform)\'==\'|\'">'))
+    self.assertTrue(output_data.endswith(b'  </ItemDefinitionGroup>'))
+
+  # TODO: add tests for _WriteLibrarianSection function.
+  # TODO: add tests for _WriteLinkerSection function.
+  # TODO: add tests for _WriteOutIntDirConditions function.
+  # TODO: add tests for _WriteOutIntDirPropertyGroups function.
+
+
+class VS2013ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2013 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    file_writer = writers.VS2013ProjectFileWriter()
+    self.assertIsNotNone(file_writer)
+
+
+class VS2015ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2015 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  # TODO: add tests for _WriteOutIntDirConditions function.
+
+
 # TODO: add tests for VSSolutionFileWriter
 # TODO: add tests for VS2008SolutionFileWriter
 # TODO: add tests for VS2010SolutionFileWriter

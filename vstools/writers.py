@@ -567,147 +567,6 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     self._tools_version = '4.0'
     self._version = 2010
 
-  def WriteHeader(self):
-    """Writes a file header."""
-    self._file.write('\xef\xbb\xbf')
-    self.WriteLines([
-        '<?xml version="1.0" encoding="utf-8"?>',
-        ('<Project DefaultTargets="Build" ToolsVersion="{0:s}" '
-         'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">').format(
-             self._tools_version)])
-
-  def WriteProjectConfigurations(self, project_configurations):
-    """Writes the project configurations.
-
-    Args:
-      project_configurations (VSConfigurations): configurations.
-    """
-    self.WriteLine('  <ItemGroup Label="ProjectConfigurations">')
-
-    for project_configuration in project_configurations.GetSorted():
-      self.WriteLine('    <ProjectConfiguration Include="{0:s}|{1:s}">'.format(
-          project_configuration.name, project_configuration.platform))
-
-      self.WriteLine('      <Configuration>{0:s}</Configuration>'.format(
-          project_configuration.name))
-
-      self.WriteLine('      <Platform>{0:s}</Platform>'.format(
-          project_configuration.platform))
-
-      self.WriteLine('    </ProjectConfiguration>')
-
-    self.WriteLine('  </ItemGroup>')
-
-  def WriteProjectInformation(self, project_information):
-    """Writes the project information.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-    """
-    self.WriteLine('  <PropertyGroup Label="Globals">')
-
-    self.WriteLine('    <ProjectGuid>{{{0:s}}}</ProjectGuid>'.format(
-        project_information.guid))
-
-    self.WriteLine('    <RootNamespace>{0:s}</RootNamespace>'.format(
-        project_information.root_name_space))
-
-    if project_information.keyword:
-      self.WriteLine('    <Keyword>{0:s}</Keyword>'.format(
-          project_information.keyword))
-
-    self.WriteLine('  </PropertyGroup>')
-
-  def _WriteConfigurationPropertyGroup(self, project_configuration):
-    """Writes the configuration property group.
-
-    Args:
-      project_configuration (VSProjectConfiguration): configuration.
-    """
-    self.WriteLine((
-        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
-            project_configuration.name, project_configuration.platform))
-
-    self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
-        project_configuration.output_type_string))
-
-    if project_configuration.character_set:
-      self.WriteLine('    <CharacterSet>{0:s}</CharacterSet>'.format(
-          project_configuration.character_set_string))
-
-    if project_configuration.managed_extensions == '1':
-      self.WriteLine('    <CLRSupport>true</CLRSupport>')
-
-    if project_configuration.whole_program_optimization:
-      self.WriteLine((
-          '    <WholeProgramOptimization>{0:s}'
-          '</WholeProgramOptimization>').format(
-              project_configuration.whole_program_optimization_string))
-
-    platform_toolset = project_configuration.GetPlatformToolset(self._version)
-    if platform_toolset:
-      self.WriteLine('    <PlatformToolset>{0:s}</PlatformToolset>'.format(
-          platform_toolset))
-
-    self.WriteLine('  </PropertyGroup>')
-
-  def _WriteOutIntDirConditions(
-      self, configuration_name, project_configurations):
-    """Writes the OutDir and IntDir conditions.
-
-    Args:
-      configuration_name (str): name of the configuration.
-      project_configurations (VSConfigurations): configurations.
-    """
-    for configuration_platform in sorted(project_configurations.platforms):
-      project_configuration = project_configurations.GetByIdentifier(
-          configuration_name, configuration_platform)
-
-      self.WriteLine((
-          '    <OutDir Condition="\'$(Configuration)|$(Platform)\'=='
-          '\'{0:s}|{1:s}\'">$(SolutionDir)$(Configuration)\\'
-          '</OutDir>').format(
-              project_configuration.name, project_configuration.platform))
-
-    for configuration_platform in sorted(project_configurations.platforms):
-      project_configuration = project_configurations.GetByIdentifier(
-          configuration_name, configuration_platform)
-
-      self.WriteLine((
-          '    <IntDir Condition="\'$(Configuration)|$(Platform)\'=='
-          '\'{0:s}|{1:s}\'">$(Configuration)\\</IntDir>').format(
-              project_configuration.name, project_configuration.platform))
-
-  def _WriteOutIntDirPropertyGroups(self, project_configurations):
-    """Writes the OutDir and IntDir property groups.
-
-    Args:
-      project_configurations (VSConfigurations): configurations.
-    """
-    self.WriteLines([
-        '  <PropertyGroup>',
-        '    <_ProjectFileVersion>{0:s}</_ProjectFileVersion>'.format(
-            self._project_file_version)])
-
-    # Mimic Visual Studio behavior and output the configurations
-    # in platforms by name.
-    for configuration_name in sorted(project_configurations.names):
-      self._WriteOutIntDirConditions(configuration_name, project_configurations)
-
-      for configuration_platform in sorted(project_configurations.platforms):
-        project_configuration = project_configurations.GetByIdentifier(
-            configuration_name, configuration_platform)
-
-        if project_configuration.link_incremental != '':
-          self.WriteLine((
-              '    <LinkIncremental Condition="\'$(Configuration)|'
-              '$(Platform)\'==\'{0:s}|{1:s}\'">{2:s}</LinkIncremental>').format(
-                  project_configuration.name, project_configuration.platform,
-                  project_configuration.link_incremental_string))
-
-    self.WriteLine('  </PropertyGroup>')
-
   def _WriteClCompileSection(self, project_configuration):
     """Writes the CLCompile section.
 
@@ -814,6 +673,78 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
           project_configuration.compile_as_string))
 
     self.WriteLine('    </ClCompile>')
+
+  def _WriteConfigurationPropertyGroup(self, project_configuration):
+    """Writes the configuration property group.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine((
+        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
+            project_configuration.name, project_configuration.platform))
+
+    self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
+        project_configuration.output_type_string))
+
+    if project_configuration.character_set:
+      self.WriteLine('    <CharacterSet>{0:s}</CharacterSet>'.format(
+          project_configuration.character_set_string))
+
+    if project_configuration.managed_extensions == '1':
+      self.WriteLine('    <CLRSupport>true</CLRSupport>')
+
+    if project_configuration.whole_program_optimization:
+      self.WriteLine((
+          '    <WholeProgramOptimization>{0:s}'
+          '</WholeProgramOptimization>').format(
+              project_configuration.whole_program_optimization_string))
+
+    platform_toolset = project_configuration.GetPlatformToolset(self._version)
+    if platform_toolset:
+      self.WriteLine('    <PlatformToolset>{0:s}</PlatformToolset>'.format(
+          platform_toolset))
+
+    self.WriteLine('  </PropertyGroup>')
+
+  def _WriteHeaderFiles(self, header_files):
+    """Writes the header files.
+
+    Args:
+      header_files (list[str]): header filenames.
+    """
+    if len(header_files) > 0:
+      self.WriteLine('  <ItemGroup>')
+
+      for filename in header_files:
+        self.WriteLine('    <ClInclude Include="{0:s}" />'.format(filename))
+
+      self.WriteLine('  </ItemGroup>')
+
+  def _WriteItemDefinitionGroup(self, project_configuration):
+    """Writes the item definition group.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine((
+        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
+        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
+            project_configuration.name, project_configuration.platform))
+
+    # Write the compiler specific section.
+    self._WriteClCompileSection(project_configuration)
+
+    # Write the librarian specific section.
+    if project_configuration.librarian_output_file:
+      self._WriteLibrarianSection(project_configuration)
+
+    # Write the linker specific section.
+    if project_configuration.linker_values_set:
+      self._WriteLinkerSection(project_configuration)
+
+    self.WriteLine('  </ItemDefinitionGroup>')
 
   def _WriteLibrarianSection(self, project_configuration):
     """Writes the librarian section.
@@ -973,29 +904,90 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
 
     self.WriteLine('    </Link>')
 
-  def _WriteItemDefinitionGroup(self, project_configuration):
-    """Writes the item definition group.
+  def _WriteOutIntDirConditions(
+      self, configuration_name, project_configurations):
+    """Writes the OutDir and IntDir conditions.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      configuration_name (str): name of the configuration.
+      project_configurations (VSConfigurations): configurations.
     """
-    self.WriteLine((
-        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
-        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
-            project_configuration.name, project_configuration.platform))
+    for configuration_platform in sorted(project_configurations.platforms):
+      project_configuration = project_configurations.GetByIdentifier(
+          configuration_name, configuration_platform)
 
-    # Write the compiler specific section.
-    self._WriteClCompileSection(project_configuration)
+      self.WriteLine((
+          '    <OutDir Condition="\'$(Configuration)|$(Platform)\'=='
+          '\'{0:s}|{1:s}\'">$(SolutionDir)$(Configuration)\\'
+          '</OutDir>').format(
+              project_configuration.name, project_configuration.platform))
 
-    # Write the librarian specific section.
-    if project_configuration.librarian_output_file:
-      self._WriteLibrarianSection(project_configuration)
+    for configuration_platform in sorted(project_configurations.platforms):
+      project_configuration = project_configurations.GetByIdentifier(
+          configuration_name, configuration_platform)
 
-    # Write the linker specific section.
-    if project_configuration.linker_values_set:
-      self._WriteLinkerSection(project_configuration)
+      self.WriteLine((
+          '    <IntDir Condition="\'$(Configuration)|$(Platform)\'=='
+          '\'{0:s}|{1:s}\'">$(Configuration)\\</IntDir>').format(
+              project_configuration.name, project_configuration.platform))
 
-    self.WriteLine('  </ItemDefinitionGroup>')
+  def _WriteOutIntDirPropertyGroups(self, project_configurations):
+    """Writes the OutDir and IntDir property groups.
+
+    Args:
+      project_configurations (VSConfigurations): configurations.
+    """
+    self.WriteLines([
+        '  <PropertyGroup>',
+        '    <_ProjectFileVersion>{0:s}</_ProjectFileVersion>'.format(
+            self._project_file_version)])
+
+    # Mimic Visual Studio behavior and output the configurations
+    # in platforms by name.
+    for configuration_name in sorted(project_configurations.names):
+      self._WriteOutIntDirConditions(configuration_name, project_configurations)
+
+      for configuration_platform in sorted(project_configurations.platforms):
+        project_configuration = project_configurations.GetByIdentifier(
+            configuration_name, configuration_platform)
+
+        if project_configuration.link_incremental != '':
+          self.WriteLine((
+              '    <LinkIncremental Condition="\'$(Configuration)|'
+              '$(Platform)\'==\'{0:s}|{1:s}\'">{2:s}</LinkIncremental>').format(
+                  project_configuration.name, project_configuration.platform,
+                  project_configuration.link_incremental_string))
+
+    self.WriteLine('  </PropertyGroup>')
+
+  def _WriteResourceFiles(self, resource_files):
+    """Writes the resource files.
+
+    Args:
+      resource_files (list[str]): resource filenames.
+    """
+    if len(resource_files) > 0:
+      self.WriteLine('  <ItemGroup>')
+
+      for filename in resource_files:
+        self.WriteLine('    <ResourceCompile Include="{0:s}" />'.format(
+            filename))
+
+      self.WriteLine('  </ItemGroup>')
+
+  def _WriteSourceFiles(self, source_files):
+    """Writes the source files.
+
+    Args:
+      source_files (list[str]): source filenames.
+    """
+    if len(source_files) > 0:
+      self.WriteLine('  <ItemGroup>')
+
+      for filename in source_files:
+        self.WriteLine('    <ClCompile Include="{0:s}" />'.format(filename))
+
+      self.WriteLine('  </ItemGroup>')
 
   def WriteConfigurations(self, project_configurations):
     """Writes the configurations.
@@ -1035,61 +1027,6 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     for project_configuration in project_configurations.GetSorted():
       self._WriteItemDefinitionGroup(project_configuration)
 
-  def _WriteSourceFiles(self, source_files):
-    """Writes the source files.
-
-    Args:
-      source_files (list[str]): source filenames.
-    """
-    if len(source_files) > 0:
-      self.WriteLine('  <ItemGroup>')
-
-      for filename in source_files:
-        self.WriteLine('    <ClCompile Include="{0:s}" />'.format(filename))
-
-      self.WriteLine('  </ItemGroup>')
-
-  def _WriteHeaderFiles(self, header_files):
-    """Writes the header files.
-
-    Args:
-      header_files (list[str]): header filenames.
-    """
-    if len(header_files) > 0:
-      self.WriteLine('  <ItemGroup>')
-
-      for filename in header_files:
-        self.WriteLine('    <ClInclude Include="{0:s}" />'.format(filename))
-
-      self.WriteLine('  </ItemGroup>')
-
-  def _WriteResourceFiles(self, resource_files):
-    """Writes the resource files.
-
-    Args:
-      resource_files (list[str]): resource filenames.
-    """
-    if len(resource_files) > 0:
-      self.WriteLine('  <ItemGroup>')
-
-      for filename in resource_files:
-        self.WriteLine('    <ResourceCompile Include="{0:s}" />'.format(
-            filename))
-
-      self.WriteLine('  </ItemGroup>')
-
-  def WriteFiles(self, source_files, header_files, resource_files):
-    """Writes the files.
-
-    Args:
-      source_files (list[str]): source filenames.
-      header_files (list[str]): header filenames.
-      resource_files (list[str]): resource filenames.
-    """
-    self._WriteSourceFiles(source_files)
-    self._WriteHeaderFiles(header_files)
-    self._WriteResourceFiles(resource_files)
-
   def WriteDependencies(self, dependencies, solution_projects_by_guid):
     """Writes the dependencies.
 
@@ -1127,6 +1064,18 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
 
       self.WriteLine('  </ItemGroup>')
 
+  def WriteFiles(self, source_files, header_files, resource_files):
+    """Writes the files.
+
+    Args:
+      source_files (list[str]): source filenames.
+      header_files (list[str]): header filenames.
+      resource_files (list[str]): resource filenames.
+    """
+    self._WriteSourceFiles(source_files)
+    self._WriteHeaderFiles(header_files)
+    self._WriteResourceFiles(resource_files)
+
   def WriteFooter(self):
     """Writes a file footer."""
     self.WriteLines([
@@ -1136,6 +1085,58 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
 
     # The last line has no \r\n.
     self._file.write('</Project>')
+
+  def WriteHeader(self):
+    """Writes a file header."""
+    self._file.write(b'\xef\xbb\xbf')
+
+    self.WriteLines([
+        '<?xml version="1.0" encoding="utf-8"?>',
+        ('<Project DefaultTargets="Build" ToolsVersion="{0:s}" '
+         'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">').format(
+             self._tools_version)])
+
+  def WriteProjectConfigurations(self, project_configurations):
+    """Writes the project configurations.
+
+    Args:
+      project_configurations (VSConfigurations): configurations.
+    """
+    self.WriteLine('  <ItemGroup Label="ProjectConfigurations">')
+
+    for project_configuration in project_configurations.GetSorted():
+      self.WriteLine('    <ProjectConfiguration Include="{0:s}|{1:s}">'.format(
+          project_configuration.name, project_configuration.platform))
+
+      self.WriteLine('      <Configuration>{0:s}</Configuration>'.format(
+          project_configuration.name))
+
+      self.WriteLine('      <Platform>{0:s}</Platform>'.format(
+          project_configuration.platform))
+
+      self.WriteLine('    </ProjectConfiguration>')
+
+    self.WriteLine('  </ItemGroup>')
+
+  def WriteProjectInformation(self, project_information):
+    """Writes the project information.
+
+    Args:
+      project_information (VSProjectInformation): project information.
+    """
+    self.WriteLine('  <PropertyGroup Label="Globals">')
+
+    self.WriteLine('    <ProjectGuid>{{{0:s}}}</ProjectGuid>'.format(
+        project_information.guid))
+
+    self.WriteLine('    <RootNamespace>{0:s}</RootNamespace>'.format(
+        project_information.root_name_space))
+
+    if project_information.keyword:
+      self.WriteLine('    <Keyword>{0:s}</Keyword>'.format(
+          project_information.keyword))
+
+    self.WriteLine('  </PropertyGroup>')
 
 
 class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
@@ -1147,93 +1148,6 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     self._project_file_version = '11.0.61030.0'
     self._tools_version = '4.0'
     self._version = 2012
-
-  def _WriteConfigurationPropertyGroup(self, project_configuration):
-    """Writes the configuration property group.
-
-    Args:
-      project_configuration (VSProjectConfiguration): configuration.
-    """
-    self.WriteLine((
-        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
-            project_configuration.name, project_configuration.platform))
-
-    self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
-        project_configuration.output_type_string))
-
-    platform_toolset = project_configuration.GetPlatformToolset(self._version)
-    if platform_toolset:
-      self.WriteLine('    <PlatformToolset>{0:s}</PlatformToolset>'.format(
-          platform_toolset))
-
-    if project_configuration.character_set:
-      self.WriteLine('    <CharacterSet>{0:s}</CharacterSet>'.format(
-          project_configuration.character_set_string))
-
-    if project_configuration.managed_extensions == '1':
-      self.WriteLine('    <CLRSupport>true</CLRSupport>')
-
-    if project_configuration.whole_program_optimization:
-      self.WriteLine((
-          '    <WholeProgramOptimization>{0:s}'
-          '</WholeProgramOptimization>').format(
-              project_configuration.whole_program_optimization_string))
-
-    self.WriteLine('  </PropertyGroup>')
-
-  def _WriteOutIntDirConditions(
-      self, configuration_name, project_configurations):
-    """Writes the OutDir and IntDir conditions.
-
-    Args:
-      configuration_name (str): name of the configuration.
-      project_configurations (VSConfigurations): configurations.
-    """
-    for configuration_platform in sorted(project_configurations.platforms):
-      project_configuration = project_configurations.GetByIdentifier(
-          configuration_name, configuration_platform)
-
-      self.WriteLines([
-          ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-           '\'{0:s}|{1:s}\'">').format(
-               project_configuration.name, project_configuration.platform),
-          '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
-          '    <IntDir>$(Configuration)\\</IntDir>'])
-
-      if project_configuration.linker_values_set:
-        self.WriteLine('    <LinkIncremental>false</LinkIncremental>')
-
-      self.WriteLine('  </PropertyGroup>')
-
-  def _WriteOutIntDirPropertyGroups(self, project_configurations):
-    """Writes the OutDir and IntDir property groups.
-
-    Args:
-      project_configurations (VSConfigurations): configurations.
-    """
-    self.WriteLines([
-        '  <PropertyGroup>',
-        '    <_ProjectFileVersion>{0:s}</_ProjectFileVersion>'.format(
-            self._project_file_version),
-        '  </PropertyGroup>'])
-
-    # Mimic Visual Studio behavior and output the configurations
-    # in platforms by name.
-    for configuration_name in sorted(project_configurations.names):
-      self._WriteOutIntDirConditions(configuration_name, project_configurations)
-
-      # for configuration_platform in sorted(project_configurations.platforms):
-      #   project_configuration = project_configurations.GetByIdentifier(
-      #       configuration_name, configuration_platform)
-
-      #   if project_configuration.link_incremental != '':
-      #     self.WriteLine((
-      #         '    <LinkIncremental Condition="\'$(Configuration)|'
-      #         '$(Platform)\'==\'{0:s}|{1:s}\'">{2:s}'
-      #         '</LinkIncremental>').format(
-      #             project_configuration.name, project_configuration.platform,
-      #             project_configuration.link_incremental_string))
 
   def _WriteClCompileSection(self, project_configuration):
     """Writes the CLCompile section.
@@ -1331,6 +1245,64 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
           project_configuration.compile_as_string))
 
     self.WriteLine('    </ClCompile>')
+
+  def _WriteConfigurationPropertyGroup(self, project_configuration):
+    """Writes the configuration property group.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine((
+        '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+        '\'{0:s}|{1:s}\'" Label="Configuration">').format(
+            project_configuration.name, project_configuration.platform))
+
+    self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
+        project_configuration.output_type_string))
+
+    platform_toolset = project_configuration.GetPlatformToolset(self._version)
+    if platform_toolset:
+      self.WriteLine('    <PlatformToolset>{0:s}</PlatformToolset>'.format(
+          platform_toolset))
+
+    if project_configuration.character_set:
+      self.WriteLine('    <CharacterSet>{0:s}</CharacterSet>'.format(
+          project_configuration.character_set_string))
+
+    if project_configuration.managed_extensions == '1':
+      self.WriteLine('    <CLRSupport>true</CLRSupport>')
+
+    if project_configuration.whole_program_optimization:
+      self.WriteLine((
+          '    <WholeProgramOptimization>{0:s}'
+          '</WholeProgramOptimization>').format(
+              project_configuration.whole_program_optimization_string))
+
+    self.WriteLine('  </PropertyGroup>')
+
+  def _WriteItemDefinitionGroup(self, project_configuration):
+    """Writes the item definition group.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine((
+        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
+        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
+            project_configuration.name, project_configuration.platform))
+
+    # Write the compiler specific section.
+    self._WriteClCompileSection(project_configuration)
+
+    # Write the librarian specific section.
+    if project_configuration.librarian_output_file:
+      self._WriteLibrarianSection(project_configuration)
+
+    # Write the linker specific section.
+    if project_configuration.linker_values_set:
+      self._WriteLinkerSection(project_configuration)
+
+    self.WriteLine('  </ItemDefinitionGroup>')
 
   def _WriteLibrarianSection(self, project_configuration):
     """Writes the librarian section.
@@ -1484,29 +1456,58 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
 
     self.WriteLine('    </Link>')
 
-  def _WriteItemDefinitionGroup(self, project_configuration):
-    """Writes the item definition group.
+  def _WriteOutIntDirConditions(
+      self, configuration_name, project_configurations):
+    """Writes the OutDir and IntDir conditions.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      configuration_name (str): name of the configuration.
+      project_configurations (VSConfigurations): configurations.
     """
-    self.WriteLine((
-        '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
-        '$(Platform)\'==\'{0:s}|{1:s}\'">').format(
-            project_configuration.name, project_configuration.platform))
+    for configuration_platform in sorted(project_configurations.platforms):
+      project_configuration = project_configurations.GetByIdentifier(
+          configuration_name, configuration_platform)
 
-    # Write the compiler specific section.
-    self._WriteClCompileSection(project_configuration)
+      self.WriteLines([
+          ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+           '\'{0:s}|{1:s}\'">').format(
+               project_configuration.name, project_configuration.platform),
+          '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
+          '    <IntDir>$(Configuration)\\</IntDir>'])
 
-    # Write the librarian specific section.
-    if project_configuration.librarian_output_file:
-      self._WriteLibrarianSection(project_configuration)
+      if project_configuration.linker_values_set:
+        self.WriteLine('    <LinkIncremental>false</LinkIncremental>')
 
-    # Write the linker specific section.
-    if project_configuration.linker_values_set:
-      self._WriteLinkerSection(project_configuration)
+      self.WriteLine('  </PropertyGroup>')
 
-    self.WriteLine('  </ItemDefinitionGroup>')
+  def _WriteOutIntDirPropertyGroups(self, project_configurations):
+    """Writes the OutDir and IntDir property groups.
+
+    Args:
+      project_configurations (VSConfigurations): configurations.
+    """
+    self.WriteLines([
+        '  <PropertyGroup>',
+        '    <_ProjectFileVersion>{0:s}</_ProjectFileVersion>'.format(
+            self._project_file_version),
+        '  </PropertyGroup>'])
+
+    # Mimic Visual Studio behavior and output the configurations
+    # in platforms by name.
+    for configuration_name in sorted(project_configurations.names):
+      self._WriteOutIntDirConditions(configuration_name, project_configurations)
+
+      # for configuration_platform in sorted(project_configurations.platforms):
+      #   project_configuration = project_configurations.GetByIdentifier(
+      #       configuration_name, configuration_platform)
+
+      #   if project_configuration.link_incremental != '':
+      #     self.WriteLine((
+      #         '    <LinkIncremental Condition="\'$(Configuration)|'
+      #         '$(Platform)\'==\'{0:s}|{1:s}\'">{2:s}'
+      #         '</LinkIncremental>').format(
+      #             project_configuration.name, project_configuration.platform,
+      #             project_configuration.link_incremental_string))
 
 
 class VS2013ProjectFileWriter(VS2010ProjectFileWriter):

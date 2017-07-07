@@ -93,19 +93,10 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\tOutputDirectory="$(SolutionDir)$(ConfigurationName)"',
         '\t\t\tIntermediateDirectory="$(ConfigurationName)"'])
 
-    self.WriteLine('\t\t\tConfigurationType="{0:s}"'.format(
-        project_configuration.output_type))
-
-    self.WriteLine('\t\t\tCharacterSet="{0:s}"'.format(
-        project_configuration.character_set))
-
-    if project_configuration.managed_extensions:
-      self.WriteLine('\t\t\tManagedExtensions="{0:s}"'.format(
-          project_configuration.managed_extensions))
-
-    if project_configuration.whole_program_optimization:
-      self.WriteLine('\t\t\tWholeProgramOptimization="{0:s}"'.format(
-          project_configuration.whole_program_optimization))
+    self._WriteConfigurationType(project_configuration)
+    self._WriteConfigurationCharacterSet(project_configuration)
+    self._WriteConfigurationManagedExtensions(project_configuration)
+    self._WriteConfigurationWholeProgramOptimization(project_configuration)
 
     self.WriteLine('\t\t\t>')
 
@@ -311,6 +302,44 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t/>'])
 
     self.WriteLine('\t\t</Configuration>')
+
+  def _WriteConfigurationCharacterSet(self, project_configuration):
+    """Writes the project configuration character set.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\tCharacterSet="{0:s}"'.format(
+        project_configuration.character_set))
+
+  def _WriteConfigurationManagedExtensions(self, project_configuration):
+    """Writes the project configuration managed extensions.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.managed_extensions:
+      self.WriteLine('\t\t\tManagedExtensions="{0:s}"'.format(
+          project_configuration.managed_extensions))
+
+  def _WriteConfigurationType(self, project_configuration):
+    """Writes the project configuration type.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\tConfigurationType="{0:s}"'.format(
+        project_configuration.output_type))
+
+  def _WriteConfigurationWholeProgramOptimization(self, project_configuration):
+    """Writes the project configuration wholde program optimization.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.whole_program_optimization:
+      self.WriteLine('\t\t\tWholeProgramOptimization="{0:s}"'.format(
+          project_configuration.whole_program_optimization))
 
   def _WriteHeaderFiles(self, header_files):
     """Writes the header files.

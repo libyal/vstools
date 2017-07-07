@@ -2,6 +2,7 @@
 """Tests for the project and solution file writer classes."""
 
 from __future__ import unicode_literals
+
 import io
 import os
 import unittest
@@ -80,10 +81,160 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  # TODO: add tests for _WriteConfiguration function.
-  # TODO: add tests for _WriteHeaderFiles function.
-  # TODO: add tests for _WriteResourceFiles function.
-  # TODO: add tests for _WriteSourceFiles function.
+  def testWriteConfiguration(self):
+    """Tests the _WriteConfiguration function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfiguration(project_configuration)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\t\t<Configuration'
+        b'\t\t\tName="|"'
+        b'\t\t\tOutputDirectory="$(SolutionDir)$(ConfigurationName)"'
+        b'\t\t\tIntermediateDirectory="$(ConfigurationName)"'
+        b'\t\t\tConfigurationType=""'
+        b'\t\t\tCharacterSet=""'
+        b'\t\t\t>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCPreBuildEventTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCCustomBuildTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCXMLDataGeneratorTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCWebServiceProxyGeneratorTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCMIDLTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCCLCompilerTool"'
+        b'\t\t\t\tAdditionalIncludeDirectories=""'
+        b'\t\t\t\tPreprocessorDefinitions=""'
+        b'\t\t\t\tRuntimeLibrary=""'
+        b'\t\t\t\tWarningLevel=""'
+        b'\t\t\t\tCompileAs=""'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCManagedResourceCompilerTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCResourceCompilerTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCPreLinkEventTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCALinkTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCXDCMakeTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCBscMakeTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCFxCopTool"'
+        b'\t\t\t/>'
+        b'\t\t\t<Tool'
+        b'\t\t\t\tName="VCPostBuildEventTool"'
+        b'\t\t\t/>'
+        b'\t\t</Configuration>')
+    self.assertEqual(output_data, expected_output_data)
+
+  # TODO: add tests for _WriteConfigurationCharacterSet function.
+  # TODO: add tests for _WriteConfigurationManagedExtensions function.
+  # TODO: add tests for _WriteConfigurationType function.
+  # TODO: add tests for _WriteConfigurationWholeProgramOptimization function.
+
+  def testWriteHeaderFiles(self):
+    """Tests the _WriteHeaderFiles function."""
+    header_files = [u'test.h']
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteHeaderFiles(header_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\t\t<Filter'
+        b'\t\t\tName="Header Files"'
+        b'\t\t\tFilter="h;hpp;hxx;hm;inl;inc;xsd"'
+        b'\t\t\tUniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"'
+        b'\t\t\t>'
+        b'\t\t\t<File'
+        b'\t\t\t\tRelativePath="test.h"'
+        b'\t\t\t\t>'
+        b'\t\t\t</File>'
+        b'\t\t</Filter>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteResourceFiles(self):
+    """Tests the _WriteResourceFiles function."""
+    resource_files = [u'test.rc']
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteResourceFiles(resource_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\t\t<Filter'
+        b'\t\t\tName="Resource Files"'
+        b'\t\t\tFilter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;'
+        b'resx;tiff;tif;png;wav"'
+        b'\t\t\tUniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"'
+        b'\t\t\t>'
+        b'\t\t\t<File'
+        b'\t\t\t\tRelativePath="test.rc"'
+        b'\t\t\t\t>'
+        b'\t\t\t</File>'
+        b'\t\t</Filter>')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteSourceFiles(self):
+    """Tests the _WriteSourceFiles function."""
+    source_files = [u'test.c']
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteSourceFiles(source_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\t\t<Filter'
+        b'\t\t\tName="Source Files"'
+        b'\t\t\tFilter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"'
+        b'\t\t\tUniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"'
+        b'\t\t\t>'
+        b'\t\t\t<File'
+        b'\t\t\t\tRelativePath="test.c"'
+        b'\t\t\t\t>'
+        b'\t\t\t</File>'
+        b'\t\t</Filter>')
+    self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeader(self):
     """Tests the WriteHeader function."""
@@ -95,12 +246,65 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
+
     expected_output_data = b'<?xml version="1.0" encoding="Windows-1252"?>'
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for WriteConfigurations function.
-  # TODO: add tests for WriteDependencies function.
-  # TODO: add tests for WriteFiles function.
+  def testWriteConfigurations(self):
+    """Tests the WriteConfigurations function."""
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteConfigurations(project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertTrue(output_data.startswith(b'\t<Configurations>'))
+    self.assertTrue(output_data.endswith(
+        b'\t</Configurations>'
+        b'\t<References>'
+        b'\t</References>'))
+
+  def testWriteDependencies(self):
+    """Tests the WriteDependencies function."""
+    dependencies = []
+    solution_projects_by_guid = {}
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteDependencies(dependencies, solution_projects_by_guid)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
+
+  def testWriteFiles(self):
+    """Tests the WriteFiles function."""
+    header_files = [u'test.h']
+    resource_files = [u'test.rc']
+    source_files = [u'test.c']
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteFiles(source_files, header_files, resource_files)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertTrue(output_data.startswith(b'\t<Files>'))
+    self.assertTrue(output_data.endswith(
+        b'\t</Files>'
+        b'\t<Globals>'
+        b'\t</Globals>'))
 
   def testWriteFooter(self):
     """Tests the WriteFooter function."""
@@ -115,8 +319,51 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     expected_output_data = b'</VisualStudioProject>'
     self.assertEqual(output_data, expected_output_data)
 
-  # TODO: add tests for WriteProjectConfigurations function.
-  # TODO: add tests for WriteProjectInformation function.
+  def testWriteProjectConfigurations(self):
+    """Tests the WriteProjectConfigurations function."""
+    project_configurations = resources.VSConfigurations()
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteProjectConfigurations(project_configurations)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    self.assertEqual(output_data, b'')
+
+  def testWriteProjectInformation(self):
+    """Tests the WriteProjectInformation function."""
+    project_information = resources.VSProjectInformation()
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteProjectInformation(project_information)
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'<VisualStudioProject'
+        b'\tProjectType="Visual C++"'
+        b'\tVersion="9,00"'
+        b'\tName=""'
+        b'\tProjectGUID="{}"'
+        b'\tRootNamespace=""'
+        b'\tTargetFrameworkVersion="131072"'
+        b'\t>'
+        b'\t<Platforms>'
+        b'\t\t<Platform'
+        b'\t\t\tName="Win32"'
+        b'\t\t/>'
+        b'\t</Platforms>'
+        b'\t<ToolFiles>'
+        b'\t</ToolFiles>')
+    self.assertEqual(output_data, expected_output_data)
 
 
 # TODO: add tests for VS2010ProjectFileWriter

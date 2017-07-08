@@ -15,6 +15,8 @@ from tests import test_lib
 class FileReaderTest(test_lib.BaseTestCase):
   """File reader tests."""
 
+  # pylint: disable=protected-access
+
   def testInitialize(self):
     """Tests the __init__ function."""
     file_reader = readers.FileReader()
@@ -28,10 +30,11 @@ class FileReaderTest(test_lib.BaseTestCase):
     path = self._GetTestFilePath(['2008.vcproj'])
     file_reader.Open(path)
 
-    line = file_reader._ReadLine()
+    file_reader._ReadLine()
 
-    line = file_reader._ReadLine(look_ahead=True)
+    line_look_ahead = file_reader._ReadLine(look_ahead=True)
     line = file_reader._ReadLine()
+    self.assertEqual(line, line_look_ahead)
 
     file_reader.Close()
 
@@ -49,6 +52,8 @@ class FileReaderTest(test_lib.BaseTestCase):
 class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
   """Visual Studio 2008 project file reader tests."""
 
+  # pylint: disable=protected-access
+
   def testParseToolCompilerConfiguration(self):
     """Tests the _ParseToolCompilerConfiguration function."""
     project_configuration = resources.VSProjectConfiguration()
@@ -60,7 +65,7 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     # TODO: tests for EnableIntrinsicFunctions=
 
-    line = 'AdditionalIncludeDirectories="..\..\include;..\..\common"'
+    line = 'AdditionalIncludeDirectories="..\\..\\include;..\\..\\common"'
     file_reader._ParseToolCompilerConfiguration(project_configuration, line)
 
     line = 'PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"'
@@ -100,7 +105,7 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     # TODO: tests for OutputDirectory=
 
-    line = 'OutputFile="$(OutDir)\$(ProjectName).dll"'
+    line = 'OutputFile="$(OutDir)\\$(ProjectName).dll"'
     file_reader._ParseToolLinkerConfiguration(project_configuration, line)
 
     # TODO: tests for AdditionalDependencies=
@@ -121,9 +126,53 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     # TODO: add more tests.
 
-  # TODO: add tests for _ReadConfiguration function.
+  def testReadConfiguration(self):
+    """Tests the _ReadConfiguration function."""
+    test_data = [
+        '                        Name="Release|Win32"',
+        ('                        OutputDirectory='
+         '"$(SolutionDir)$(ConfigurationName)"'),
+        '                        IntermediateDirectory="$(ConfigurationName)"',
+        '                        ConfigurationType="2"',
+        '                        CharacterSet="1"',
+        '                        >',
+        '                </Configuration>']
+
+    file_reader = readers.VS2008ProjectFileReader()
+
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
+    project_configuration = file_reader._ReadConfiguration('<Configuration')
+
+    self.assertIsNotNone(project_configuration)
+
   # TODO: add tests for _ReadConfigurations function.
-  # TODO: add tests for _ReadFiles function.
+
+  def testReadFiles(self):
+    """Tests the _ReadFiles function."""
+    test_data = [
+        '        <Files>',
+        '                <Filter',
+        '                        Name="Source Files"',
+        ('                        Filter='
+         '"cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"'),
+        ('                        UniqueIdentifier='
+         '"{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"'),
+        '                        >',
+        '                        <File',
+        '                                RelativePath="test.c"',
+        '                                >',
+        '                        </File>',
+        '                </Filter>',
+        '        </Files>']
+
+    project_information = resources.VSProjectInformation()
+
+    file_reader = readers.VS2008ProjectFileReader()
+
+    file_data = '\n'.join(test_data).encode('utf-8')
+    file_reader._file = io.BytesIO(file_data)
+    file_reader._ReadFiles(project_information)
 
   def testReadProjectInformation(self):
     """Tests the _ReadProjectInformation function."""
@@ -217,6 +266,8 @@ class VSSolutionFileReaderTest(test_lib.BaseTestCase):
 class VS2008SolutionFileReaderTest(test_lib.BaseTestCase):
   """Visual Studio 2008 solution file reader tests."""
 
+  # pylint: disable=protected-access
+
   def testCheckFormatVersion(self):
     """Tests the _CheckFormatVersion function."""
     file_reader = readers.VS2008SolutionFileReader()
@@ -233,6 +284,8 @@ class VS2008SolutionFileReaderTest(test_lib.BaseTestCase):
 class VS2010SolutionFileReaderTest(test_lib.BaseTestCase):
   """Visual Studio 2010 solution file reader tests."""
 
+  # pylint: disable=protected-access
+
   def testCheckFormatVersion(self):
     """Tests the _CheckFormatVersion function."""
     file_reader = readers.VS2010SolutionFileReader()
@@ -248,6 +301,8 @@ class VS2010SolutionFileReaderTest(test_lib.BaseTestCase):
 
 class VS2012SolutionFileReaderTest(test_lib.BaseTestCase):
   """Visual Studio 2012 solution file reader tests."""
+
+  # pylint: disable=protected-access
 
   def testCheckFormatVersion(self):
     """Tests the _CheckFormatVersion function."""

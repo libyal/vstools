@@ -552,21 +552,25 @@ class VS2008ProjectFileReader(VSProjectFileReader):
 
 class VS2010ProjectFileReader(VSProjectFileReader):
   """Visual Studio 2010 project file reader."""
+
   # TODO: implement.
 
 
 class VS2012ProjectFileReader(VSProjectFileReader):
   """Visual Studio 2012 project file reader."""
+
   # TODO: implement.
 
 
 class VS2013ProjectFileReader(VSProjectFileReader):
   """Visual Studio 2013 project file reader."""
+
   # TODO: implement.
 
 
 class VS2015ProjectFileReader(VSProjectFileReader):
   """Visual Studio 2015 project file reader."""
+
   # TODO: implement.
 
 

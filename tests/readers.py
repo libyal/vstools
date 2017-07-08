@@ -67,77 +67,31 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  def testParseToolCompilerConfiguration(self):
-    """Tests the _ParseToolCompilerConfiguration function."""
+  # TODO: add tests for _ParseConfigurationOption function.
+
+  def testParseConfigurationOption(self):
+    """Tests the _ParseConfigurationOption function."""
     project_configuration = resources.VSProjectConfiguration()
 
     file_reader = readers.VS2008ProjectFileReader()
 
     line = 'Optimization="0"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
+    file_reader._ParseConfigurationOption(
+        project_configuration, 'Optimization', 'optimization', line)
+    self.assertEqual(project_configuration.optimization, '0')
 
-    # TODO: tests for EnableIntrinsicFunctions=
-
-    line = 'AdditionalIncludeDirectories="..\\..\\include;..\\..\\common"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    line = 'PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    line = 'BasicRuntimeChecks="3"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    line = 'SmallerTypeCheck="true"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    line = 'RuntimeLibrary="3"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    # TODO: tests for EnableFunctionLevelLinking=
-    # TODO: tests for UsePrecompiledHeader=
-
-    line = 'WarningLevel="4"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    # TODO: tests for Detect64BitPortabilityProblems=
-    # TODO: tests for WarnAsError=
-
-    line = 'DebugInformationFormat="3"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-    line = 'CompileAs="1"'
-    file_reader._ParseToolCompilerConfiguration(project_configuration, line)
-
-  # TODO: add tests for _ParseToolLibrarianConfiguration function.
-
-  def testParseToolLinkerConfiguration(self):
-    """Tests the _ParseToolLinkerConfiguration function."""
+  def testParseConfigurationOptions(self):
+    """Tests the _ParseConfigurationOptions function."""
     project_configuration = resources.VSProjectConfiguration()
 
     file_reader = readers.VS2008ProjectFileReader()
 
-    # TODO: tests for OutputDirectory=
+    configuration_options = {'Optimization': 'optimization'}
 
-    line = 'OutputFile="$(OutDir)\\$(ProjectName).dll"'
-    file_reader._ParseToolLinkerConfiguration(project_configuration, line)
-
-    # TODO: tests for AdditionalDependencies=
-    # TODO: tests for LinkIncremental=
-    # TODO: tests for ModuleDefinitionFile=
-
-    line = 'AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"'
-    file_reader._ParseToolLinkerConfiguration(project_configuration, line)
-
-    line = 'GenerateDebugInformation="true"'
-    file_reader._ParseToolLinkerConfiguration(project_configuration, line)
-
-    # TODO: tests for SubSystem=
-    # TODO: tests for OptimizeReferences=
-
-    line = 'RandomizedBaseAddress="1"'
-    file_reader._ParseToolLinkerConfiguration(project_configuration, line)
-
-    # TODO: add more tests.
+    line = 'Optimization="0"'
+    file_reader._ParseConfigurationOptions(
+        project_configuration, configuration_options, line)
+    self.assertEqual(project_configuration.optimization, '0')
 
   def testReadConfiguration(self):
     """Tests the _ReadConfiguration function."""
@@ -158,6 +112,9 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
     project_configuration = file_reader._ReadConfiguration('<Configuration')
 
     self.assertIsNotNone(project_configuration)
+
+    self.assertEqual(project_configuration.character_set, '1')
+    self.assertEqual(project_configuration.output_type, '2')
 
   # TODO: add tests for _ReadConfigurations function.
 

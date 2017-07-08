@@ -83,214 +83,87 @@ class VSProjectFileReader(FileReader):
 class VS2008ProjectFileReader(VSProjectFileReader):
   """Visual Studio 2008 project file reader."""
 
-  def _ParseToolCompilerConfiguration(self, project_configuration, line):
-    """Parses compiler specific configuration.
+  _CONFIGURATION_OPTIONS = {
+      'CharacterSet': 'character_set',
+      'ConfigurationType': 'output_type',
+      'ManagedExtensions': 'managed_extensions',
+      'WholeProgramOptimization': 'whole_program_optimization',
+  }
+
+  _TOOL_COMPILER_CONFIGURATION_OPTIONS = {
+      'AdditionalIncludeDirectories': 'include_directories',
+      'BasicRuntimeChecks': 'basic_runtime_checks',
+      'CompileAs': 'compile_as',
+      'DebugInformationFormat': 'debug_information_format',
+      'Detect64BitPortabilityProblems': 'detect_64bit_portability_problems',
+      'EnableFunctionLevelLinking': 'enable_function_level_linking',
+      'EnableIntrinsicFunctions': 'enable_intrinsic_functions',
+      'Optimization': 'optimization',
+      'PreprocessorDefinitions': 'preprocessor_definitions',
+      'RuntimeLibrary': 'runtime_library',
+      'SmallerTypeCheck': 'smaller_type_check',
+      'UsePrecompiledHeader': 'precompiled_header',
+      'WarnAsError': 'warning_as_error',
+      'WarningLevel': 'warning_level',
+  }
+
+  _TOOL_LIBRARIAN_CONFIGURATION_OPTIONS = {
+      'IgnoreAllDefaultLibraries': 'librarian_ignore_defaults',
+      'OutputFile': 'librarian_output_file',
+  }
+
+  _TOOL_LINKER_CONFIGURATION_OPTIONS = {
+      'AdditionalDependencies': 'additional_dependencies',
+      'AdditionalLibraryDirectories': 'library_directories',
+      'DataExecutionPrevention': 'data_execution_prevention',
+      'EnableCOMDATFolding': 'enable_comdat_folding',
+      'FixedBaseAddress': 'fixed_base_address',
+      'GenerateDebugInformation': 'generate_debug_information',
+      'ImportLibrary': 'linker_values_set',
+      'LinkIncremental': 'link_incremental',
+      'ModuleDefinitionFile': 'module_definition_file',
+      'OptimizeReferences': 'optimize_references',
+      'OutputDirectory': 'linker_output_directory',
+      'OutputFile': 'linker_output_file',
+      'RandomizedBaseAddress': 'randomized_base_address',
+      'SubSystem': 'sub_system',
+      'TargetMachine': 'target_machine',
+  }
+
+  def _ParseConfigurationOption(
+        self, project_configuration, definition, name, line):
+    """Parses a configuration option.
 
     Args:
       project_information (VSProjectInformation): project information.
-      line (str): line that contains the start of the configuration section.
+      definition (str): definition of the configuration value in the line.
+      name (str): name of the configuration value in the project information.
+      line (str): line that contains the configuration value.
     """
-    if line.startswith('Optimization='):
-      values = re.findall('Optimization="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.optimization = values[0]
+    regex_pattern = '{0:s}="([^"]*)"'.format(definition)
+    values = re.findall(regex_pattern, line)
+    if len(values) == 1:
+      setattr(project_configuration, name, values[0])
 
-    elif line.startswith('EnableIntrinsicFunctions='):
-      values = re.findall(
-          'EnableIntrinsicFunctions="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.enable_intrinsic_functions = values[0]
-
-    elif line.startswith('AdditionalIncludeDirectories='):
-      values = re.findall(
-          'AdditionalIncludeDirectories="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.include_directories = values[0]
-
-    elif line.startswith('PreprocessorDefinitions='):
-      values = re.findall(
-          'PreprocessorDefinitions="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.preprocessor_definitions = values[0]
-
-    elif line.startswith('BasicRuntimeChecks='):
-      values = re.findall('BasicRuntimeChecks="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.basic_runtime_checks = values[0]
-
-    elif line.startswith('SmallerTypeCheck='):
-      values = re.findall('SmallerTypeCheck="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.smaller_type_check = values[0]
-
-    elif line.startswith('RuntimeLibrary='):
-      values = re.findall('RuntimeLibrary="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.runtime_library = values[0]
-
-    elif line.startswith('EnableFunctionLevelLinking='):
-      values = re.findall('EnableFunctionLevelLinking="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.enable_function_level_linking = values[0]
-
-    elif line.startswith('UsePrecompiledHeader='):
-      values = re.findall('UsePrecompiledHeader="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.precompiled_header = values[0]
-
-    elif line.startswith('WarningLevel='):
-      values = re.findall('WarningLevel="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.warning_level = values[0]
-
-    elif line.startswith('Detect64BitPortabilityProblems='):
-      values = re.findall(
-          'Detect64BitPortabilityProblems="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.detect_64bit_portability_problems = (
-            values[0])
-
-    elif line.startswith('WarnAsError='):
-      values = re.findall('WarnAsError="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.warning_as_error = values[0]
-
-    elif line.startswith('DebugInformationFormat='):
-      values = re.findall(
-          'DebugInformationFormat="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.debug_information_format = values[0]
-
-    elif line.startswith('CompileAs='):
-      values = re.findall('CompileAs="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.compile_as = values[0]
-
-  def _ParseToolLibrarianConfiguration(self, project_configuration, line):
-    """Parses librarian specific configuration.
+  def _ParseConfigurationOptions(
+        self, project_configuration, configuration_options, line):
+    """Parses configuration options.
 
     Args:
       project_information (VSProjectInformation): project information.
-      line (str): line that contains the start of the configuration section.
+      configuration_options (dict[str, str]): configuration options defined
+          as a name per definition.
+      line (str): line that contains the configuration value.
     """
-    if line.startswith('OutputFile='):
-      values = re.findall('OutputFile="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.librarian_output_file = values[0]
+    configuration_definition, _, _ = line.partition('=')
 
-    elif line.startswith('IgnoreAllDefaultLibraries='):
-      values = re.findall(
-          'IgnoreAllDefaultLibraries="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.librarian_ignore_defaults = values[0]
+    configuration_value = configuration_options.get(
+        configuration_definition, None)
 
-  def _ParseToolLinkerConfiguration(self, project_configuration, line):
-    """Parses linker specific configuration.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-      line (str): line that contains the start of the configuration section.
-    """
-    if line.startswith('OutputDirectory='):
-      project_configuration.linker_values_set = True
-      values = re.findall('OutputDirectory="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.linker_output_directory = values[0]
-
-    elif line.startswith('OutputFile='):
-      project_configuration.linker_values_set = True
-      values = re.findall('OutputFile="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.linker_output_file = values[0]
-
-    elif line.startswith('AdditionalDependencies='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'AdditionalDependencies="([^"]*)"', line)
-      if len(values) == 1:
-        values = values[0].split(' ')
-        project_configuration.additional_dependencies = values
-
-    elif line.startswith('LinkIncremental='):
-      project_configuration.linker_values_set = True
-      values = re.findall('LinkIncremental="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.link_incremental = values[0]
-
-    elif line.startswith('ModuleDefinitionFile='):
-      project_configuration.linker_values_set = True
-      values = re.findall('ModuleDefinitionFile="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.module_definition_file = values[0]
-
-    elif line.startswith('AdditionalLibraryDirectories='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'AdditionalLibraryDirectories="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.library_directories = values[0]
-
-    elif line.startswith('GenerateDebugInformation='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'GenerateDebugInformation="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.generate_debug_information = values[0]
-
-    elif line.startswith('SubSystem='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'SubSystem="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.sub_system = values[0]
-
-    elif line.startswith('OptimizeReferences='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'OptimizeReferences="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.optimize_references = values[0]
-
-    elif line.startswith('RandomizedBaseAddress='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'RandomizedBaseAddress="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.randomized_base_address = values[0]
-
-    elif line.startswith('FixedBaseAddress='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'FixedBaseAddress="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.fixed_base_address = values[0]
-
-    elif line.startswith('EnableCOMDATFolding='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'EnableCOMDATFolding="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.enable_comdat_folding = values[0]
-
-    elif line.startswith('DataExecutionPrevention='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'DataExecutionPrevention="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.data_execution_prevention = values[0]
-
-    elif line.startswith('ImportLibrary='):
-      project_configuration.linker_values_set = True
-      values = re.findall(
-          'ImportLibrary="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.import_library = values[0]
-
-    elif line.startswith('TargetMachine='):
-      project_configuration.linker_values_set = True
-      values = re.findall('TargetMachine="([^"]*)"', line)
-      if len(values) == 1:
-        project_configuration.target_machine = values[0]
+    if configuration_value:
+      self._ParseConfigurationOption(
+          project_configuration, configuration_definition, configuration_value,
+          line)
 
   def _ReadConfiguration(self, line):
     """Reads a configuration.
@@ -326,13 +199,19 @@ class VS2008ProjectFileReader(VSProjectFileReader):
           found_tool_linker = False
 
         elif found_tool_compiler:
-          self._ParseToolCompilerConfiguration(project_configuration, line)
+          self._ParseConfigurationOptions(
+              project_configuration, self._TOOL_COMPILER_CONFIGURATION_OPTIONS,
+              line)
 
         elif found_tool_librarian:
-          self._ParseToolLibrarianConfiguration(project_configuration, line)
+          self._ParseConfigurationOptions(
+              project_configuration, self._TOOL_LIBRARIAN_CONFIGURATION_OPTIONS,
+              line)
 
         elif found_tool_linker:
-          self._ParseToolLinkerConfiguration(project_configuration, line)
+          self._ParseConfigurationOptions(
+              project_configuration, self._TOOL_LINKER_CONFIGURATION_OPTIONS,
+              line)
 
         elif line.startswith('Name="VCCLCompilerTool"'):
           found_tool_compiler = True
@@ -353,25 +232,9 @@ class VS2008ProjectFileReader(VSProjectFileReader):
           project_configuration.name = values[0]
           project_configuration.platform = values[1]
 
-      elif line.startswith('ConfigurationType='):
-        values = re.findall('ConfigurationType="([^"]*)"', line)
-        if len(values) == 1:
-          project_configuration.output_type = values[0]
-
-      elif line.startswith('CharacterSet='):
-        values = re.findall('CharacterSet="([^"]*)"', line)
-        if len(values) == 1:
-          project_configuration.character_set = values[0]
-
-      elif line.startswith('ManagedExtensions='):
-        values = re.findall('ManagedExtensions="([^"]*)"', line)
-        if len(values) == 1:
-          project_configuration.managed_extensions = values[0]
-
-      elif line.startswith('WholeProgramOptimization='):
-        values = re.findall('WholeProgramOptimization="([^"]*)"', line)
-        if len(values) == 1:
-          project_configuration.whole_program_optimization = values[0]
+      else:
+        self._ParseConfigurationOptions(
+            project_configuration, self._CONFIGURATION_OPTIONS, line)
 
       # TODO: PlatformToolset.
       # TargetFrameworkVersion ?

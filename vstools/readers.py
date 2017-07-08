@@ -73,8 +73,7 @@ class FileReader(object):
     Args:
       filename (str): path of the file.
     """
-    # For reading these files we don't care about the actual end of lines.
-    self._file = open(filename, 'r')
+    self._file = open(filename, 'rb')
 
 
 class VSProjectFileReader(FileReader):

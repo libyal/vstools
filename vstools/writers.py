@@ -11,7 +11,7 @@ class FileWriter(object):
   """File writer."""
 
   def __init__(self, encoding='utf-8', end_of_line='\r\n'):
-    """Initializes a Visual Studio project configuration.
+    """Initializes a file writer.
 
     Args:
       encoding (str): encoding.
@@ -58,9 +58,15 @@ class FileWriter(object):
 class VSProjectFileWriter(FileWriter):
   """Visual Studio project file writer."""
 
-  def __init__(self):
-    """Initializes a Visual Studio project file writer."""
-    super(VSProjectFileWriter, self).__init__(end_of_line='')
+  def __init__(self, encoding='utf-8', end_of_line='\r\n'):
+    """Initializes a Visual Studio project file writer.
+
+    Args:
+      encoding (str): encoding.
+      end_of_line (str): end of line.
+    """
+    super(VSProjectFileWriter, self).__init__(
+       encoding=encoding, end_of_line=end_of_line)
 
   @abc.abstractmethod
   def WriteFooter(self):

@@ -95,7 +95,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tAdditionalIncludeDirectories=""'
+    expected_output_data = b'\t\t\t\tAdditionalIncludeDirectories=""\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolBasicRuntimeChecks(self):
@@ -112,7 +112,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tBasicRuntimeChecks="3"'
+    expected_output_data = b'\t\t\t\tBasicRuntimeChecks="3"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolCompileAs(self):
@@ -129,7 +129,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tCompileAs="1"'
+    expected_output_data = b'\t\t\t\tCompileAs="1"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolDebugInformationFormat(self):
@@ -146,7 +146,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tDebugInformationFormat="3"'
+    expected_output_data = b'\t\t\t\tDebugInformationFormat="3"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolDetect64BitPortabilityProblems(self):
@@ -164,7 +164,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tDetect64BitPortabilityProblems="true"'
+    expected_output_data = b'\t\t\t\tDetect64BitPortabilityProblems="true"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolOptimization(self):
@@ -181,7 +181,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tOptimization="0"'
+    expected_output_data = b'\t\t\t\tOptimization="0"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolPreprocessorDefinitions(self):
@@ -200,7 +200,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t\t\tPreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"')
+        b'\t\t\t\tPreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolRuntimeLibrary(self):
@@ -217,7 +217,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tRuntimeLibrary="2"'
+    expected_output_data = b'\t\t\t\tRuntimeLibrary="2"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolSmallerTypeCheck(self):
@@ -234,7 +234,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tSmallerTypeCheck="true"'
+    expected_output_data = b'\t\t\t\tSmallerTypeCheck="true"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolUsePrecompiledHeader(self):
@@ -251,7 +251,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tUsePrecompiledHeader="true"'
+    expected_output_data = b'\t\t\t\tUsePrecompiledHeader="true"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolWarnAsError(self):
@@ -268,7 +268,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tWarnAsError="true"'
+    expected_output_data = b'\t\t\t\tWarnAsError="true"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteCompilerToolWarningLevel(self):
@@ -285,7 +285,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\t\tWarningLevel="4"'
+    expected_output_data = b'\t\t\t\tWarningLevel="4"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfiguration(self):
@@ -301,8 +301,8 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    self.assertTrue(output_data.startswith(b'\t\t<Configuration'))
-    self.assertTrue(output_data.endswith(b'\t\t</Configuration>'))
+    self.assertTrue(output_data.startswith(b'\t\t<Configuration\r\n'))
+    self.assertTrue(output_data.endswith(b'\t\t</Configuration>\r\n'))
 
   def testWriteConfigurationCharacterSet(self):
     """Tests the _WriteConfigurationCharacterSet function."""
@@ -318,7 +318,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\tCharacterSet="1"'
+    expected_output_data = b'\t\t\tCharacterSet="1"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationCompilerTool(self):
@@ -335,14 +335,14 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCCLCompilerTool"'
-        b'\t\t\t\tAdditionalIncludeDirectories=""'
-        b'\t\t\t\tPreprocessorDefinitions=""'
-        b'\t\t\t\tRuntimeLibrary=""'
-        b'\t\t\t\tWarningLevel=""'
-        b'\t\t\t\tCompileAs=""'
-        b'\t\t\t/>')
+        b'\t\t\t<Tool\r\n'
+        b'\t\t\t\tName="VCCLCompilerTool"\r\n'
+        b'\t\t\t\tAdditionalIncludeDirectories=""\r\n'
+        b'\t\t\t\tPreprocessorDefinitions=""\r\n'
+        b'\t\t\t\tRuntimeLibrary=""\r\n'
+        b'\t\t\t\tWarningLevel=""\r\n'
+        b'\t\t\t\tCompileAs=""\r\n'
+        b'\t\t\t/>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationManagedExtensions(self):
@@ -359,7 +359,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\tManagedExtensions=".test"'
+    expected_output_data = b'\t\t\tManagedExtensions=".test"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationLibrarianTool(self):
@@ -376,12 +376,12 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCLibrarianTool"'
-        b'\t\t\t\tOutputFile=""'
-        b'\t\t\t\tModuleDefinitionFile=""'
-        b'\t\t\t\tIgnoreAllDefaultLibraries=""'
-        b'\t\t\t/>')
+        b'\t\t\t<Tool\r\n'
+        b'\t\t\t\tName="VCLibrarianTool"\r\n'
+        b'\t\t\t\tOutputFile=""\r\n'
+        b'\t\t\t\tModuleDefinitionFile=""\r\n'
+        b'\t\t\t\tIgnoreAllDefaultLibraries=""\r\n'
+        b'\t\t\t/>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationLinkerTool(self):
@@ -398,10 +398,10 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t\t<Tool'
-        b'\t\t\t\tName="VCLinkerTool"'
-        b'\t\t\t\tAdditionalLibraryDirectories="&quot;$(OutDir)&quot;"'
-        b'\t\t\t/>')
+        b'\t\t\t<Tool\r\n'
+        b'\t\t\t\tName="VCLinkerTool"\r\n'
+        b'\t\t\t\tAdditionalLibraryDirectories="&quot;$(OutDir)&quot;"\r\n'
+        b'\t\t\t/>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationType(self):
@@ -418,7 +418,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\tConfigurationType="2"'
+    expected_output_data = b'\t\t\tConfigurationType="2"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationWholeProgramOptimization(self):
@@ -436,7 +436,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\tWholeProgramOptimization="0"'
+    expected_output_data = b'\t\t\tWholeProgramOptimization="0"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeaderFiles(self):
@@ -453,16 +453,16 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t<Filter'
-        b'\t\t\tName="Header Files"'
-        b'\t\t\tFilter="h;hpp;hxx;hm;inl;inc;xsd"'
-        b'\t\t\tUniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"'
-        b'\t\t\t>'
-        b'\t\t\t<File'
-        b'\t\t\t\tRelativePath="test.h"'
-        b'\t\t\t\t>'
-        b'\t\t\t</File>'
-        b'\t\t</Filter>')
+        b'\t\t<Filter\r\n'
+        b'\t\t\tName="Header Files"\r\n'
+        b'\t\t\tFilter="h;hpp;hxx;hm;inl;inc;xsd"\r\n'
+        b'\t\t\tUniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"\r\n'
+        b'\t\t\t>\r\n'
+        b'\t\t\t<File\r\n'
+        b'\t\t\t\tRelativePath="test.h"\r\n'
+        b'\t\t\t\t>\r\n'
+        b'\t\t\t</File>\r\n'
+        b'\t\t</Filter>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteResourceFiles(self):
@@ -479,17 +479,17 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t<Filter'
-        b'\t\t\tName="Resource Files"'
+        b'\t\t<Filter\r\n'
+        b'\t\t\tName="Resource Files"\r\n'
         b'\t\t\tFilter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;'
-        b'resx;tiff;tif;png;wav"'
-        b'\t\t\tUniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"'
-        b'\t\t\t>'
-        b'\t\t\t<File'
-        b'\t\t\t\tRelativePath="test.rc"'
-        b'\t\t\t\t>'
-        b'\t\t\t</File>'
-        b'\t\t</Filter>')
+        b'resx;tiff;tif;png;wav"\r\n'
+        b'\t\t\tUniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"\r\n'
+        b'\t\t\t>\r\n'
+        b'\t\t\t<File\r\n'
+        b'\t\t\t\tRelativePath="test.rc"\r\n'
+        b'\t\t\t\t>\r\n'
+        b'\t\t\t</File>\r\n'
+        b'\t\t</Filter>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteSourceFiles(self):
@@ -506,16 +506,16 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\t\t<Filter'
-        b'\t\t\tName="Source Files"'
-        b'\t\t\tFilter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"'
-        b'\t\t\tUniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"'
-        b'\t\t\t>'
-        b'\t\t\t<File'
-        b'\t\t\t\tRelativePath="test.c"'
-        b'\t\t\t\t>'
-        b'\t\t\t</File>'
-        b'\t\t</Filter>')
+        b'\t\t<Filter\r\n'
+        b'\t\t\tName="Source Files"\r\n'
+        b'\t\t\tFilter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"\r\n'
+        b'\t\t\tUniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"\r\n'
+        b'\t\t\t>\r\n'
+        b'\t\t\t<File\r\n'
+        b'\t\t\t\tRelativePath="test.c"\r\n'
+        b'\t\t\t\t>\r\n'
+        b'\t\t\t</File>\r\n'
+        b'\t\t</Filter>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeader(self):
@@ -529,7 +529,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'<?xml version="1.0" encoding="Windows-1252"?>'
+    expected_output_data = b'<?xml version="1.0" encoding="Windows-1252"?>\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurations(self):
@@ -545,11 +545,11 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    self.assertTrue(output_data.startswith(b'\t<Configurations>'))
+    self.assertTrue(output_data.startswith(b'\t<Configurations>\r\n'))
     self.assertTrue(output_data.endswith(
-        b'\t</Configurations>'
-        b'\t<References>'
-        b'\t</References>'))
+        b'\t</Configurations>\r\n'
+        b'\t<References>\r\n'
+        b'\t</References>\r\n'))
 
   def testWriteDependencies(self):
     """Tests the WriteDependencies function."""
@@ -582,11 +582,11 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    self.assertTrue(output_data.startswith(b'\t<Files>'))
+    self.assertTrue(output_data.startswith(b'\t<Files>\r\n'))
     self.assertTrue(output_data.endswith(
-        b'\t</Files>'
-        b'\t<Globals>'
-        b'\t</Globals>'))
+        b'\t</Files>\r\n'
+        b'\t<Globals>\r\n'
+        b'\t</Globals>\r\n'))
 
   def testWriteFooter(self):
     """Tests the WriteFooter function."""
@@ -599,7 +599,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'</VisualStudioProject>'
+    expected_output_data = b'</VisualStudioProject>\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteProjectConfigurations(self):
@@ -631,21 +631,21 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'<VisualStudioProject'
-        b'\tProjectType="Visual C++"'
-        b'\tVersion="9,00"'
-        b'\tName=""'
-        b'\tProjectGUID="{}"'
-        b'\tRootNamespace=""'
-        b'\tTargetFrameworkVersion="131072"'
-        b'\t>'
-        b'\t<Platforms>'
-        b'\t\t<Platform'
-        b'\t\t\tName="Win32"'
-        b'\t\t/>'
-        b'\t</Platforms>'
-        b'\t<ToolFiles>'
-        b'\t</ToolFiles>')
+        b'<VisualStudioProject\r\n'
+        b'\tProjectType="Visual C++"\r\n'
+        b'\tVersion="9,00"\r\n'
+        b'\tName=""\r\n'
+        b'\tProjectGUID="{}"\r\n'
+        b'\tRootNamespace=""\r\n'
+        b'\tTargetFrameworkVersion="131072"\r\n'
+        b'\t>\r\n'
+        b'\t<Platforms>\r\n'
+        b'\t\t<Platform\r\n'
+        b'\t\t\tName="Win32"\r\n'
+        b'\t\t/>\r\n'
+        b'\t</Platforms>\r\n'
+        b'\t<ToolFiles>\r\n'
+        b'\t</ToolFiles>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
 
@@ -668,14 +668,14 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'    <ClCompile>'
+        b'    <ClCompile>\r\n'
         b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
-        b'</AdditionalIncludeDirectories>'
+        b'</AdditionalIncludeDirectories>\r\n'
         b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
-        b'</PreprocessorDefinitions>'
-        b'      <RuntimeLibrary></RuntimeLibrary>'
-        b'      <WarningLevel></WarningLevel>'
-        b'    </ClCompile>')
+        b'</PreprocessorDefinitions>\r\n'
+        b'      <RuntimeLibrary></RuntimeLibrary>\r\n'
+        b'      <WarningLevel></WarningLevel>\r\n'
+        b'    </ClCompile>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationPropertyGroup(self):
@@ -693,9 +693,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
     expected_output_data = (
         b'  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'|\'"'
-        b' Label="Configuration">'
-        b'    <ConfigurationType></ConfigurationType>'
-        b'  </PropertyGroup>')
+        b' Label="Configuration">\r\n'
+        b'    <ConfigurationType></ConfigurationType>\r\n'
+        b'  </PropertyGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationPropertyGroupFooter(self):
@@ -709,7 +709,7 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'  </PropertyGroup>'
+    expected_output_data = b'  </PropertyGroup>\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationPropertyGroupHeader(self):
@@ -727,7 +727,7 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
     expected_output_data = (
         b'  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'|\'" '
-        b'Label="Configuration">')
+        b'Label="Configuration">\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeaderFiles(self):
@@ -744,9 +744,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <ItemGroup>'
-        b'    <ClInclude Include="test.h" />'
-        b'  </ItemGroup>')
+        b'  <ItemGroup>\r\n'
+        b'    <ClInclude Include="test.h" />\r\n'
+        b'  </ItemGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteItemDefinitionGroup(self):
@@ -764,16 +764,16 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
     expected_output_data = (
         b'  <ItemDefinitionGroup'
-        b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">'
-        b'    <ClCompile>'
+        b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">\r\n'
+        b'    <ClCompile>\r\n'
         b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
-        b'</AdditionalIncludeDirectories>'
+        b'</AdditionalIncludeDirectories>\r\n'
         b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
-        b'</PreprocessorDefinitions>'
-        b'      <RuntimeLibrary></RuntimeLibrary>'
-        b'      <WarningLevel></WarningLevel>'
-        b'    </ClCompile>'
-        b'  </ItemDefinitionGroup>')
+        b'</PreprocessorDefinitions>\r\n'
+        b'      <RuntimeLibrary></RuntimeLibrary>\r\n'
+        b'      <WarningLevel></WarningLevel>\r\n'
+        b'    </ClCompile>\r\n'
+        b'  </ItemDefinitionGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteItemDefinitionGroupFooter(self):
@@ -787,7 +787,7 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'  </ItemDefinitionGroup>'
+    expected_output_data = b'  </ItemDefinitionGroup>\r\n'
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteItemDefinitionGroupHeader(self):
@@ -805,7 +805,7 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
     expected_output_data = (
         b'  <ItemDefinitionGroup'
-        b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">')
+        b' Condition="\'$(Configuration)|$(Platform)\'==\'|\'">\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteLibrarianSection(self):
@@ -822,11 +822,11 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'    <Lib>'
-        b'      <OutputFile></OutputFile>'
-        b'      <ModuleDefinitionFile>'
-        b'      </ModuleDefinitionFile>'
-        b'    </Lib>')
+        b'    <Lib>\r\n'
+        b'      <OutputFile></OutputFile>\r\n'
+        b'      <ModuleDefinitionFile>\r\n'
+        b'      </ModuleDefinitionFile>\r\n'
+        b'    </Lib>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteLinkerSection(self):
@@ -843,8 +843,8 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'    <Link>'
-        b'    </Link>')
+        b'    <Link>\r\n'
+        b'    </Link>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteOutIntDirConditions(self):
@@ -878,9 +878,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <PropertyGroup>'
-        b'    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>'
-        b'  </PropertyGroup>')
+        b'  <PropertyGroup>\r\n'
+        b'    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>\r\n'
+        b'  </PropertyGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteResourceFiles(self):
@@ -897,9 +897,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <ItemGroup>'
-        b'    <ResourceCompile Include="test.rc" />'
-        b'  </ItemGroup>')
+        b'  <ItemGroup>\r\n'
+        b'    <ResourceCompile Include="test.rc" />\r\n'
+        b'  </ItemGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteSourceFiles(self):
@@ -916,9 +916,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <ItemGroup>'
-        b'    <ClCompile Include="test.c" />'
-        b'  </ItemGroup>')
+        b'  <ItemGroup>\r\n'
+        b'    <ClCompile Include="test.c" />\r\n'
+        b'  </ItemGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurations(self):
@@ -936,8 +936,8 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
     self.assertTrue(output_data.startswith(
         b'  <Import Project="$(VCTargetsPath)\\'
-        b'Microsoft.Cpp.Default.props" />'))
-    self.assertTrue(output_data.endswith(b'  </PropertyGroup>'))
+        b'Microsoft.Cpp.Default.props" />\r\n'))
+    self.assertTrue(output_data.endswith(b'  </PropertyGroup>\r\n'))
 
   def testWriteDependencies(self):
     """Tests the WriteDependencies function."""
@@ -970,8 +970,8 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    self.assertTrue(output_data.startswith(b'  <ItemGroup>'))
-    self.assertTrue(output_data.endswith(b'  </ItemGroup>'))
+    self.assertTrue(output_data.startswith(b'  <ItemGroup>\r\n'))
+    self.assertTrue(output_data.endswith(b'  </ItemGroup>\r\n'))
 
   def testWriteFooter(self):
     """Tests the WriteFooter function."""
@@ -998,9 +998,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'\xef\xbb\xbf<?xml version="1.0" encoding="utf-8"?>'
+        b'\xef\xbb\xbf<?xml version="1.0" encoding="utf-8"?>\r\n'
         b'<Project DefaultTargets="Build" ToolsVersion="4.0" '
-        b'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">')
+        b'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteProjectConfigurations(self):
@@ -1017,8 +1017,8 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <ItemGroup Label="ProjectConfigurations">'
-        b'  </ItemGroup>')
+        b'  <ItemGroup Label="ProjectConfigurations">\r\n'
+        b'  </ItemGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteProjectInformation(self):
@@ -1035,10 +1035,10 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <PropertyGroup Label="Globals">'
-        b'    <ProjectGuid>{}</ProjectGuid>'
-        b'    <RootNamespace></RootNamespace>'
-        b'  </PropertyGroup>')
+        b'  <PropertyGroup Label="Globals">\r\n'
+        b'    <ProjectGuid>{}</ProjectGuid>\r\n'
+        b'    <RootNamespace></RootNamespace>\r\n'
+        b'  </PropertyGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
 
@@ -1061,14 +1061,14 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'    <ClCompile>'
+        b'    <ClCompile>\r\n'
         b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
-        b'</AdditionalIncludeDirectories>'
+        b'</AdditionalIncludeDirectories>\r\n'
         b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
-        b'</PreprocessorDefinitions>'
-        b'      <RuntimeLibrary></RuntimeLibrary>'
-        b'      <WarningLevel></WarningLevel>'
-        b'    </ClCompile>')
+        b'</PreprocessorDefinitions>\r\n'
+        b'      <RuntimeLibrary></RuntimeLibrary>\r\n'
+        b'      <WarningLevel></WarningLevel>\r\n'
+        b'    </ClCompile>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationPropertyGroup(self):
@@ -1086,10 +1086,10 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
 
     expected_output_data = (
         b'  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'|\'"'
-        b' Label="Configuration">'
-        b'    <ConfigurationType></ConfigurationType>'
-        b'    <PlatformToolset>v110</PlatformToolset>'
-        b'  </PropertyGroup>')
+        b' Label="Configuration">\r\n'
+        b'    <ConfigurationType></ConfigurationType>\r\n'
+        b'    <PlatformToolset>v110</PlatformToolset>\r\n'
+        b'  </PropertyGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteItemDefinitionGroup(self):
@@ -1107,16 +1107,16 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
 
     expected_output_data = (
         b'  <ItemDefinitionGroup '
-        b'Condition="\'$(Configuration)|$(Platform)\'==\'|\'">'
-        b'    <ClCompile>'
+        b'Condition="\'$(Configuration)|$(Platform)\'==\'|\'">\r\n'
+        b'    <ClCompile>\r\n'
         b'      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)'
-        b'</AdditionalIncludeDirectories>'
+        b'</AdditionalIncludeDirectories>\r\n'
         b'      <PreprocessorDefinitions>%(PreprocessorDefinitions)'
-        b'</PreprocessorDefinitions>'
-        b'      <RuntimeLibrary></RuntimeLibrary>'
-        b'      <WarningLevel></WarningLevel>'
-        b'    </ClCompile>'
-        b'  </ItemDefinitionGroup>')
+        b'</PreprocessorDefinitions>\r\n'
+        b'      <RuntimeLibrary></RuntimeLibrary>\r\n'
+        b'      <WarningLevel></WarningLevel>\r\n'
+        b'    </ClCompile>\r\n'
+        b'  </ItemDefinitionGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteLibrarianSection(self):
@@ -1133,10 +1133,10 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'    <Lib>'
-        b'      <OutputFile></OutputFile>'
-        b'      <ModuleDefinitionFile />'
-        b'    </Lib>')
+        b'    <Lib>\r\n'
+        b'      <OutputFile></OutputFile>\r\n'
+        b'      <ModuleDefinitionFile />\r\n'
+        b'    </Lib>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteLinkerSection(self):
@@ -1153,8 +1153,8 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'    <Link>'
-        b'    </Link>')
+        b'    <Link>\r\n'
+        b'    </Link>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteOutIntDirConditions(self):
@@ -1188,9 +1188,9 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
     output_data = file_writer._file.read()
 
     expected_output_data = (
-        b'  <PropertyGroup>'
-        b'    <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>'
-        b'  </PropertyGroup>')
+        b'  <PropertyGroup>\r\n'
+        b'    <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>\r\n'
+        b'  </PropertyGroup>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
 

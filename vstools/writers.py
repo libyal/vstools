@@ -79,6 +79,123 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     super(VS2008ProjectFileWriter, self).__init__()
     self._version = 2008
 
+  def _WriteCompilerToolAdditionalIncludeDirectories(
+      self, project_configuration):
+    """Writes the compiler tool additional include directories.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tAdditionalIncludeDirectories="{0:s}"'.format(
+        project_configuration.include_directories))
+
+  def _WriteCompilerToolBasicRuntimeChecks(self, project_configuration):
+    """Writes the compiler tool basic runtime checks.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.basic_runtime_checks:
+      self.WriteLine('\t\t\t\tBasicRuntimeChecks="{0:s}"'.format(
+          project_configuration.basic_runtime_checks))
+
+  def _WriteCompilerToolCompileAs(self, project_configuration):
+    """Writes the compiler tool compile as.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tCompileAs="{0:s}"'.format(
+        project_configuration.compile_as))
+
+  def _WriteCompilerToolDebugInformationFormat(self, project_configuration):
+    """Writes the compiler tool debug information format.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.debug_information_format:
+      self.WriteLine('\t\t\t\tDebugInformationFormat="{0:s}"'.format(
+          project_configuration.debug_information_format))
+
+  def _WriteCompilerToolDetect64BitPortabilityProblems(
+      self, project_configuration):
+    """Writes the compiler tool detect 64-bit portability problems.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.detect_64bit_portability_problems:
+      self.WriteLine('\t\t\t\tDetect64BitPortabilityProblems="{0:s}"'.format(
+          project_configuration.detect_64bit_portability_problems))
+
+  def _WriteCompilerToolOptimization(self, project_configuration):
+    """Writes the compiler tool optimization.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.optimization:
+      self.WriteLine('\t\t\t\tOptimization="{0:s}"'.format(
+          project_configuration.optimization))
+
+  def _WriteCompilerToolPreprocessorDefinitions(self, project_configuration):
+    """Writes the compiler tool preprocessor definitions.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tPreprocessorDefinitions="{0:s}"'.format(
+        project_configuration.preprocessor_definitions))
+
+  def _WriteCompilerToolRuntimeLibrary(self, project_configuration):
+    """Writes the compiler tool runtime library.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tRuntimeLibrary="{0:s}"'.format(
+        project_configuration.runtime_library))
+
+  def _WriteCompilerToolSmallerTypeCheck(self, project_configuration):
+    """Writes the compiler tool smaller type check.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.smaller_type_check:
+      self.WriteLine('\t\t\t\tSmallerTypeCheck="{0:s}"'.format(
+          project_configuration.smaller_type_check))
+
+  def _WriteCompilerToolUsePrecompiledHeader(self, project_configuration):
+    """Writes the compiler tool use precompiled header.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.precompiled_header:
+      self.WriteLine('\t\t\t\tUsePrecompiledHeader="{0:s}"'.format(
+          project_configuration.precompiled_header))
+
+  def _WriteCompilerToolWarnAsError(self, project_configuration):
+    """Writes the compiler tool warn as error.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    if project_configuration.warning_as_error:
+      self.WriteLine('\t\t\t\tWarnAsError="{0:s}"'.format(
+          project_configuration.warning_as_error))
+
+  def _WriteCompilerToolWarningLevel(self, project_configuration):
+    """Writes the compiler tool warning level.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('\t\t\t\tWarningLevel="{0:s}"'.format(
+        project_configuration.warning_level))
+
   def _WriteConfiguration(self, project_configuration):
     """Writes the project configuration.
 
@@ -126,42 +243,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t\tName="VCMIDLTool"',
         '\t\t\t/>'])
 
-    self.WriteLines([
-        '\t\t\t<Tool',
-        '\t\t\t\tName="VCCLCompilerTool"'])
-
-    self._WriteConfigurationOptimization(project_configuration)
-    self._WriteConfigurationAdditionalIncludeDirectories(project_configuration)
-    self._WriteConfigurationPreprocessorDefinitions(project_configuration)
-    self._WriteConfigurationBasicRuntimeChecks(project_configuration)
-    self._WriteConfigurationSmallerTypeCheck(project_configuration)
-
-    self.WriteLine('\t\t\t\tRuntimeLibrary="{0:s}"'.format(
-        project_configuration.runtime_library))
-
-    if project_configuration.precompiled_header:
-      self.WriteLine('\t\t\t\tUsePrecompiledHeader="{0:s}"'.format(
-          project_configuration.precompiled_header))
-
-    self.WriteLine('\t\t\t\tWarningLevel="{0:s}"'.format(
-        project_configuration.warning_level))
-
-    if project_configuration.warning_as_error:
-      self.WriteLine('\t\t\t\tWarnAsError="{0:s}"'.format(
-          project_configuration.warning_as_error))
-
-    if project_configuration.detect_64bit_portability_problems:
-      self.WriteLine('\t\t\t\tDetect64BitPortabilityProblems="{0:s}"'.format(
-          project_configuration.detect_64bit_portability_problems))
-
-    if project_configuration.debug_information_format:
-      self.WriteLine('\t\t\t\tDebugInformationFormat="{0:s}"'.format(
-          project_configuration.debug_information_format))
-
-    self.WriteLine('\t\t\t\tCompileAs="{0:s}"'.format(
-        project_configuration.compile_as))
-
-    self.WriteLine('\t\t\t/>')
+    self._WriteConfigurationCompilerTool(project_configuration)
 
     self.WriteLines([
         '\t\t\t<Tool',
@@ -178,80 +260,12 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t\tName="VCPreLinkEventTool"',
         '\t\t\t/>'])
 
-    # TODO: add librarian values set?
+    # TODO: add "librarian values set" to project configuration?
     if project_configuration.librarian_output_file:
-      self.WriteLines([
-          '\t\t\t<Tool',
-          '\t\t\t\tName="VCLibrarianTool"'])
-
-      self.WriteLine('\t\t\t\tOutputFile="{0:s}"'.format(
-          project_configuration.librarian_output_file))
-
-      self.WriteLine('\t\t\t\tModuleDefinitionFile=""')
-
-      self.WriteLine('\t\t\t\tIgnoreAllDefaultLibraries="{0:s}"'.format(
-          project_configuration.librarian_ignore_defaults))
-
-      self.WriteLine('\t\t\t/>')
+      self._WriteConfigurationLibrarianTool(project_configuration)
 
     if project_configuration.linker_values_set:
-      self.WriteLines([
-          '\t\t\t<Tool',
-          '\t\t\t\tName="VCLinkerTool"'])
-
-      if project_configuration.additional_dependencies:
-        self.WriteLine('\t\t\t\tAdditionalDependencies="{0:s}"'.format(
-            ' '.join(sorted(project_configuration.additional_dependencies))))
-
-      if project_configuration.linker_output_file:
-        self.WriteLine('\t\t\t\tOutputFile="{0:s}"'.format(
-            project_configuration.linker_output_file))
-
-      if project_configuration.link_incremental:
-        self.WriteLine('\t\t\t\tLinkIncremental="{0:s}"'.format(
-            project_configuration.link_incremental))
-
-      library_directories = '&quot;$(OutDir)&quot;'
-      if project_configuration.library_directories:
-        library_directories = '{0:s};{1:s}'.format(
-            library_directories, project_configuration.library_directories)
-
-      self.WriteLine('\t\t\t\tAdditionalLibraryDirectories="{0:s}"'.format(
-          library_directories))
-
-      if project_configuration.generate_debug_information:
-        self.WriteLine('\t\t\t\tGenerateDebugInformation="{0:s}"'.format(
-            project_configuration.generate_debug_information))
-
-      if project_configuration.sub_system:
-        self.WriteLine('\t\t\t\tSubSystem="{0:s}"'.format(
-            project_configuration.sub_system))
-
-      if project_configuration.optimize_references:
-        self.WriteLine('\t\t\t\tOptimizeReferences="{0:s}"'.format(
-            project_configuration.optimize_references))
-
-      if project_configuration.enable_comdat_folding:
-        self.WriteLine('\t\t\t\tEnableCOMDATFolding="{0:s}"'.format(
-            project_configuration.enable_comdat_folding))
-
-      if project_configuration.randomized_base_address:
-        self.WriteLine('\t\t\t\tRandomizedBaseAddress="{0:s}"'.format(
-            project_configuration.randomized_base_address))
-
-      if project_configuration.data_execution_prevention:
-        self.WriteLine('\t\t\t\tDataExecutionPrevention="{0:s}"'.format(
-            project_configuration.data_execution_prevention))
-
-      if project_configuration.target_machine:
-        self.WriteLine('\t\t\t\tTargetMachine="{0:s}"'.format(
-            project_configuration.target_machine))
-
-      if project_configuration.import_library:
-        self.WriteLine('\t\t\t\tImportLibrary="{0:s}"'.format(
-            project_configuration.import_library))
-
-      self.WriteLine('\t\t\t/>')
+      self._WriteConfigurationLinkerTool(project_configuration)
 
     self.WriteLines([
         '\t\t\t<Tool',
@@ -292,25 +306,30 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     self.WriteLine('\t\t</Configuration>')
 
-  def _WriteConfigurationAdditionalIncludeDirectories(
-      self, project_configuration):
-    """Writes the project configuration additional include directories.
+  def _WriteConfigurationCompilerTool(self, project_configuration):
+    """Writes the project configuration compiler tool.
 
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    self.WriteLine('\t\t\t\tAdditionalIncludeDirectories="{0:s}"'.format(
-        project_configuration.include_directories))
+    self.WriteLines([
+        '\t\t\t<Tool',
+        '\t\t\t\tName="VCCLCompilerTool"'])
 
-  def _WriteConfigurationBasicRuntimeChecks(self, project_configuration):
-    """Writes the project configuration basic runtime checks.
+    self._WriteCompilerToolOptimization(project_configuration)
+    self._WriteCompilerToolAdditionalIncludeDirectories(project_configuration)
+    self._WriteCompilerToolPreprocessorDefinitions(project_configuration)
+    self._WriteCompilerToolBasicRuntimeChecks(project_configuration)
+    self._WriteCompilerToolSmallerTypeCheck(project_configuration)
+    self._WriteCompilerToolRuntimeLibrary(project_configuration)
+    self._WriteCompilerToolUsePrecompiledHeader(project_configuration)
+    self._WriteCompilerToolWarningLevel(project_configuration)
+    self._WriteCompilerToolWarnAsError(project_configuration)
+    self._WriteCompilerToolDetect64BitPortabilityProblems(project_configuration)
+    self._WriteCompilerToolDebugInformationFormat(project_configuration)
+    self._WriteCompilerToolCompileAs(project_configuration)
 
-    Args:
-      project_configuration (VSProjectConfiguration): configuration.
-    """
-    if project_configuration.basic_runtime_checks:
-      self.WriteLine('\t\t\t\tBasicRuntimeChecks="{0:s}"'.format(
-          project_configuration.basic_runtime_checks))
+    self.WriteLine('\t\t\t/>')
 
   def _WriteConfigurationCharacterSet(self, project_configuration):
     """Writes the project configuration character set.
@@ -331,34 +350,89 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
       self.WriteLine('\t\t\tManagedExtensions="{0:s}"'.format(
           project_configuration.managed_extensions))
 
-  def _WriteConfigurationOptimization(self, project_configuration):
-    """Writes the project configuration optimization.
+  def _WriteConfigurationLibrarianTool(self, project_configuration):
+    """Writes the project configuration librarian tool.
 
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    if project_configuration.optimization:
-      self.WriteLine('\t\t\t\tOptimization="{0:s}"'.format(
-          project_configuration.optimization))
+    self.WriteLines([
+        '\t\t\t<Tool',
+        '\t\t\t\tName="VCLibrarianTool"'])
 
-  def _WriteConfigurationPreprocessorDefinitions(self, project_configuration):
-    """Writes the project configuration preprocessor definitions.
+    self.WriteLine('\t\t\t\tOutputFile="{0:s}"'.format(
+        project_configuration.librarian_output_file))
+
+    self.WriteLine('\t\t\t\tModuleDefinitionFile=""')
+
+    self.WriteLine('\t\t\t\tIgnoreAllDefaultLibraries="{0:s}"'.format(
+        project_configuration.librarian_ignore_defaults))
+
+    self.WriteLine('\t\t\t/>')
+
+  def _WriteConfigurationLinkerTool(self, project_configuration):
+    """Writes the project configuration linker tool.
 
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    self.WriteLine('\t\t\t\tPreprocessorDefinitions="{0:s}"'.format(
-        project_configuration.preprocessor_definitions))
+    self.WriteLines([
+        '\t\t\t<Tool',
+        '\t\t\t\tName="VCLinkerTool"'])
 
-  def _WriteConfigurationSmallerTypeCheck(self, project_configuration):
-    """Writes the project configuration smaller type check.
+    if project_configuration.additional_dependencies:
+      self.WriteLine('\t\t\t\tAdditionalDependencies="{0:s}"'.format(
+          ' '.join(sorted(project_configuration.additional_dependencies))))
 
-    Args:
-      project_configuration (VSProjectConfiguration): configuration.
-    """
-    if project_configuration.smaller_type_check:
-      self.WriteLine('\t\t\t\tSmallerTypeCheck="{0:s}"'.format(
-          project_configuration.smaller_type_check))
+    if project_configuration.linker_output_file:
+      self.WriteLine('\t\t\t\tOutputFile="{0:s}"'.format(
+          project_configuration.linker_output_file))
+
+    if project_configuration.link_incremental:
+      self.WriteLine('\t\t\t\tLinkIncremental="{0:s}"'.format(
+          project_configuration.link_incremental))
+
+    library_directories = '&quot;$(OutDir)&quot;'
+    if project_configuration.library_directories:
+      library_directories = '{0:s};{1:s}'.format(
+          library_directories, project_configuration.library_directories)
+
+    self.WriteLine('\t\t\t\tAdditionalLibraryDirectories="{0:s}"'.format(
+        library_directories))
+
+    if project_configuration.generate_debug_information:
+      self.WriteLine('\t\t\t\tGenerateDebugInformation="{0:s}"'.format(
+          project_configuration.generate_debug_information))
+
+    if project_configuration.sub_system:
+      self.WriteLine('\t\t\t\tSubSystem="{0:s}"'.format(
+          project_configuration.sub_system))
+
+    if project_configuration.optimize_references:
+      self.WriteLine('\t\t\t\tOptimizeReferences="{0:s}"'.format(
+          project_configuration.optimize_references))
+
+    if project_configuration.enable_comdat_folding:
+      self.WriteLine('\t\t\t\tEnableCOMDATFolding="{0:s}"'.format(
+          project_configuration.enable_comdat_folding))
+
+    if project_configuration.randomized_base_address:
+      self.WriteLine('\t\t\t\tRandomizedBaseAddress="{0:s}"'.format(
+          project_configuration.randomized_base_address))
+
+    if project_configuration.data_execution_prevention:
+      self.WriteLine('\t\t\t\tDataExecutionPrevention="{0:s}"'.format(
+          project_configuration.data_execution_prevention))
+
+    if project_configuration.target_machine:
+      self.WriteLine('\t\t\t\tTargetMachine="{0:s}"'.format(
+          project_configuration.target_machine))
+
+    if project_configuration.import_library:
+      self.WriteLine('\t\t\t\tImportLibrary="{0:s}"'.format(
+          project_configuration.import_library))
+
+    self.WriteLine('\t\t\t/>')
 
   def _WriteConfigurationType(self, project_configuration):
     """Writes the project configuration type.

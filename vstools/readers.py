@@ -24,6 +24,17 @@ class FileReader(object):
     self._file = None
     self._line = None
 
+  def _ReadBinaryData(self, size):
+    """Reads binary data.
+
+    Args:
+      size (int): number of bytes to read.
+
+    Returns:
+      bytes: binary data.
+    """
+    return self._file.read(size)
+
   def _ReadLine(self, look_ahead=False):
     """Reads a line.
 
@@ -637,8 +648,8 @@ class VSSolutionFileReader(FileReader):
     Returns:
       bool: True if successful or false otherwise.
     """
-    line = self._ReadLine()
-    if not line or line != '\xef\xbb\xbf':
+    binary_data = self._ReadBinaryData(5)
+    if binary_data != b'\xef\xbb\xbf\r\n':
       return False
 
     line = self._ReadLine()

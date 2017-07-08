@@ -22,6 +22,19 @@ class FileReaderTest(test_lib.BaseTestCase):
     file_reader = readers.FileReader()
     self.assertIsNotNone(file_reader)
 
+  @test_lib.skipUnlessHasTestFile(['2008.sln'])
+  def testReadBinaryData(self):
+    """Tests the _ReadBinaryData function."""
+    file_reader = readers.FileReader()
+
+    path = self._GetTestFilePath(['2008.sln'])
+    file_reader.Open(path)
+
+    binary_data = file_reader._ReadBinaryData(5)
+    self.assertEqual(binary_data, b'\xef\xbb\xbf\r\n')
+
+    file_reader.Close()
+
   @test_lib.skipUnlessHasTestFile(['2008.vcproj'])
   def testReadLine(self):
     """Tests the _ReadLine function."""
@@ -279,6 +292,34 @@ class VS2008SolutionFileReaderTest(test_lib.BaseTestCase):
     line = 'Microsoft Visual Studio Solution File, Format Version BOGUS'
     result = file_reader._CheckFormatVersion(line)
     self.assertFalse(result)
+
+  @test_lib.skipUnlessHasTestFile(['2008.sln'])
+  def testReadHeader(self):
+    """Tests the ReadHeader function."""
+    file_reader = readers.VS2008SolutionFileReader()
+
+    path = self._GetTestFilePath(['2008.sln'])
+    file_reader.Open(path)
+
+    result = file_reader.ReadHeader()
+    self.assertTrue(result)
+
+    file_reader.Close()
+
+  @test_lib.skipUnlessHasTestFile(['2008.sln'])
+  def testReadProjects(self):
+    """Tests the ReadProjects function."""
+    file_reader = readers.VS2008SolutionFileReader()
+
+    path = self._GetTestFilePath(['2008.sln'])
+    file_reader.Open(path)
+
+    file_reader.ReadHeader()
+
+    solution_projects = file_reader.ReadProjects()
+    self.assertEqual(len(solution_projects), 3)
+
+    file_reader.Close()
 
 
 class VS2010SolutionFileReaderTest(test_lib.BaseTestCase):

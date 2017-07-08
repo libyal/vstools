@@ -1123,6 +1123,8 @@ class LibyalSourceVSSolution(VSSolution):
       solution_reader.Open(input_sln_path)
 
       if not solution_reader.ReadHeader():
+        logging.warning('Unable to read solution file: {0:s} header.'.format(
+            input_sln_path))
         return False
 
       solution_projects = solution_reader.ReadProjects()

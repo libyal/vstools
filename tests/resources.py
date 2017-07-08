@@ -15,7 +15,7 @@ class VSConfigurationTest(test_lib.BaseTestCase):
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = resources.VSConfiguration()
+    configuration = resources.VSConfiguration(name='test', platform='Win32')
     self.assertIsNotNone(configuration)
 
 
@@ -27,10 +27,40 @@ class VSConfigurationsTest(test_lib.BaseTestCase):
     configurations = resources.VSConfigurations()
     self.assertIsNotNone(configurations)
 
-  # TODO: add tests for number_of_configurations property
-  # TODO: add tests for Append function
-  # TODO: add tests for ExtendWithX64 function
-  # TODO: add tests for GetByIdentifier function
+  def testNumberOfConfigurations(self):
+    """Tests the number_of_configurations property."""
+    configurations = resources.VSConfigurations()
+    self.assertEqual(configurations.number_of_configurations, 0)
+
+  def testAppend(self):
+    """Tests the Append function."""
+    configurations = resources.VSConfigurations()
+
+    configuration = resources.VSSolutionConfiguration(
+        name='test', platform='Win32')
+    configurations.Append(configuration)
+
+  def testExtendWithX64(self):
+    """Tests the ExtendWithX64 function."""
+    configurations = resources.VSConfigurations()
+
+    configuration = resources.VSSolutionConfiguration(
+        name='test', platform='Win32')
+    configurations.Append(configuration)
+
+    configurations.ExtendWithX64('2010')
+
+  def testGetByIdentifier(self):
+    """Tests the GetByIdentifier function."""
+    configurations = resources.VSConfigurations()
+
+    configuration = resources.VSSolutionConfiguration(
+        name='test', platform='Win32')
+    configurations.Append(configuration)
+
+    configuration = configurations.GetByIdentifier('test', 'Win32')
+    self.assertIsNotNone(configuration)
+
   # TODO: add tests for GetSorted function
 
 

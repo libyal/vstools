@@ -62,7 +62,7 @@ class VSConfigurations(object):
       output_version (str): output Visual Studio version.
     """
     if 'x64' not in self.platforms:
-      for configuration in self._configurations.values():
+      for configuration in list(self._configurations.values()):
         if configuration.platform != 'x64':
           x64_configuration = configuration.CopyToX64()
 

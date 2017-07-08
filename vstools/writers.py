@@ -66,7 +66,7 @@ class VSProjectFileWriter(FileWriter):
       end_of_line (str): end of line.
     """
     super(VSProjectFileWriter, self).__init__(
-       encoding=encoding, end_of_line=end_of_line)
+        encoding=encoding, end_of_line=end_of_line)
 
   @abc.abstractmethod
   def WriteFooter(self):
@@ -153,51 +153,48 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     self.WriteLine('\t\t\t>')
 
-    # TODO: create data driven _WriteConfigurationTools
-    self._WriteConfigurationTool(
-        project_configuration, 'VCPreBuildEventTool', [])
-    self._WriteConfigurationTool(project_configuration, 'VCCustomBuildTool', [])
-    self._WriteConfigurationTool(
-        project_configuration, 'VCXMLDataGeneratorTool', [])
-    self._WriteConfigurationTool(
-        project_configuration, 'VCWebServiceProxyGeneratorTool', [])
-    self._WriteConfigurationTool(project_configuration, 'VCMIDLTool', [])
-
-    self._WriteConfigurationTool(
-        project_configuration, 'VCCLCompilerTool',
-        self._TOOL_COMPILER_CONFIGURATION_OPTIONS)
-
-    self._WriteConfigurationTool(
-        project_configuration, 'VCManagedResourceCompilerTool', [])
-    self._WriteConfigurationTool(
-        project_configuration, 'VCResourceCompilerTool', [])
-    self._WriteConfigurationTool(
-        project_configuration, 'VCPreLinkEventTool', [])
-
+    tools = [
+        ('VCPreBuildEventTool', []),
+        ('VCCustomBuildTool', []),
+        ('VCXMLDataGeneratorTool', []),
+        ('VCWebServiceProxyGeneratorTool', []),
+        ('VCMIDLTool', []),
+        ('VCCLCompilerTool', self._TOOL_COMPILER_CONFIGURATION_OPTIONS),
+        ('VCManagedResourceCompilerTool', []),
+        ('VCResourceCompilerTool', []),
+        ('VCPreLinkEventTool', []),
+    ]
     # TODO: add "librarian values set" to project configuration?
     if project_configuration.librarian_output_file:
+      tool = ('VCLibrarianTool', self._TOOL_LIBRARIAN_CONFIGURATION_OPTIONS)
+      tools.append(tool)
+
+    for name, configuration_options in tools:
       self._WriteConfigurationTool(
-          project_configuration, 'VCLibrarianTool',
-          self._TOOL_LIBRARIAN_CONFIGURATION_OPTIONS)
+          project_configuration, name, configuration_options)
 
     if project_configuration.linker_values_set:
       self._WriteConfigurationLinkerTool(project_configuration)
 
-    self._WriteConfigurationTool(project_configuration, 'VCALinkTool', [])
+    tools = [('VCALinkTool', [])]
 
     if project_configuration.linker_values_set:
-      self._WriteConfigurationTool(project_configuration, 'VCManifestTool', [])
+      tools.append(('VCManifestTool', []))
 
-    self._WriteConfigurationTool(project_configuration, 'VCXDCMakeTool', [])
-    self._WriteConfigurationTool(project_configuration, 'VCBscMakeTool', [])
-    self._WriteConfigurationTool(project_configuration, 'VCFxCopTool', [])
+    tools.extend([
+        ('VCXDCMakeTool', []),
+        ('VCBscMakeTool', []),
+        ('VCFxCopTool', [])
+    ])
 
     if project_configuration.linker_values_set:
+      tools.append(('VCAppVerifierTool', []))
+
+    tools.append(('VCPostBuildEventTool', []))
+
+    for name, configuration_options in tools:
       self._WriteConfigurationTool(
-          project_configuration, 'VCAppVerifierTool', [])
-
-    self._WriteConfigurationTool(
-        project_configuration, 'VCPostBuildEventTool', [])
+          project_configuration, name, configuration_options)
 
     self.WriteLine('\t\t</Configuration>')
 

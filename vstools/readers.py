@@ -131,7 +131,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
   }
 
   def _ParseConfigurationOption(
-        self, project_configuration, definition, name, line):
+      self, project_configuration, definition, name, line):
     """Parses a configuration option.
 
     Args:
@@ -146,7 +146,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
       setattr(project_configuration, name, values[0])
 
   def _ParseConfigurationOptions(
-        self, project_configuration, configuration_options, line):
+      self, project_configuration, configuration_options, line):
     """Parses configuration options.
 
     Args:

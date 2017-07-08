@@ -109,12 +109,15 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 
     file_data = '\n'.join(test_data).encode('utf-8')
     file_reader._file = io.BytesIO(file_data)
-    project_configuration = file_reader._ReadConfiguration('<Configuration')
 
+    project_configuration = file_reader._ReadConfiguration('<Configuration')
     self.assertIsNotNone(project_configuration)
 
     self.assertEqual(project_configuration.character_set, '1')
     self.assertEqual(project_configuration.output_type, '2')
+
+    project_configuration = file_reader._ReadConfiguration('')
+    self.assertIsNone(project_configuration)
 
   # TODO: add tests for _ReadConfigurations function.
 

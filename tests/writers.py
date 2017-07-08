@@ -81,213 +81,6 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
-  def testWriteCompilerToolAdditionalIncludeDirectories(self):
-    """Tests the _WriteCompilerToolAdditionalIncludeDirectories function."""
-    project_configuration = resources.VSProjectConfiguration()
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolAdditionalIncludeDirectories(
-        project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tAdditionalIncludeDirectories=""\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolBasicRuntimeChecks(self):
-    """Tests the _WriteCompilerToolBasicRuntimeChecks function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.basic_runtime_checks = '3'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolBasicRuntimeChecks(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tBasicRuntimeChecks="3"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolCompileAs(self):
-    """Tests the _WriteCompilerToolCompileAs function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.compile_as = '1'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolCompileAs(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tCompileAs="1"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolDebugInformationFormat(self):
-    """Tests the _WriteCompilerToolDebugInformationFormat function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.debug_information_format = '3'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolDebugInformationFormat(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tDebugInformationFormat="3"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolDetect64BitPortabilityProblems(self):
-    """Tests the _WriteCompilerToolDetect64BitPortabilityProblems function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.detect_64bit_portability_problems = 'true'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolDetect64BitPortabilityProblems(
-        project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tDetect64BitPortabilityProblems="true"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolOptimization(self):
-    """Tests the _WriteCompilerToolOptimization function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.optimization = '0'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolOptimization(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tOptimization="0"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolPreprocessorDefinitions(self):
-    """Tests the _WriteCompilerToolPreprocessorDefinitions function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.preprocessor_definitions = '_CRT_SECURE_NO_DEPRECATE'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolPreprocessorDefinitions(
-        project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = (
-        b'\t\t\t\tPreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"\r\n')
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolRuntimeLibrary(self):
-    """Tests the _WriteCompilerToolRuntimeLibrary function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.runtime_library = '2'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolRuntimeLibrary(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tRuntimeLibrary="2"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolSmallerTypeCheck(self):
-    """Tests the _WriteCompilerToolSmallerTypeCheck function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.smaller_type_check = 'true'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolSmallerTypeCheck(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tSmallerTypeCheck="true"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolUsePrecompiledHeader(self):
-    """Tests the _WriteCompilerToolUsePrecompiledHeader function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.precompiled_header = 'true'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolUsePrecompiledHeader(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tUsePrecompiledHeader="true"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolWarnAsError(self):
-    """Tests the _WriteCompilerToolWarnAsError function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.warning_as_error = 'true'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolWarnAsError(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tWarnAsError="true"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteCompilerToolWarningLevel(self):
-    """Tests the _WriteCompilerToolWarningLevel function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.warning_level = '4'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteCompilerToolWarningLevel(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\t\tWarningLevel="4"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
   def testWriteConfiguration(self):
     """Tests the _WriteConfiguration function."""
     project_configuration = resources.VSProjectConfiguration()
@@ -303,86 +96,6 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
 
     self.assertTrue(output_data.startswith(b'\t\t<Configuration\r\n'))
     self.assertTrue(output_data.endswith(b'\t\t</Configuration>\r\n'))
-
-  def testWriteConfigurationCharacterSet(self):
-    """Tests the _WriteConfigurationCharacterSet function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.character_set = '1'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteConfigurationCharacterSet(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\tCharacterSet="1"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteConfigurationCompilerTool(self):
-    """Tests the _WriteConfigurationCompilerTool function."""
-    project_configuration = resources.VSProjectConfiguration()
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteConfigurationCompilerTool(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = (
-        b'\t\t\t<Tool\r\n'
-        b'\t\t\t\tName="VCCLCompilerTool"\r\n'
-        b'\t\t\t\tAdditionalIncludeDirectories=""\r\n'
-        b'\t\t\t\tPreprocessorDefinitions=""\r\n'
-        b'\t\t\t\tRuntimeLibrary=""\r\n'
-        b'\t\t\t\tWarningLevel=""\r\n'
-        b'\t\t\t\tCompileAs=""\r\n'
-        b'\t\t\t/>\r\n')
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteConfigurationManagedExtensions(self):
-    """Tests the _WriteConfigurationManagedExtensions function."""
-    project_configuration = resources.VSProjectConfiguration()
-    project_configuration.managed_extensions = '.test'
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteConfigurationManagedExtensions(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = b'\t\t\tManagedExtensions=".test"\r\n'
-    self.assertEqual(output_data, expected_output_data)
-
-  def testWriteConfigurationLibrarianTool(self):
-    """Tests the _WriteConfigurationLibrarianTool function."""
-    project_configuration = resources.VSProjectConfiguration()
-
-    file_writer = writers.VS2008ProjectFileWriter()
-
-    file_writer._file = io.BytesIO()
-
-    file_writer._WriteConfigurationLibrarianTool(project_configuration)
-
-    file_writer._file.seek(0, os.SEEK_SET)
-    output_data = file_writer._file.read()
-
-    expected_output_data = (
-        b'\t\t\t<Tool\r\n'
-        b'\t\t\t\tName="VCLibrarianTool"\r\n'
-        b'\t\t\t\tOutputFile=""\r\n'
-        b'\t\t\t\tModuleDefinitionFile=""\r\n'
-        b'\t\t\t\tIgnoreAllDefaultLibraries=""\r\n'
-        b'\t\t\t/>\r\n')
-    self.assertEqual(output_data, expected_output_data)
 
   def testWriteConfigurationLinkerTool(self):
     """Tests the _WriteConfigurationLinkerTool function."""
@@ -404,39 +117,84 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
         b'\t\t\t/>\r\n')
     self.assertEqual(output_data, expected_output_data)
 
-  def testWriteConfigurationType(self):
-    """Tests the _WriteConfigurationType function."""
+  def testWriteConfigurationOption(self):
+    """Tests the _WriteConfigurationOption function."""
     project_configuration = resources.VSProjectConfiguration()
-    project_configuration.output_type = '2'
+    project_configuration.compile_as = '1'
 
     file_writer = writers.VS2008ProjectFileWriter()
 
     file_writer._file = io.BytesIO()
 
-    file_writer._WriteConfigurationType(project_configuration)
+    file_writer._WriteConfigurationOption(
+        project_configuration, 'CompileAs', 'compile_as', False)
 
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\tConfigurationType="2"\r\n'
+    expected_output_data = b'\t\t\t\tCompileAs="1"\r\n'
     self.assertEqual(output_data, expected_output_data)
 
-  def testWriteConfigurationWholeProgramOptimization(self):
-    """Tests the _WriteConfigurationWholeProgramOptimization function."""
+  def testWriteConfigurationTool(self):
+    """Tests the _WriteConfigurationTool function."""
     project_configuration = resources.VSProjectConfiguration()
-    project_configuration.whole_program_optimization = '0'
 
     file_writer = writers.VS2008ProjectFileWriter()
 
     file_writer._file = io.BytesIO()
 
-    file_writer._WriteConfigurationWholeProgramOptimization(
-        project_configuration)
+    file_writer._WriteConfigurationTool(
+        project_configuration, 'VCCLCompilerTool',
+        file_writer._TOOL_COMPILER_CONFIGURATION_OPTIONS)
 
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()
 
-    expected_output_data = b'\t\t\tWholeProgramOptimization="0"\r\n'
+    expected_output_data = (
+        b'\t\t\t<Tool\r\n'
+        b'\t\t\t\tName="VCCLCompilerTool"\r\n'
+        b'\t\t\t\tAdditionalIncludeDirectories=""\r\n'
+        b'\t\t\t\tPreprocessorDefinitions=""\r\n'
+        b'\t\t\t\tRuntimeLibrary=""\r\n'
+        b'\t\t\t\tWarningLevel=""\r\n'
+        b'\t\t\t\tCompileAs=""\r\n'
+        b'\t\t\t/>\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationToolFooter(self):
+    """Tests the _WriteConfigurationToolFooter function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.compile_as = '1'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationToolFooter()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = b'\t\t\t/>\r\n'
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurationToolHeader(self):
+    """Tests the _WriteConfigurationToolHeader function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.compile_as = '1'
+
+    file_writer = writers.VS2008ProjectFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteConfigurationToolHeader('VCLinkerTool')
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\t\t\t<Tool\r\n'
+        b'\t\t\t\tName="VCLinkerTool"\r\n')
     self.assertEqual(output_data, expected_output_data)
 
   def testWriteHeaderFiles(self):

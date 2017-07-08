@@ -136,7 +136,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
 
     Args:
       project_information (VSProjectInformation): project information.
-      definition (str): definition of the configuration value in the line.
+      definition (str): definition of the configuration value in file.
       name (str): name of the configuration value in the project information.
       line (str): line that contains the configuration value.
     """

@@ -258,16 +258,133 @@ class VSProjectConfigurationTests(test_lib.BaseTestCase):
     project_configuration.precompiled_header = '-1'
     self.assertEqual(project_configuration.precompiled_header_string, '')
 
-  # TODO: add tests for precompiled_header_string property
-  # TODO: add tests for randomized_base_address_string property
-  # TODO: add tests for runtime_librarian_string property
-  # TODO: add tests for sub_system_string property
-  # TODO: add tests for target_machine_string property
-  # TODO: add tests for warning_level_string property
-  # TODO: add tests for whole_program_optimization_string property
+  def testRandomizedBaseAddressString(self):
+    """Tests the randomized_base_address_string property."""
+    project_configuration = resources.VSProjectConfiguration()
 
-  # TODO: add tests for CopyToX64 function
-  # TODO: add tests for GetPlatformToolset function
+    project_configuration.randomized_base_address = ''
+    self.assertEqual(project_configuration.randomized_base_address_string, '')
+
+    project_configuration.randomized_base_address = '1'
+    self.assertEqual(
+        project_configuration.randomized_base_address_string, 'false')
+
+    project_configuration.randomized_base_address = '2'
+    self.assertEqual(
+        project_configuration.randomized_base_address_string, 'true')
+
+    project_configuration.randomized_base_address = '-1'
+    self.assertEqual(project_configuration.randomized_base_address_string, '')
+
+  def testRuntimeLibrarianString(self):
+    """Tests the runtime_librarian_string property."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    project_configuration.runtime_library = ''
+    self.assertEqual(project_configuration.runtime_librarian_string, '')
+
+    project_configuration.runtime_library = '2'
+    self.assertEqual(
+        project_configuration.runtime_librarian_string, 'MultiThreadedDLL')
+
+    project_configuration.runtime_library = '3'
+    self.assertEqual(
+        project_configuration.runtime_librarian_string, 'MultiThreadedDebugDLL')
+
+    project_configuration.runtime_library = '-1'
+    self.assertEqual(project_configuration.runtime_librarian_string, '')
+
+  def testSubSystemString(self):
+    """Tests the sub_system_string property."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    project_configuration.sub_system = ''
+    self.assertEqual(project_configuration.sub_system_string, '')
+
+    project_configuration.sub_system = '0'
+    self.assertEqual(
+        project_configuration.sub_system_string, 'NotSet')
+
+    project_configuration.sub_system = '1'
+    self.assertEqual(
+        project_configuration.sub_system_string, 'Console')
+
+    project_configuration.sub_system = '-1'
+    self.assertEqual(project_configuration.sub_system_string, '')
+
+  def testTargetMachineString(self):
+    """Tests the target_machine_string property."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    project_configuration.target_machine = ''
+    self.assertEqual(project_configuration.target_machine_string, '')
+
+    project_configuration.target_machine = '1'
+    self.assertEqual(
+        project_configuration.target_machine_string, 'MachineX86')
+
+    project_configuration.target_machine = '2'
+    self.assertEqual(
+        project_configuration.target_machine_string, 'MachineX64')
+
+    project_configuration.target_machine = '-1'
+    self.assertEqual(project_configuration.target_machine_string, '')
+
+  def testWarningLevelString(self):
+    """Tests the warning_level_string property."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    project_configuration.warning_level = ''
+    self.assertEqual(project_configuration.warning_level_string, '')
+
+    project_configuration.warning_level = '3'
+    self.assertEqual(
+        project_configuration.warning_level_string, 'Level3')
+
+    project_configuration.warning_level = '4'
+    self.assertEqual(
+        project_configuration.warning_level_string, 'Level4')
+
+    project_configuration.warning_level = '-1'
+    self.assertEqual(project_configuration.warning_level_string, '')
+
+  def testWholeProgramOptimizationString(self):
+    """Tests the whole_program_optimization_string property."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    project_configuration.whole_program_optimization = ''
+    self.assertEqual(
+        project_configuration.whole_program_optimization_string, '')
+
+    project_configuration.whole_program_optimization = '0'
+    self.assertEqual(
+        project_configuration.whole_program_optimization_string, 'false')
+
+    project_configuration.whole_program_optimization = '1'
+    self.assertEqual(
+        project_configuration.whole_program_optimization_string, 'true')
+
+    project_configuration.whole_program_optimization = '-1'
+    self.assertEqual(
+        project_configuration.whole_program_optimization_string, '')
+
+  def testCopyToX64(self):
+    """Tests the CopyToX64 function."""
+    project_configuration = resources.VSProjectConfiguration()
+
+    copy_project_configuration = project_configuration.CopyToX64()
+    self.assertIsNotNone(copy_project_configuration)
+
+  def testGetPlatformToolset(self):
+    """Tests the GetPlatformToolset function."""
+    project_configuration = resources.VSProjectConfiguration()
+    project_configuration.platform = 'x64'
+
+    platform_toolset = project_configuration.GetPlatformToolset(2010)
+    self.assertEqual(platform_toolset, 'Windows7.1SDK')
+
+    platform_toolset = project_configuration.GetPlatformToolset(2012)
+    self.assertEqual(platform_toolset, 'v110')
 
 
 class VSProjectInformationTests(test_lib.BaseTestCase):
@@ -282,7 +399,12 @@ class VSProjectInformationTests(test_lib.BaseTestCase):
 class VSSolutionConfigurationTests(test_lib.BaseTestCase):
   """Visual Studio solution configuration tests."""
 
-  # TODO: add tests for CopyToX64 function
+  def testCopyToX64(self):
+    """Tests the CopyToX64 function."""
+    solution_configuration = resources.VSSolutionConfiguration()
+
+    copy_solution_configuration = solution_configuration.CopyToX64()
+    self.assertIsNotNone(copy_solution_configuration)
 
 
 class VSSolutionProjectTest(test_lib.BaseTestCase):
@@ -293,7 +415,11 @@ class VSSolutionProjectTest(test_lib.BaseTestCase):
     solution_project = resources.VSSolutionProject('name', 'file', 'guid')
     self.assertIsNotNone(solution_project)
 
-  # TODO: add tests for AddDependency function
+  def testAddDependency(self):
+    """Tests the AddDependency function."""
+    solution_project = resources.VSSolutionProject('name', 'file', 'guid')
+
+    solution_project.AddDependency('dependency_guid')
 
 
 if __name__ == '__main__':

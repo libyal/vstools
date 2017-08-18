@@ -124,7 +124,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
       ('RandomizedBaseAddress', 'randomized_base_address', True),
       ('DataExecutionPrevention', 'data_execution_prevention', True),
       ('TargetMachine', 'target_machine', True),
-      ('ImportLibrary', 'linker_values_set', True),
+      ('ImportLibrary', 'import_library', True),
   ]
 
   def __init__(self):
@@ -149,7 +149,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     for definition, name, is_optional in self._CONFIGURATION_OPTIONS:
       self._WriteConfigurationOption(
-          project_configuration, definition, name, is_optional)
+          project_configuration, definition, name, is_optional, 3)
 
     self.WriteLine('\t\t\t>')
 
@@ -213,7 +213,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     for definition, name, is_optional in (
         self._TOOL_LINKER_CONFIGURATION_OPTIONS1):
       self._WriteConfigurationOption(
-          project_configuration, definition, name, is_optional)
+          project_configuration, definition, name, is_optional, 4)
 
     library_directories = '&quot;$(OutDir)&quot;'
     if project_configuration.library_directories:
@@ -226,12 +226,13 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     for definition, name, is_optional in (
         self._TOOL_LINKER_CONFIGURATION_OPTIONS2):
       self._WriteConfigurationOption(
-          project_configuration, definition, name, is_optional)
+          project_configuration, definition, name, is_optional, 4)
 
     self._WriteConfigurationToolFooter()
 
   def _WriteConfigurationOption(
-      self, project_configuration, definition, name, is_optional):
+      self, project_configuration, definition, name, is_optional,
+      indentation_level):
     """Parses a configuration option.
 
     An optional configuration option will not be written when its configuration
@@ -242,10 +243,13 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
       definition (str): definition of the configuration value in file.
       name (str): name of the configuration value in the project information.
       is_optional (bool): True if the configuration option is optional.
+      indentation_level (int): indentation level.
     """
     configuration_value = getattr(project_configuration, name, '')
     if not is_optional or configuration_value:
-      line = '\t\t\t\t{0:s}="{1:s}"'.format(definition, configuration_value)
+      indentation = '\t' * indentation_level
+      line = '{0:s}{1:s}="{2:s}"'.format(
+          indentation, definition, configuration_value)
       self.WriteLine(line)
 
   def _WriteConfigurationTool(
@@ -262,7 +266,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     for definition, name, is_optional in configuration_options:
       self._WriteConfigurationOption(
-          project_configuration, definition, name, is_optional)
+          project_configuration, definition, name, is_optional, 4)
 
     self._WriteConfigurationToolFooter()
 

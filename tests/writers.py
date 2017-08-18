@@ -127,7 +127,7 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
     file_writer._file = io.BytesIO()
 
     file_writer._WriteConfigurationOption(
-        project_configuration, 'CompileAs', 'compile_as', False)
+        project_configuration, 'CompileAs', 'compile_as', False, 4)
 
     file_writer._file.seek(0, os.SEEK_SET)
     output_data = file_writer._file.read()

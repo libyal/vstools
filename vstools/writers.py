@@ -264,6 +264,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """
     self._WriteConfigurationToolHeader(name)
 
+    # pylint: disable=redefined-argument-from-local
     for definition, name, is_optional in configuration_options:
       self._WriteConfigurationOption(
           project_configuration, definition, name, is_optional, 4)
@@ -631,7 +632,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     Args:
       header_files (list[str]): header filenames.
     """
-    if len(header_files) > 0:
+    if header_files:
       self.WriteLine('  <ItemGroup>')
 
       for filename in header_files:
@@ -895,7 +896,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     Args:
       resource_files (list[str]): resource filenames.
     """
-    if len(resource_files) > 0:
+    if resource_files:
       self.WriteLine('  <ItemGroup>')
 
       for filename in resource_files:
@@ -910,7 +911,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     Args:
       source_files (list[str]): source filenames.
     """
-    if len(source_files) > 0:
+    if source_files:
       self.WriteLine('  <ItemGroup>')
 
       for filename in source_files:
@@ -964,7 +965,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
       solution_projects_by_guid (dict[str, VSSolutionProject]): projects
           per lower case GUID.
     """
-    if len(dependencies) > 0:
+    if dependencies:
       self.WriteLine('  <ItemGroup>')
 
       dependencies_by_name = {}
@@ -1577,7 +1578,7 @@ class VS2008SolutionFileWriter(VSSolutionFileWriter):
             solution_project.name, solution_project_filename,
             solution_project.guid.upper()))
 
-    if len(solution_project.dependencies) > 0:
+    if solution_project.dependencies:
       self.WriteLine(
           '\tProjectSection(ProjectDependencies) = postProject')
 

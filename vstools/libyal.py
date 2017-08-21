@@ -12,29 +12,105 @@ from vstools import resources
 from vstools import solutions
 
 
-class LibyalReleaseVSProjectConfiguration(resources.VSProjectConfiguration):
-  """Libyal release VS project configuration."""
+class Bzip2VSProjectInformation(resources.VSProjectInformation):
+  """Bzip2 Visual Studio project information."""
 
   def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleaseVSProjectConfiguration, self).__init__()
+    """Initializes bzip2 Visual Studio project information."""
+    super(Bzip2VSProjectInformation, self).__init__()
 
-    self.name = 'Release'
-    self.platform = 'Win32'
-    self.character_set = '1'
+    self.header_files = sorted([
+        '..\\..\\..\\bzip2\\bzlib.h',
+        '..\\..\\..\\bzip2\\bzlib_private.h'])
 
-    self.runtime_library = '2'
-    # self.smaller_type_check = 'false'
-    # self.precompiled_header = '0'
-    self.warning_level = '4'
-    # self.warning_as_error = 'false'
-    self.compile_as = '1'
+    self.source_files = sorted([
+        '..\\..\\..\\bzip2\\blocksort.c',
+        '..\\..\\..\\bzip2\\bzlib.c',
+        '..\\..\\..\\bzip2\\compress.c',
+        '..\\..\\..\\bzip2\\crctable.c',
+        '..\\..\\..\\bzip2\\decompress.c',
+        '..\\..\\..\\bzip2\\huffman.c',
+        '..\\..\\..\\bzip2\\randtable.c'])
 
-    self.target_machine = '1'
+
+class DokanVSProjectInformation(resources.VSProjectInformation):
+  """Dokan Visual Studio project information."""
+
+  def __init__(self):
+    """Initializes dokan Visual Studio project information."""
+    super(DokanVSProjectInformation, self).__init__()
+
+    self.header_files = sorted([
+        '..\\..\\..\\dokan\\dokan\\dokan.h',
+        '..\\..\\..\\dokan\\dokan\\dokanc.h',
+        '..\\..\\..\\dokan\\dokan\\dokani.h',
+        '..\\..\\..\\dokan\\dokan\\fileinfo.h',
+        '..\\..\\..\\dokan\\dokan\\list.h'])
+
+    self.source_files = sorted([
+        '..\\..\\..\\dokan\\dokan\\access.c',
+        '..\\..\\..\\dokan\\dokan\\cleanup.c',
+        '..\\..\\..\\dokan\\dokan\\close.c',
+        '..\\..\\..\\dokan\\dokan\\create.c',
+        '..\\..\\..\\dokan\\dokan\\directory.c',
+        '..\\..\\..\\dokan\\dokan\\dokan.c',
+        '..\\..\\..\\dokan\\dokan\\fileinfo.c',
+        '..\\..\\..\\dokan\\dokan\\flush.c',
+        '..\\..\\..\\dokan\\dokan\\lock.c',
+        '..\\..\\..\\dokan\\dokan\\mount.c',
+        '..\\..\\..\\dokan\\dokan\\read.c',
+        '..\\..\\..\\dokan\\dokan\\security.c',
+        '..\\..\\..\\dokan\\dokan\\setfile.c',
+        '..\\..\\..\\dokan\\dokan\\status.c',
+        '..\\..\\..\\dokan\\dokan\\timeout.c',
+        '..\\..\\..\\dokan\\dokan\\version.c',
+        '..\\..\\..\\dokan\\dokan\\volume.c',
+        '..\\..\\..\\dokan\\dokan\\write.c'])
+
+
+class ZlibVSProjectInformation(resources.VSProjectInformation):
+  """Zlib Visual Studio project information."""
+
+  def __init__(self):
+    """Initializes zlib Visual Studio project information."""
+    super(ZlibVSProjectInformation, self).__init__()
+
+    self.header_files = sorted([
+        '..\\..\\..\\zlib\\crc32.h',
+        '..\\..\\..\\zlib\\deflate.h',
+        '..\\..\\..\\zlib\\gzguts.h',
+        '..\\..\\..\\zlib\\inffast.h',
+        '..\\..\\..\\zlib\\inffixed.h',
+        '..\\..\\..\\zlib\\inflate.h',
+        '..\\..\\..\\zlib\\inftrees.h',
+        '..\\..\\..\\zlib\\trees.h',
+        '..\\..\\..\\zlib\\zconf.h',
+        '..\\..\\..\\zlib\\zlib.h',
+        '..\\..\\..\\zlib\\zutil.h'])
+
+    self.resource_files = sorted([
+        '..\\..\\..\\zlib\\win32\\zlib1.rc'])
+
+    self.source_files = sorted([
+        '..\\..\\..\\zlib\\adler32.c',
+        '..\\..\\..\\zlib\\compress.c',
+        '..\\..\\..\\zlib\\crc32.c',
+        '..\\..\\..\\zlib\\deflate.c',
+        '..\\..\\..\\zlib\\gzclose.c',
+        '..\\..\\..\\zlib\\gzlib.c',
+        '..\\..\\..\\zlib\\gzread.c',
+        '..\\..\\..\\zlib\\gzwrite.c',
+        '..\\..\\..\\zlib\\infback.c',
+        '..\\..\\..\\zlib\\inffast.c',
+        '..\\..\\..\\zlib\\inflate.c',
+        '..\\..\\..\\zlib\\inftrees.c',
+        '..\\..\\..\\zlib\\trees.c',
+        '..\\..\\..\\zlib\\uncompr.c',
+        '..\\..\\..\\zlib\\zutil.c'])
 
 
 class LibyalDebugVSProjectConfiguration(resources.VSProjectConfiguration):
-  """Libyal debug VS project configuration."""
+  """Libyal debug Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
@@ -57,6 +133,182 @@ class LibyalDebugVSProjectConfiguration(resources.VSProjectConfiguration):
     self.target_machine = '1'
 
 
+class LibyalDebugDllVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
+  """Libyal debug DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalDebugDllVSProjectConfiguration, self).__init__()
+
+    self.output_type = '2'
+    self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
+    self.library_directories = ''
+    self.generate_debug_information = 'true'
+    self.randomized_base_address = '1'
+    self.data_execution_prevention = '1'
+    self.import_library = '$(OutDir)\\$(ProjectName).lib'
+    self.linker_values_set = True
+
+
+class LibyalDebugDotNetDllVSProjectConfiguration(
+    LibyalDebugDllVSProjectConfiguration):
+  """Libyal debug .Net DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalDebugDotNetDllVSProjectConfiguration, self).__init__()
+
+    self.compile_as = '2'
+    self.managed_extensions = '1'
+    self.basic_runtime_checks = ''
+    self.smaller_type_check = ''
+
+
+class LibyalDebugExeVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
+  """Libyal debug EXE Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalDebugExeVSProjectConfiguration, self).__init__()
+
+    self.output_type = '1'
+
+    # self.precompiled_header = '0'
+
+    self.generate_debug_information = 'true'
+    self.link_incremental = '1'
+    self.sub_system = '1'
+    self.optimize_references = '2'
+    self.enable_comdat_folding = '2'
+    self.randomized_base_address = '1'
+    self.data_execution_prevention = '1'
+    self.target_machine = '1'
+    self.linker_values_set = True
+
+
+class LibyalDebugLibraryVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
+  """Libyal debug library Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalDebugLibraryVSProjectConfiguration, self).__init__()
+
+    self.output_type = '4'
+    self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
+    self.librarian_ignore_defaults = 'false'
+
+
+class LibyalDebugPythonDllVSProjectConfiguration(
+    LibyalDebugDllVSProjectConfiguration):
+  """Libyal debug Python DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalDebugPythonDllVSProjectConfiguration, self).__init__()
+
+    self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
+    self.library_directories = 'C:\\Python27\\libs'
+
+
+class LibyalReleaseVSProjectConfiguration(resources.VSProjectConfiguration):
+  """Libyal release Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalReleaseVSProjectConfiguration, self).__init__()
+
+    self.name = 'Release'
+    self.platform = 'Win32'
+    self.character_set = '1'
+
+    self.runtime_library = '2'
+    # self.smaller_type_check = 'false'
+    # self.precompiled_header = '0'
+    self.warning_level = '4'
+    # self.warning_as_error = 'false'
+    self.compile_as = '1'
+
+    self.target_machine = '1'
+
+
+class LibyalReleaseDllVSProjectConfiguration(
+    LibyalReleaseVSProjectConfiguration):
+  """Libyal release DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalReleaseDllVSProjectConfiguration, self).__init__()
+
+    self.output_type = '2'
+    self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
+    self.library_directories = ''
+    self.randomized_base_address = '2'
+    self.data_execution_prevention = '2'
+    self.import_library = '$(OutDir)\\$(ProjectName).lib'
+    self.linker_values_set = True
+
+
+class LibyalReleaseDotNetDllVSProjectConfiguration(
+    LibyalReleaseDllVSProjectConfiguration):
+  """Libyal release .Net DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalReleaseDotNetDllVSProjectConfiguration, self).__init__()
+
+    self.compile_as = '2'
+    self.managed_extensions = '1'
+
+
+class LibyalReleaseExeVSProjectConfiguration(
+    LibyalReleaseVSProjectConfiguration):
+  """Libyal release EXE Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalReleaseExeVSProjectConfiguration, self).__init__()
+
+    self.output_type = '1'
+
+    self.whole_program_optimization = '1'
+
+    # self.precompiled_header = '0'
+
+    self.link_incremental = '1'
+    self.sub_system = '1'
+    self.optimize_references = '2'
+    self.enable_comdat_folding = '2'
+    self.randomized_base_address = '2'
+    self.data_execution_prevention = '2'
+    self.target_machine = '1'
+    self.linker_values_set = True
+
+
+class LibyalReleaseLibraryVSProjectConfiguration(
+    LibyalReleaseVSProjectConfiguration):
+  """Libyal release library Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalReleaseLibraryVSProjectConfiguration, self).__init__()
+
+    self.output_type = '4'
+    self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
+    self.librarian_ignore_defaults = 'false'
+
+
+class LibyalReleasePythonDllVSProjectConfiguration(
+    LibyalReleaseDllVSProjectConfiguration):
+  """Libyal release Python DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(LibyalReleasePythonDllVSProjectConfiguration, self).__init__()
+
+    self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
+    self.library_directories = 'C:\\Python27\\libs'
+
+
 class LibyalSourceVSSolution(solutions.VSSolution):
   """Libyal source Visual Studio solution generator."""
 
@@ -75,19 +327,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       debug_project_configuration (LibyalReleaseVSProjectConfiguration):
           debug project configuration.
     """
-    project_information.source_files = sorted([
-        '..\\..\\..\\bzip2\\blocksort.c',
-        '..\\..\\..\\bzip2\\bzlib.c',
-        '..\\..\\..\\bzip2\\compress.c',
-        '..\\..\\..\\bzip2\\crctable.c',
-        '..\\..\\..\\bzip2\\decompress.c',
-        '..\\..\\..\\bzip2\\huffman.c',
-        '..\\..\\..\\bzip2\\randtable.c'])
-
-    project_information.header_files = sorted([
-        '..\\..\\..\\bzip2\\bzlib.h',
-        '..\\..\\..\\bzip2\\bzlib_private.h'])
-
     include_directories = sorted([
         '..\\..\\..\\bzip2'])
 
@@ -109,59 +348,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
-    self._ConfigureAsDll(
-        project_information, release_project_configuration,
-        debug_project_configuration)
-
-  def _ConfigureAsDll(
-      self, project_information, release_project_configuration,
-      debug_project_configuration):
-    """Configures the project as a DLL.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
-          release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
-          debug project configuration.
-    """
-    if project_information.name.startswith('py'):
-      dll_extension = 'pyd'
-      library_directories = 'C:\\Python27\\libs'
-    else:
-      dll_extension = 'dll'
-      library_directories = ''
-
-    dll_filename = '$(OutDir)\\$(ProjectName).{0:s}'.format(dll_extension)
-    lib_filename = '$(OutDir)\\$(ProjectName).lib'
-
-    release_project_configuration.output_type = '2'
-    release_project_configuration.linker_output_file = dll_filename
-    release_project_configuration.library_directories = library_directories
-    release_project_configuration.randomized_base_address = '2'
-    release_project_configuration.data_execution_prevention = '2'
-    release_project_configuration.import_library = lib_filename
-    release_project_configuration.linker_values_set = True
-
-    if project_information.name.endswith('.net'):
-      release_project_configuration.compile_as = '2'
-      release_project_configuration.managed_extensions = '1'
-
-    debug_project_configuration.output_type = '2'
-    debug_project_configuration.linker_output_file = dll_filename
-    debug_project_configuration.library_directories = library_directories
-    debug_project_configuration.generate_debug_information = 'true'
-    debug_project_configuration.randomized_base_address = '1'
-    debug_project_configuration.data_execution_prevention = '1'
-    debug_project_configuration.import_library = lib_filename
-    debug_project_configuration.linker_values_set = True
-
-    if project_information.name.endswith('.net'):
-      debug_project_configuration.compile_as = '2'
-      debug_project_configuration.managed_extensions = '1'
-      debug_project_configuration.basic_runtime_checks = ''
-      debug_project_configuration.smaller_type_check = ''
-
   def _ConfigureAsDokanDll(
       self, project_information, release_project_configuration,
       debug_project_configuration):
@@ -174,33 +360,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       debug_project_configuration (LibyalReleaseVSProjectConfiguration):
           debug project configuration.
     """
-    project_information.source_files = sorted([
-        '..\\..\\..\\dokan\\dokan\\access.c',
-        '..\\..\\..\\dokan\\dokan\\cleanup.c',
-        '..\\..\\..\\dokan\\dokan\\close.c',
-        '..\\..\\..\\dokan\\dokan\\create.c',
-        '..\\..\\..\\dokan\\dokan\\directory.c',
-        '..\\..\\..\\dokan\\dokan\\dokan.c',
-        '..\\..\\..\\dokan\\dokan\\fileinfo.c',
-        '..\\..\\..\\dokan\\dokan\\flush.c',
-        '..\\..\\..\\dokan\\dokan\\lock.c',
-        '..\\..\\..\\dokan\\dokan\\mount.c',
-        '..\\..\\..\\dokan\\dokan\\read.c',
-        '..\\..\\..\\dokan\\dokan\\security.c',
-        '..\\..\\..\\dokan\\dokan\\setfile.c',
-        '..\\..\\..\\dokan\\dokan\\status.c',
-        '..\\..\\..\\dokan\\dokan\\timeout.c',
-        '..\\..\\..\\dokan\\dokan\\version.c',
-        '..\\..\\..\\dokan\\dokan\\volume.c',
-        '..\\..\\..\\dokan\\dokan\\write.c'])
-
-    project_information.header_files = sorted([
-        '..\\..\\..\\dokan\\dokan\\dokan.h',
-        '..\\..\\..\\dokan\\dokan\\dokanc.h',
-        '..\\..\\..\\dokan\\dokan\\dokani.h',
-        '..\\..\\..\\dokan\\dokan\\fileinfo.h',
-        '..\\..\\..\\dokan\\dokan\\list.h'])
-
     include_directories = sorted([
         '..\\..\\..\\dokan\\sys\\'])
 
@@ -228,10 +387,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.module_definition_file = (
         module_definition_file)
 
-    self._ConfigureAsDll(
-        project_information, release_project_configuration,
-        debug_project_configuration)
-
   def _ConfigureAsExe(
       self, project_information, release_project_configuration,
       debug_project_configuration):
@@ -246,35 +401,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     """
     project_information.keyword = 'Win32Proj'
 
-    release_project_configuration.output_type = '1'
-
-    release_project_configuration.whole_program_optimization = '1'
-
-    # release_project_configuration.precompiled_header = '0'
-
-    release_project_configuration.link_incremental = '1'
-    release_project_configuration.sub_system = '1'
-    release_project_configuration.optimize_references = '2'
-    release_project_configuration.enable_comdat_folding = '2'
-    release_project_configuration.randomized_base_address = '2'
-    release_project_configuration.data_execution_prevention = '2'
-    release_project_configuration.target_machine = '1'
-    release_project_configuration.linker_values_set = True
-
-    debug_project_configuration.output_type = '1'
-
-    # debug_project_configuration.precompiled_header = '0'
-
-    debug_project_configuration.generate_debug_information = 'true'
-    debug_project_configuration.link_incremental = '1'
-    debug_project_configuration.sub_system = '1'
-    debug_project_configuration.optimize_references = '2'
-    debug_project_configuration.enable_comdat_folding = '2'
-    debug_project_configuration.randomized_base_address = '1'
-    debug_project_configuration.data_execution_prevention = '1'
-    debug_project_configuration.target_machine = '1'
-    debug_project_configuration.linker_values_set = True
-
   def _ConfigureAsLibrary(
       self, unused_project_information, release_project_configuration,
       debug_project_configuration):
@@ -287,15 +413,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       debug_project_configuration (LibyalReleaseVSProjectConfiguration):
           debug project configuration.
     """
-    lib_filename = '$(OutDir)\\$(ProjectName).lib'
-
-    release_project_configuration.output_type = '4'
-    release_project_configuration.librarian_output_file = lib_filename
-    release_project_configuration.librarian_ignore_defaults = 'false'
-
-    debug_project_configuration.output_type = '4'
-    debug_project_configuration.librarian_output_file = lib_filename
-    debug_project_configuration.librarian_ignore_defaults = 'false'
+    pass
 
   def _ConfigureAsZlibDll(
       self, project_information, release_project_configuration,
@@ -309,39 +427,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       debug_project_configuration (LibyalReleaseVSProjectConfiguration):
           debug project configuration.
     """
-    project_information.source_files = sorted([
-        '..\\..\\..\\zlib\\adler32.c',
-        '..\\..\\..\\zlib\\compress.c',
-        '..\\..\\..\\zlib\\crc32.c',
-        '..\\..\\..\\zlib\\deflate.c',
-        '..\\..\\..\\zlib\\gzclose.c',
-        '..\\..\\..\\zlib\\gzlib.c',
-        '..\\..\\..\\zlib\\gzread.c',
-        '..\\..\\..\\zlib\\gzwrite.c',
-        '..\\..\\..\\zlib\\infback.c',
-        '..\\..\\..\\zlib\\inffast.c',
-        '..\\..\\..\\zlib\\inflate.c',
-        '..\\..\\..\\zlib\\inftrees.c',
-        '..\\..\\..\\zlib\\trees.c',
-        '..\\..\\..\\zlib\\uncompr.c',
-        '..\\..\\..\\zlib\\zutil.c'])
-
-    project_information.header_files = sorted([
-        '..\\..\\..\\zlib\\crc32.h',
-        '..\\..\\..\\zlib\\deflate.h',
-        '..\\..\\..\\zlib\\gzguts.h',
-        '..\\..\\..\\zlib\\inffast.h',
-        '..\\..\\..\\zlib\\inffixed.h',
-        '..\\..\\..\\zlib\\inflate.h',
-        '..\\..\\..\\zlib\\inftrees.h',
-        '..\\..\\..\\zlib\\trees.h',
-        '..\\..\\..\\zlib\\zconf.h',
-        '..\\..\\..\\zlib\\zlib.h',
-        '..\\..\\..\\zlib\\zutil.h'])
-
-    project_information.resource_files = sorted([
-        '..\\..\\..\\zlib\\win32\\zlib1.rc'])
-
     include_directories = sorted([
         '..\\..\\..\\zlib'])
 
@@ -362,10 +447,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         include_directories)
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
-
-    self._ConfigureAsDll(
-        project_information, release_project_configuration,
-        debug_project_configuration)
 
   def _ConfigureLibcrypto(
       self, unused_project_information, release_project_configuration,
@@ -445,14 +526,29 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
       solution_projects.append(solution_project)
 
-      project_information = resources.VSProjectInformation()
+      if project_name == 'bzip2':
+        project_information = Bzip2VSProjectInformation()
+
+      elif project_name == 'dokan':
+        project_information = DokanVSProjectInformation()
+
+      elif project_name == 'zlib':
+        project_information = ZlibVSProjectInformation()
+
+      else:
+        project_information = resources.VSProjectInformation()
 
       project_information.name = project_name
       project_information.guid = project_guid
       project_information.root_name_space = project_name
 
-      release_project_configuration = LibyalReleaseVSProjectConfiguration()
-      debug_project_configuration = LibyalDebugVSProjectConfiguration()
+      if project_name in ('bzip2', 'dokan', 'zlib'):
+          release_project_configuration = (
+              LibyalReleaseDllVSProjectConfiguration())
+          debug_project_configuration = LibyalDebugDllVSProjectConfiguration()
+      else:
+        release_project_configuration = LibyalReleaseVSProjectConfiguration()
+        debug_project_configuration = LibyalDebugVSProjectConfiguration()
 
       if project_name == 'bzip2':
         self._ConfigureAsBzip2Dll(
@@ -944,8 +1040,35 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         project_information.guid = project_guid
         project_information.root_name_space = project_name
 
-        release_project_configuration = LibyalReleaseVSProjectConfiguration()
-        debug_project_configuration = LibyalDebugVSProjectConfiguration()
+        # TODO: replace _ConfigureAsDll and equiv by
+        # LibyalReleaseDllVSProjectConfiguration.
+        if project_name == solution_name:
+          release_project_configuration = (
+              LibyalReleaseDllVSProjectConfiguration())
+          debug_project_configuration = LibyalDebugDllVSProjectConfiguration()
+
+        elif project_name.endswith('.net'):
+          release_project_configuration = (
+              LibyalReleaseDotNetDllVSProjectConfiguration())
+          debug_project_configuration = (
+              LibyalDebugDotNetDllVSProjectConfiguration())
+
+        elif project_name.startswith('py'):
+          release_project_configuration = (
+              LibyalReleasePythonDllVSProjectConfiguration())
+          debug_project_configuration = (
+              LibyalDebugPythonDllVSProjectConfiguration())
+
+        elif project_name.startswith('lib'):
+          release_project_configuration = (
+              LibyalReleaseLibraryVSProjectConfiguration())
+          debug_project_configuration = (
+              LibyalDebugLibraryVSProjectConfiguration())
+
+        else:
+          release_project_configuration = (
+              LibyalReleaseExeVSProjectConfiguration())
+          debug_project_configuration = LibyalDebugExeVSProjectConfiguration()
 
         # TODO: determine autogenerated source.
 
@@ -957,14 +1080,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
         if (project_name == solution_name or project_name.startswith('py') or
             project_name.endswith('.net')):
-          self._ConfigureAsDll(
-              project_information, release_project_configuration,
-              debug_project_configuration)
+          pass
 
         elif project_name.startswith('lib'):
-          self._ConfigureAsLibrary(
-              project_information, release_project_configuration,
-              debug_project_configuration)
+          pass
 
         else:
           self._ConfigureAsExe(

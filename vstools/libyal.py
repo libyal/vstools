@@ -109,12 +109,106 @@ class ZlibVSProjectInformation(resources.VSProjectInformation):
         '..\\..\\..\\zlib\\zutil.c'])
 
 
-class LibyalDebugVSProjectConfiguration(resources.VSProjectConfiguration):
-  """Libyal debug Visual Studio project configuration."""
+class ReleaseVSProjectConfiguration(resources.VSProjectConfiguration):
+  """Release Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(LibyalDebugVSProjectConfiguration, self).__init__()
+    super(ReleaseVSProjectConfiguration, self).__init__()
+
+    self.name = 'Release'
+    self.platform = 'Win32'
+    self.character_set = '1'
+
+    self.runtime_library = '2'
+    # self.smaller_type_check = 'false'
+    # self.precompiled_header = '0'
+    self.warning_level = '4'
+    # self.warning_as_error = 'false'
+    self.compile_as = '1'
+
+    self.target_machine = '1'
+
+
+class ReleaseDllVSProjectConfiguration(ReleaseVSProjectConfiguration):
+  """Release DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(ReleaseDllVSProjectConfiguration, self).__init__()
+
+    self.output_type = '2'
+    self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
+    self.library_directories = ''
+    self.randomized_base_address = '2'
+    self.data_execution_prevention = '2'
+    self.import_library = '$(OutDir)\\$(ProjectName).lib'
+    self.linker_values_set = True
+
+
+class ReleaseDotNetDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
+  """Release .Net DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(ReleaseDotNetDllVSProjectConfiguration, self).__init__()
+
+    self.compile_as = '2'
+    self.managed_extensions = '1'
+
+
+class ReleaseExeVSProjectConfiguration(ReleaseVSProjectConfiguration):
+  """Release EXE Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(ReleaseExeVSProjectConfiguration, self).__init__()
+
+    self.output_type = '1'
+
+    self.whole_program_optimization = '1'
+
+    # self.precompiled_header = '0'
+
+    self.link_incremental = '1'
+    self.sub_system = '1'
+    self.optimize_references = '2'
+    self.enable_comdat_folding = '2'
+    self.randomized_base_address = '2'
+    self.data_execution_prevention = '2'
+    self.target_machine = '1'
+    self.linker_values_set = True
+
+
+class ReleaseLibraryVSProjectConfiguration(ReleaseVSProjectConfiguration):
+  """Release library Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(ReleaseLibraryVSProjectConfiguration, self).__init__()
+
+    self.output_type = '4'
+    self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
+    self.librarian_ignore_defaults = 'false'
+
+
+class ReleasePythonDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
+  """Release Python DLL Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(ReleasePythonDllVSProjectConfiguration, self).__init__()
+
+    self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
+    self.library_directories = 'C:\\Python27\\libs'
+
+
+class VSDebugVSProjectConfiguration(resources.VSProjectConfiguration):
+  """VSDebug Visual Studio project configuration."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project configuration."""
+    super(VSDebugVSProjectConfiguration, self).__init__()
 
     self.name = 'VSDebug'
     self.platform = 'Win32'
@@ -133,12 +227,12 @@ class LibyalDebugVSProjectConfiguration(resources.VSProjectConfiguration):
     self.target_machine = '1'
 
 
-class LibyalDebugDllVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
-  """Libyal debug DLL Visual Studio project configuration."""
+class VSDebugDllVSProjectConfiguration(VSDebugVSProjectConfiguration):
+  """VSDebug DLL Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(LibyalDebugDllVSProjectConfiguration, self).__init__()
+    super(VSDebugDllVSProjectConfiguration, self).__init__()
 
     self.output_type = '2'
     self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
@@ -150,13 +244,12 @@ class LibyalDebugDllVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
     self.linker_values_set = True
 
 
-class LibyalDebugDotNetDllVSProjectConfiguration(
-    LibyalDebugDllVSProjectConfiguration):
-  """Libyal debug .Net DLL Visual Studio project configuration."""
+class VSDebugDotNetDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
+  """VSDebug .Net DLL Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(LibyalDebugDotNetDllVSProjectConfiguration, self).__init__()
+    super(VSDebugDotNetDllVSProjectConfiguration, self).__init__()
 
     self.compile_as = '2'
     self.managed_extensions = '1'
@@ -164,12 +257,12 @@ class LibyalDebugDotNetDllVSProjectConfiguration(
     self.smaller_type_check = ''
 
 
-class LibyalDebugExeVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
-  """Libyal debug EXE Visual Studio project configuration."""
+class VSDebugExeVSProjectConfiguration(VSDebugVSProjectConfiguration):
+  """VSDebug EXE Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(LibyalDebugExeVSProjectConfiguration, self).__init__()
+    super(VSDebugExeVSProjectConfiguration, self).__init__()
 
     self.output_type = '1'
 
@@ -186,124 +279,24 @@ class LibyalDebugExeVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
     self.linker_values_set = True
 
 
-class LibyalDebugLibraryVSProjectConfiguration(LibyalDebugVSProjectConfiguration):
-  """Libyal debug library Visual Studio project configuration."""
+class VSDebugLibraryVSProjectConfiguration(VSDebugVSProjectConfiguration):
+  """VSDebug library Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(LibyalDebugLibraryVSProjectConfiguration, self).__init__()
+    super(VSDebugLibraryVSProjectConfiguration, self).__init__()
 
     self.output_type = '4'
     self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
     self.librarian_ignore_defaults = 'false'
 
 
-class LibyalDebugPythonDllVSProjectConfiguration(
-    LibyalDebugDllVSProjectConfiguration):
-  """Libyal debug Python DLL Visual Studio project configuration."""
+class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
+  """VSDebug Python DLL Visual Studio project configuration."""
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(LibyalDebugPythonDllVSProjectConfiguration, self).__init__()
-
-    self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
-    self.library_directories = 'C:\\Python27\\libs'
-
-
-class LibyalReleaseVSProjectConfiguration(resources.VSProjectConfiguration):
-  """Libyal release Visual Studio project configuration."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleaseVSProjectConfiguration, self).__init__()
-
-    self.name = 'Release'
-    self.platform = 'Win32'
-    self.character_set = '1'
-
-    self.runtime_library = '2'
-    # self.smaller_type_check = 'false'
-    # self.precompiled_header = '0'
-    self.warning_level = '4'
-    # self.warning_as_error = 'false'
-    self.compile_as = '1'
-
-    self.target_machine = '1'
-
-
-class LibyalReleaseDllVSProjectConfiguration(
-    LibyalReleaseVSProjectConfiguration):
-  """Libyal release DLL Visual Studio project configuration."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleaseDllVSProjectConfiguration, self).__init__()
-
-    self.output_type = '2'
-    self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
-    self.library_directories = ''
-    self.randomized_base_address = '2'
-    self.data_execution_prevention = '2'
-    self.import_library = '$(OutDir)\\$(ProjectName).lib'
-    self.linker_values_set = True
-
-
-class LibyalReleaseDotNetDllVSProjectConfiguration(
-    LibyalReleaseDllVSProjectConfiguration):
-  """Libyal release .Net DLL Visual Studio project configuration."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleaseDotNetDllVSProjectConfiguration, self).__init__()
-
-    self.compile_as = '2'
-    self.managed_extensions = '1'
-
-
-class LibyalReleaseExeVSProjectConfiguration(
-    LibyalReleaseVSProjectConfiguration):
-  """Libyal release EXE Visual Studio project configuration."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleaseExeVSProjectConfiguration, self).__init__()
-
-    self.output_type = '1'
-
-    self.whole_program_optimization = '1'
-
-    # self.precompiled_header = '0'
-
-    self.link_incremental = '1'
-    self.sub_system = '1'
-    self.optimize_references = '2'
-    self.enable_comdat_folding = '2'
-    self.randomized_base_address = '2'
-    self.data_execution_prevention = '2'
-    self.target_machine = '1'
-    self.linker_values_set = True
-
-
-class LibyalReleaseLibraryVSProjectConfiguration(
-    LibyalReleaseVSProjectConfiguration):
-  """Libyal release library Visual Studio project configuration."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleaseLibraryVSProjectConfiguration, self).__init__()
-
-    self.output_type = '4'
-    self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
-    self.librarian_ignore_defaults = 'false'
-
-
-class LibyalReleasePythonDllVSProjectConfiguration(
-    LibyalReleaseDllVSProjectConfiguration):
-  """Libyal release Python DLL Visual Studio project configuration."""
-
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
-    super(LibyalReleasePythonDllVSProjectConfiguration, self).__init__()
+    super(VSDebugPythonDllVSProjectConfiguration, self).__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
     self.library_directories = 'C:\\Python27\\libs'
@@ -322,9 +315,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     Args:
       project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
+      release_project_configuration (ReleaseVSProjectConfiguration):
           release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
+      debug_project_configuration (VSDebugVSProjectConfiguration):
           debug project configuration.
     """
     include_directories = sorted([
@@ -355,9 +348,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     Args:
       project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
+      release_project_configuration (ReleaseVSProjectConfiguration):
           release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
+      debug_project_configuration (VSDebugVSProjectConfiguration):
           debug project configuration.
     """
     include_directories = sorted([
@@ -394,9 +387,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     Args:
       project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
+      release_project_configuration (ReleaseVSProjectConfiguration):
           release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
+      debug_project_configuration (VSDebugVSProjectConfiguration):
           debug project configuration.
     """
     include_directories = sorted([
@@ -427,9 +420,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     Args:
       project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
+      release_project_configuration (ReleaseVSProjectConfiguration):
           release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
+      debug_project_configuration (VSDebugVSProjectConfiguration):
           debug project configuration.
     """
     dependency = 'advapi32.lib'
@@ -447,9 +440,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     Args:
       project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
+      release_project_configuration (ReleaseVSProjectConfiguration):
           release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
+      debug_project_configuration (VSDebugVSProjectConfiguration):
           debug project configuration.
     """
     dependency = 'rpcrt4.lib'
@@ -515,12 +508,11 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       project_information.root_name_space = project_name
 
       if project_name in ('bzip2', 'dokan', 'zlib'):
-          release_project_configuration = (
-              LibyalReleaseDllVSProjectConfiguration())
-          debug_project_configuration = LibyalDebugDllVSProjectConfiguration()
+          release_project_configuration = ReleaseDllVSProjectConfiguration()
+          debug_project_configuration = VSDebugDllVSProjectConfiguration()
       else:
-        release_project_configuration = LibyalReleaseVSProjectConfiguration()
-        debug_project_configuration = LibyalDebugVSProjectConfiguration()
+        release_project_configuration = ReleaseVSProjectConfiguration()
+        debug_project_configuration = VSDebugVSProjectConfiguration()
 
       if project_name == 'bzip2':
         self._ConfigureAsBzip2Dll(
@@ -551,9 +543,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       makefile_am_path (str): path of the Makefile.am file.
       solution_name (str): name of the solution.
       project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
+      release_project_configuration (ReleaseVSProjectConfiguration):
           release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
+      debug_project_configuration (VSDebugVSProjectConfiguration):
           debug project configuration.
     """
     project_name = project_information.name
@@ -1013,34 +1005,26 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         project_information.root_name_space = project_name
 
         if project_name == solution_name:
-          release_project_configuration = (
-              LibyalReleaseDllVSProjectConfiguration())
-          debug_project_configuration = LibyalDebugDllVSProjectConfiguration()
+          release_project_configuration = ReleaseDllVSProjectConfiguration()
+          debug_project_configuration = VSDebugDllVSProjectConfiguration()
 
         elif project_name.endswith('.net'):
-          release_project_configuration = (
-              LibyalReleaseDotNetDllVSProjectConfiguration())
-          debug_project_configuration = (
-              LibyalDebugDotNetDllVSProjectConfiguration())
+          release_project_configuration = ReleaseDotNetDllVSProjectConfiguration()
+          debug_project_configuration = VSDebugDotNetDllVSProjectConfiguration()
 
         elif project_name.startswith('py'):
-          release_project_configuration = (
-              LibyalReleasePythonDllVSProjectConfiguration())
-          debug_project_configuration = (
-              LibyalDebugPythonDllVSProjectConfiguration())
+          release_project_configuration = ReleasePythonDllVSProjectConfiguration()
+          debug_project_configuration = VSDebugPythonDllVSProjectConfiguration()
 
         elif project_name.startswith('lib'):
-          release_project_configuration = (
-              LibyalReleaseLibraryVSProjectConfiguration())
-          debug_project_configuration = (
-              LibyalDebugLibraryVSProjectConfiguration())
+          release_project_configuration = ReleaseLibraryVSProjectConfiguration()
+          debug_project_configuration = VSDebugLibraryVSProjectConfiguration()
 
         else:
           project_information.keyword = 'Win32Proj'
 
-          release_project_configuration = (
-              LibyalReleaseExeVSProjectConfiguration())
-          debug_project_configuration = LibyalDebugExeVSProjectConfiguration()
+          release_project_configuration = ReleaseExeVSProjectConfiguration()
+          debug_project_configuration = VSDebugExeVSProjectConfiguration()
 
         # TODO: determine autogenerated source.
 

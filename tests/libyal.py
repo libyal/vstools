@@ -56,12 +56,101 @@ class ZlibVSProjectInformationTest(test_lib.BaseTestCase):
         '..\\..\\..\\zlib\\win32\\zlib1.rc', project_information.resource_files)
 
 
-class LibyalDebugVSProjectConfigurationTest(test_lib.BaseTestCase):
-  """Libyal debug VS project configuration tests."""
+class ReleaseVSProjectConfigurationTest(test_lib.BaseTestCase):
+  """Release VS project configuration tests."""
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = libyal.LibyalDebugVSProjectConfiguration()
+    configuration = libyal.ReleaseVSProjectConfiguration()
+
+    self.assertEqual(configuration.name, 'Release')
+    self.assertEqual(configuration.platform, 'Win32')
+    self.assertEqual(configuration.character_set, '1')
+    self.assertEqual(configuration.runtime_library, '2')
+    self.assertEqual(configuration.warning_level, '4')
+    self.assertEqual(configuration.compile_as, '1')
+    self.assertEqual(configuration.target_machine, '1')
+
+
+class ReleaseDllVSProjectConfiguration(test_lib.BaseTestCase):
+  """Release DLL VS project configuration tests."""
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    configuration = libyal.ReleaseDllVSProjectConfiguration()
+
+    self.assertEqual(configuration.output_type, '2')
+    self.assertEqual(
+        configuration.linker_output_file, '$(OutDir)\\$(ProjectName).dll')
+    self.assertEqual(configuration.library_directories, '')
+    self.assertEqual(configuration.randomized_base_address, '2')
+    self.assertEqual(configuration.data_execution_prevention, '2')
+    self.assertEqual(
+        configuration.import_library, '$(OutDir)\\$(ProjectName).lib')
+    self.assertTrue(configuration.linker_values_set)
+
+
+class ReleaseDotNetDllVSProjectConfiguration(test_lib.BaseTestCase):
+  """Release .Net DLL VS project configuration tests."""
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    configuration = libyal.ReleaseDotNetDllVSProjectConfiguration()
+
+    self.assertEqual(configuration.compile_as, '2')
+    self.assertEqual(configuration.managed_extensions, '1')
+
+
+class ReleaseExeVSProjectConfiguration(test_lib.BaseTestCase):
+  """Release EXE VS project configuration tests."""
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    configuration = libyal.ReleaseExeVSProjectConfiguration()
+
+    self.assertEqual(configuration.output_type, '1')
+    self.assertEqual(configuration.whole_program_optimization, '1')
+    self.assertEqual(configuration.link_incremental, '1')
+    self.assertEqual(configuration.sub_system, '1')
+    self.assertEqual(configuration.optimize_references, '2')
+    self.assertEqual(configuration.enable_comdat_folding, '2')
+    self.assertEqual(configuration.randomized_base_address, '2')
+    self.assertEqual(configuration.data_execution_prevention, '2')
+    self.assertEqual(configuration.target_machine, '1')
+    self.assertTrue(configuration.linker_values_set)
+
+
+class ReleaseLibraryVSProjectConfiguration(test_lib.BaseTestCase):
+  """Release library VS project configuration tests."""
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    configuration = libyal.ReleaseLibraryVSProjectConfiguration()
+
+    self.assertEqual(configuration.output_type, '4')
+    self.assertEqual(
+        configuration.librarian_output_file, '$(OutDir)\\$(ProjectName).lib')
+    self.assertEqual(configuration.librarian_ignore_defaults, 'false')
+
+
+class ReleasePythonDllVSProjectConfiguration(test_lib.BaseTestCase):
+  """Release Python DLL VS project configuration tests."""
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    configuration = libyal.ReleasePythonDllVSProjectConfiguration()
+
+    self.assertEqual(
+        configuration.linker_output_file, '$(OutDir)\\$(ProjectName).pyd')
+    self.assertEqual(configuration.library_directories, 'C:\\Python27\\libs')
+
+
+class VSDebugVSProjectConfigurationTest(test_lib.BaseTestCase):
+  """VSDebug VS project configuration tests."""
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    configuration = libyal.VSDebugVSProjectConfiguration()
 
     self.assertEqual(configuration.name, 'VSDebug')
     self.assertEqual(configuration.platform, 'Win32')
@@ -76,12 +165,12 @@ class LibyalDebugVSProjectConfigurationTest(test_lib.BaseTestCase):
     self.assertEqual(configuration.target_machine, '1')
 
 
-class LibyalDebugDllVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal debug DLL VS project configuration tests."""
+class VSDebugDllVSProjectConfiguration(test_lib.BaseTestCase):
+  """VSDebug DLL VS project configuration tests."""
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = libyal.LibyalDebugDllVSProjectConfiguration()
+    configuration = libyal.VSDebugDllVSProjectConfiguration()
 
     self.assertEqual(configuration.output_type, '2')
     self.assertEqual(
@@ -95,12 +184,12 @@ class LibyalDebugDllVSProjectConfiguration(test_lib.BaseTestCase):
     self.assertTrue(configuration.linker_values_set)
 
 
-class LibyalDebugDotNetDllVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal debug .Net DLL VS project configuration tests."""
+class VSDebugDotNetDllVSProjectConfiguration(test_lib.BaseTestCase):
+  """VSDebug .Net DLL VS project configuration tests."""
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = libyal.LibyalDebugDotNetDllVSProjectConfiguration()
+    configuration = libyal.VSDebugDotNetDllVSProjectConfiguration()
 
     self.assertEqual(configuration.compile_as, '2')
     self.assertEqual(configuration.managed_extensions, '1')
@@ -108,12 +197,12 @@ class LibyalDebugDotNetDllVSProjectConfiguration(test_lib.BaseTestCase):
     self.assertEqual(configuration.smaller_type_check, '')
 
 
-class LibyalDebugExeVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal debug EXE VS project configuration tests."""
+class VSDebugExeVSProjectConfiguration(test_lib.BaseTestCase):
+  """VSDebug EXE VS project configuration tests."""
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = libyal.LibyalDebugExeVSProjectConfiguration()
+    configuration = libyal.VSDebugExeVSProjectConfiguration()
 
     self.assertEqual(configuration.output_type, '1')
     self.assertEqual(configuration.generate_debug_information, 'true')
@@ -127,12 +216,12 @@ class LibyalDebugExeVSProjectConfiguration(test_lib.BaseTestCase):
     self.assertTrue(configuration.linker_values_set)
 
 
-class LibyalDebugLibraryVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal debug library VS project configuration tests."""
+class VSDebugLibraryVSProjectConfiguration(test_lib.BaseTestCase):
+  """VSDebug library VS project configuration tests."""
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = libyal.LibyalDebugLibraryVSProjectConfiguration()
+    configuration = libyal.VSDebugLibraryVSProjectConfiguration()
 
     self.assertEqual(configuration.output_type, '4')
     self.assertEqual(
@@ -140,101 +229,12 @@ class LibyalDebugLibraryVSProjectConfiguration(test_lib.BaseTestCase):
     self.assertEqual(configuration.librarian_ignore_defaults, 'false')
 
 
-class LibyalDebugPythonDllVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal debug Python DLL VS project configuration tests."""
+class VSDebugPythonDllVSProjectConfiguration(test_lib.BaseTestCase):
+  """VSDebug Python DLL VS project configuration tests."""
 
   def testInitialize(self):
     """Tests the __init__ function."""
-    configuration = libyal.LibyalDebugPythonDllVSProjectConfiguration()
-
-    self.assertEqual(
-        configuration.linker_output_file, '$(OutDir)\\$(ProjectName).pyd')
-    self.assertEqual(configuration.library_directories, 'C:\\Python27\\libs')
-
-
-class LibyalReleaseVSProjectConfigurationTest(test_lib.BaseTestCase):
-  """Libyal release VS project configuration tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    configuration = libyal.LibyalReleaseVSProjectConfiguration()
-
-    self.assertEqual(configuration.name, 'Release')
-    self.assertEqual(configuration.platform, 'Win32')
-    self.assertEqual(configuration.character_set, '1')
-    self.assertEqual(configuration.runtime_library, '2')
-    self.assertEqual(configuration.warning_level, '4')
-    self.assertEqual(configuration.compile_as, '1')
-    self.assertEqual(configuration.target_machine, '1')
-
-
-class LibyalReleaseDllVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal release DLL VS project configuration tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    configuration = libyal.LibyalReleaseDllVSProjectConfiguration()
-
-    self.assertEqual(configuration.output_type, '2')
-    self.assertEqual(
-        configuration.linker_output_file, '$(OutDir)\\$(ProjectName).dll')
-    self.assertEqual(configuration.library_directories, '')
-    self.assertEqual(configuration.randomized_base_address, '2')
-    self.assertEqual(configuration.data_execution_prevention, '2')
-    self.assertEqual(
-        configuration.import_library, '$(OutDir)\\$(ProjectName).lib')
-    self.assertTrue(configuration.linker_values_set)
-
-
-class LibyalReleaseDotNetDllVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal release .Net DLL VS project configuration tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    configuration = libyal.LibyalReleaseDotNetDllVSProjectConfiguration()
-
-    self.assertEqual(configuration.compile_as, '2')
-    self.assertEqual(configuration.managed_extensions, '1')
-
-
-class LibyalReleaseExeVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal release EXE VS project configuration tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    configuration = libyal.LibyalReleaseExeVSProjectConfiguration()
-
-    self.assertEqual(configuration.output_type, '1')
-    self.assertEqual(configuration.whole_program_optimization, '1')
-    self.assertEqual(configuration.link_incremental, '1')
-    self.assertEqual(configuration.sub_system, '1')
-    self.assertEqual(configuration.optimize_references, '2')
-    self.assertEqual(configuration.enable_comdat_folding, '2')
-    self.assertEqual(configuration.randomized_base_address, '2')
-    self.assertEqual(configuration.data_execution_prevention, '2')
-    self.assertEqual(configuration.target_machine, '1')
-    self.assertTrue(configuration.linker_values_set)
-
-
-class LibyalReleaseLibraryVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal release library VS project configuration tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    configuration = libyal.LibyalReleaseLibraryVSProjectConfiguration()
-
-    self.assertEqual(configuration.output_type, '4')
-    self.assertEqual(
-        configuration.librarian_output_file, '$(OutDir)\\$(ProjectName).lib')
-    self.assertEqual(configuration.librarian_ignore_defaults, 'false')
-
-
-class LibyalReleasePythonDllVSProjectConfiguration(test_lib.BaseTestCase):
-  """Libyal release Python DLL VS project configuration tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    configuration = libyal.LibyalReleasePythonDllVSProjectConfiguration()
+    configuration = libyal.VSDebugPythonDllVSProjectConfiguration()
 
     self.assertEqual(
         configuration.linker_output_file, '$(OutDir)\\$(ProjectName).pyd')
@@ -251,8 +251,8 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     solution = libyal.LibyalSourceVSSolution()
 
     project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.LibyalReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugVSProjectConfiguration()
+    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
+    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
 
     solution._ConfigureAsBzip2Dll(
         project_information, release_project_configuration,
@@ -279,8 +279,8 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     solution = libyal.LibyalSourceVSSolution()
 
     project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.LibyalReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugVSProjectConfiguration()
+    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
+    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
 
     solution._ConfigureAsDokanDll(
         project_information, release_project_configuration,
@@ -315,8 +315,8 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     solution = libyal.LibyalSourceVSSolution()
 
     project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.LibyalReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugVSProjectConfiguration()
+    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
+    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
 
     solution._ConfigureAsZlibDll(
         project_information, release_project_configuration,
@@ -343,8 +343,8 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     solution = libyal.LibyalSourceVSSolution()
 
     project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.LibyalReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugVSProjectConfiguration()
+    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
+    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
 
     solution._ConfigureLibcrypto(
         project_information, release_project_configuration,
@@ -361,8 +361,8 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     solution = libyal.LibyalSourceVSSolution()
 
     project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.LibyalReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugVSProjectConfiguration()
+    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
+    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
 
     solution._ConfigureLibuuid(
         project_information, release_project_configuration,

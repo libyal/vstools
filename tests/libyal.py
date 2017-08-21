@@ -310,48 +310,6 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
         debug_project_configuration.module_definition_file,
         '..\\..\\..\\dokan\\dokan\\dokan.def')
 
-  def testConfigureAsExe(self):
-    """Tests the _ConfigureAsExe function."""
-    solution = libyal.LibyalSourceVSSolution()
-
-    project_information = resources.VSProjectInformation()
-    project_information.name = 'testinfo'
-    release_project_configuration = libyal.LibyalReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugVSProjectConfiguration()
-
-    solution._ConfigureAsExe(
-        project_information, release_project_configuration,
-        debug_project_configuration)
-
-    self.assertEqual(project_information.keyword, 'Win32Proj')
-
-  def testConfigureAsLibrary(self):
-    """Tests the _ConfigureAsLibrary function."""
-    solution = libyal.LibyalSourceVSSolution()
-
-    project_information = resources.VSProjectInformation()
-    project_information.name = 'libtest'
-    release_project_configuration = libyal.LibyalReleaseLibraryVSProjectConfiguration()
-    debug_project_configuration = libyal.LibyalDebugLibraryVSProjectConfiguration()
-
-    solution._ConfigureAsLibrary(
-        project_information, release_project_configuration,
-        debug_project_configuration)
-
-    self.assertEqual(release_project_configuration.output_type, '4')
-    self.assertEqual(
-        release_project_configuration.librarian_output_file,
-        '$(OutDir)\\$(ProjectName).lib')
-    self.assertEqual(
-        release_project_configuration.librarian_ignore_defaults, 'false')
-
-    self.assertEqual(debug_project_configuration.output_type, '4')
-    self.assertEqual(
-        debug_project_configuration.librarian_output_file,
-        '$(OutDir)\\$(ProjectName).lib')
-    self.assertEqual(
-        debug_project_configuration.librarian_ignore_defaults, 'false')
-
   def testConfigureAsZlibDll(self):
     """Tests the _ConfigureAsZlibDll function."""
     solution = libyal.LibyalSourceVSSolution()

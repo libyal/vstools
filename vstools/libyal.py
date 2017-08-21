@@ -387,34 +387,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.module_definition_file = (
         module_definition_file)
 
-  def _ConfigureAsExe(
-      self, project_information, release_project_configuration,
-      debug_project_configuration):
-    """Configures the project as an EXE.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
-          release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
-          debug project configuration.
-    """
-    project_information.keyword = 'Win32Proj'
-
-  def _ConfigureAsLibrary(
-      self, unused_project_information, release_project_configuration,
-      debug_project_configuration):
-    """Configures the project as a local library.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-      release_project_configuration (LibyalReleaseVSProjectConfiguration):
-          release project configuration.
-      debug_project_configuration (LibyalReleaseVSProjectConfiguration):
-          debug project configuration.
-    """
-    pass
-
   def _ConfigureAsZlibDll(
       self, project_information, release_project_configuration,
       debug_project_configuration):
@@ -1040,8 +1012,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         project_information.guid = project_guid
         project_information.root_name_space = project_name
 
-        # TODO: replace _ConfigureAsDll and equiv by
-        # LibyalReleaseDllVSProjectConfiguration.
         if project_name == solution_name:
           release_project_configuration = (
               LibyalReleaseDllVSProjectConfiguration())
@@ -1066,6 +1036,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
               LibyalDebugLibraryVSProjectConfiguration())
 
         else:
+          project_information.keyword = 'Win32Proj'
+
           release_project_configuration = (
               LibyalReleaseExeVSProjectConfiguration())
           debug_project_configuration = LibyalDebugExeVSProjectConfiguration()
@@ -1077,18 +1049,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             release_project_configuration, debug_project_configuration)
 
         # TODO: add additional Python 3 project.
-
-        if (project_name == solution_name or project_name.startswith('py') or
-            project_name.endswith('.net')):
-          pass
-
-        elif project_name.startswith('lib'):
-          pass
-
-        else:
-          self._ConfigureAsExe(
-              project_information, release_project_configuration,
-              debug_project_configuration)
 
         project_information.configurations.Append(release_project_configuration)
         project_information.configurations.Append(debug_project_configuration)

@@ -38,24 +38,13 @@ class VSSolution(object):
           input_project_filename, path_segment)
 
     # TODO: move logic into the reader?
-    if input_version == '2008':
-      input_project_filename = '{0:s}.vcproj'.format(input_project_filename)
-    elif output_version in ('2010', '2012', '2013', '2015'):
-      input_project_filename = '{0:s}.vcxproj'.format(input_project_filename)
+    input_project_filename = self._GetProjectFilename(
+        input_version, input_project_filename)
 
     if not os.path.exists(input_project_filename):
       return False
 
-    if input_version == '2008':
-      project_reader = readers.VS2008ProjectFileReader()
-    elif input_version == '2010':
-      project_reader = readers.VS2010ProjectFileReader()
-    elif input_version == '2012':
-      project_reader = readers.VS2012ProjectFileReader()
-    elif input_version == '2013':
-      project_reader = readers.VS2013ProjectFileReader()
-    elif input_version == '2015':
-      project_reader = readers.VS2015ProjectFileReader()
+    project_reader = self._GetProjectFileReader(input_version)
 
     logging.info('Reading: {0:s}'.format(input_project_filename))
 
@@ -76,6 +65,105 @@ class VSSolution(object):
 
     return True
 
+  def _GetProjectFilename(self, version, project_filename):
+    """Retrieves a Visual Studio version specific project filename.
+
+    Args:
+      version (str): version of the Visual Studio solution.
+      project_filename (str): project filename without extension.
+
+    Returns:
+      str: project filename with extension or None if version is not supported.
+    """
+    if version == '2008':
+      return '{0:s}.vcproj'.format(project_filename)
+    elif version in ('2010', '2012', '2013', '2015'):
+      return '{0:s}.vcxproj'.format(project_filename)
+
+  def _GetProjectFileReader(self, input_version):
+    """Retrieves a Visual Studio project file reader.
+
+    Args:
+      input_version (str): input version of the Visual Studio solution.
+
+    Returns:
+      VSProjectFileReader: Visual Studio project file reader or None if version
+          is not supported.
+    """
+    if input_version == '2008':
+      return readers.VS2008ProjectFileReader()
+    elif input_version == '2010':
+      return readers.VS2010ProjectFileReader()
+    elif input_version == '2012':
+      return readers.VS2012ProjectFileReader()
+    elif input_version == '2013':
+      return readers.VS2013ProjectFileReader()
+    elif input_version == '2015':
+      return readers.VS2015ProjectFileReader()
+
+  def _GetProjectFileWriter(self, output_version):
+    """Retrieves a Visual Studio project file writer.
+
+    Args:
+      output_version (str): output version of the Visual Studio solution.
+
+    Returns:
+      VSProjectFileWriter: Visual Studio project file writer or None if version
+          is not supported.
+    """
+    if output_version == '2008':
+      return writers.VS2008ProjectFileWriter()
+    elif output_version == '2010':
+      return writers.VS2010ProjectFileWriter()
+    elif output_version == '2012':
+      return writers.VS2012ProjectFileWriter()
+    elif output_version == '2013':
+      return writers.VS2013ProjectFileWriter()
+    elif output_version == '2015':
+      return writers.VS2015ProjectFileWriter()
+
+  def _GetSolutionFileReader(self, input_version):
+    """Retrieves a Visual Studio solution file reader.
+
+    Args:
+      input_version (str): input version of the Visual Studio solution.
+
+    Returns:
+      VSSolutionFileReader: Visual Studio solution file reader or None if
+          version is not supported.
+    """
+    if input_version == '2008':
+      return readers.VS2008SolutionFileReader()
+    elif input_version == '2010':
+      return readers.VS2010SolutionFileReader()
+    elif input_version == '2012':
+      return readers.VS2012SolutionFileReader()
+    elif input_version == '2013':
+      return readers.VS2013SolutionFileReader()
+    elif input_version == '2015':
+      return readers.VS2015SolutionFileReader()
+
+  def _GetSolutionFileWriter(self, output_version):
+    """Retrieves a Visual Studio solution file writer.
+
+    Args:
+      output_version (str): output version of the Visual Studio solution.
+
+    Returns:
+      VSSolutionFileWriter: Visual Studio solution file writer or None if
+          version is not supported.
+    """
+    if output_version == '2008':
+      return writers.VS2008SolutionFileWriter()
+    elif output_version == '2010':
+      return writers.VS2010SolutionFileWriter()
+    elif output_version == '2012':
+      return writers.VS2012SolutionFileWriter()
+    elif output_version == '2013':
+      return writers.VS2013SolutionFileWriter()
+    elif output_version == '2015':
+      return writers.VS2015SolutionFileWriter()
+
   def _WriteProject(
       self, output_version, solution_project, project_information,
       solution_projects_by_guid):
@@ -95,24 +183,13 @@ class VSSolution(object):
           output_project_filename, path_segment)
 
     # TODO: move logic into the writer?
-    if output_version == '2008':
-      output_project_filename = '{0:s}.vcproj'.format(output_project_filename)
-    elif output_version in ('2010', '2012', '2013', '2015'):
-      output_project_filename = '{0:s}.vcxproj'.format(output_project_filename)
+    output_project_filename = self._GetProjectFilename(
+        output_version, output_project_filename)
 
     output_directory = os.path.dirname(output_project_filename)
     os.mkdir(output_directory)
 
-    if output_version == '2008':
-      project_writer = writers.VS2008ProjectFileWriter()
-    elif output_version == '2010':
-      project_writer = writers.VS2010ProjectFileWriter()
-    elif output_version == '2012':
-      project_writer = writers.VS2012ProjectFileWriter()
-    elif output_version == '2013':
-      project_writer = writers.VS2013ProjectFileWriter()
-    elif output_version == '2015':
-      project_writer = writers.VS2015ProjectFileWriter()
+    project_writer = self._GetProjectFileWriter(output_version)
 
     logging.info('Writing: {0:s}'.format(output_project_filename))
 
@@ -148,16 +225,7 @@ class VSSolution(object):
 
     logging.info('Writing: {0:s}'.format(output_sln_filename))
 
-    if output_version == '2008':
-      solution_writer = writers.VS2008SolutionFileWriter()
-    elif output_version == '2010':
-      solution_writer = writers.VS2010SolutionFileWriter()
-    elif output_version == '2012':
-      solution_writer = writers.VS2012SolutionFileWriter()
-    elif output_version == '2013':
-      solution_writer = writers.VS2013SolutionFileWriter()
-    elif output_version == '2015':
-      solution_writer = writers.VS2015SolutionFileWriter()
+    solution_writer = self._GetSolutionFileWriter(output_version)
 
     solution_writer.Open(output_sln_filename)
     solution_writer.WriteHeader()
@@ -184,16 +252,7 @@ class VSSolution(object):
     # TODO: detect input version based on solution file reader?
     input_version = '2008'
 
-    if input_version == '2008':
-      solution_reader = readers.VS2008SolutionFileReader()
-    elif input_version == '2010':
-      solution_reader = readers.VS2010SolutionFileReader()
-    elif input_version == '2012':
-      solution_reader = readers.VS2012SolutionFileReader()
-    elif input_version == '2013':
-      solution_reader = readers.VS2013SolutionFileReader()
-    elif input_version == '2015':
-      solution_reader = readers.VS2015SolutionFileReader()
+    solution_reader = self._GetSolutionFileReader(input_version)
 
     solution_reader.Open(input_sln_path)
 

@@ -171,6 +171,12 @@ class VSProjectConfiguration(VSConfiguration):
     whole_program_optimization (str): whole program optimization.
   """
 
+  _OUTPUT_TYPE_STRINGS = {
+      1: 'Application',
+      2: 'DynamicLibrary',
+      4: 'StaticLibrary'
+  }
+
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
     super(VSProjectConfiguration, self).__init__()
@@ -340,13 +346,7 @@ class VSProjectConfiguration(VSConfiguration):
     except (TypeError, ValueError):
       return ''
 
-    if output_type == 1:
-      return 'Application'
-    elif output_type == 2:
-      return 'DynamicLibrary'
-    elif output_type == 4:
-      return 'StaticLibrary'
-    return ''
+    return self._OUTPUT_TYPE_STRINGS.get(output_type, '')
 
   @property
   def precompiled_header_string(self):

@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 import abc
 import re
 
+from vstools import definitions
+
 
 class FileWriter(object):
   """File writer."""
@@ -1489,6 +1491,29 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
     self._tools_version = '15.0'
     self._version = 2017
 
+  def _WriteItemDefinitionGroup(self, project_configuration):
+    """Writes the item definition group.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self._WriteItemDefinitionGroupHeader(project_configuration)
+
+    # Write the compiler specific section.
+    self._WriteClCompileSection(project_configuration)
+
+    # Write the librarian specific section.
+    if project_configuration.librarian_output_file:
+      self._WriteLibrarianSection(project_configuration)
+
+    # Write the linker specific section.
+    if (project_configuration.linker_values_set or
+        project_configuration.output_type == (
+            definitions.OUTPUT_TYPE_APPLICATION)):
+      self._WriteLinkerSection(project_configuration)
+
+    self._WriteItemDefinitionGroupFooter()
+
   def _WriteLinkerSection(self, project_configuration):
     """Writes the linker section.
 
@@ -1612,8 +1637,9 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
       self.WriteLine('      <TargetMachine>{0:s}</TargetMachine>'.format(
           project_configuration.target_machine_string))
 
-    self.WriteLine(
-        '      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>')
+    if project_configuration.output_type != definitions.OUTPUT_TYPE_APPLICATION:
+      self.WriteLine(
+          '      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>')
 
     self.WriteLine('    </Link>')
 
@@ -1635,6 +1661,10 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
                project_configuration.name, project_configuration.platform),
           '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
           '    <IntDir>$(Configuration)\\</IntDir>'])
+
+      if project_configuration.output_type == (
+          definitions.OUTPUT_TYPE_APPLICATION):
+        self.WriteLine('    <LinkIncremental>false</LinkIncremental>')
 
       self.WriteLine('  </PropertyGroup>')
 

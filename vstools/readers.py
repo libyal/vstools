@@ -218,6 +218,11 @@ class VS2008ProjectFileReader(VSProjectFileReader):
               project_configuration, self._TOOL_LINKER_CONFIGURATION_OPTIONS,
               line)
 
+          if isinstance(
+              project_configuration.library_directories, py2to3.STRING_TYPES):
+            project_configuration.library_directories = (
+                project_configuration.library_directories.split(';'))
+
         elif line.startswith('Name="VCCLCompilerTool"'):
           found_tool_compiler = True
 

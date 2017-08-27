@@ -14,18 +14,17 @@ class VSSolution(object):
   """Visual Studio solution."""
 
   def __init__(
-      self, generate_python_dll=True,
-      python_include_path='C:\\Python27\\include'):
+      self, generate_python_dll=True, python_path='C:\\Python27\\include'):
     """Initializes a Visual Studio solution.
 
     Args:
       generate_python_dll (Optional[bool]): True if a Python module DLL
           should be generated.
-      python_include_path (Optional[str]): path to the Python include headers.
+      python_path (Optional[str]): path to the Python installation.
     """
     super(VSSolution, self).__init__()
     self._generate_python_dll = generate_python_dll
-    self._python_include_path = python_include_path
+    self._python_path = python_path
 
   def _ConvertProject(
       self, input_version, input_directory, output_version, solution_project,

@@ -146,7 +146,7 @@ class VSProjectConfiguration(VSConfiguration):
     include_directories (list[str]): include directories.
     librarian_ignore_defaults (str): librarian ignore defaults.
     librarian_output_file (str): librarian output file.
-    library_directories (str): library directories.
+    library_directories (list[str]): library directories.
     link_incremental (str): link incremental.
     linker_output_directory (str): linker output directory.
     linker_output_file (str): linker output file.
@@ -192,7 +192,7 @@ class VSProjectConfiguration(VSConfiguration):
     self.include_directories = []
     self.librarian_ignore_defaults = ''
     self.librarian_output_file = ''
-    self.library_directories = ''
+    self.library_directories = []
     self.link_incremental = ''
     self.linker_output_directory = ''
     self.linker_output_file = ''
@@ -465,7 +465,7 @@ class VSProjectConfiguration(VSConfiguration):
     copy.include_directories = list(self.include_directories)
     copy.librarian_ignore_defaults = self.librarian_ignore_defaults
     copy.librarian_output_file = self.librarian_output_file
-    copy.library_directories = self.library_directories
+    copy.library_directories = list(self.library_directories)
     copy.link_incremental = self.link_incremental
     copy.linker_output_directory = self.linker_output_directory
     copy.linker_output_file = self.linker_output_file

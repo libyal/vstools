@@ -195,12 +195,16 @@ class ReleaseLibraryVSProjectConfiguration(ReleaseVSProjectConfiguration):
 class ReleasePythonDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
   """Release Python DLL Visual Studio project configuration."""
 
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
+  def __init__(self, python_path='C:\\Python27'):
+    """Initializes a Visual Studio project configuration.
+
+    Args:
+      python_path (Optional[str]): path to the Python installation.
+    """
     super(ReleasePythonDllVSProjectConfiguration, self).__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
-    self.library_directories = 'C:\\Python27\\libs'
+    self.library_directories = ['{0:s}\\libs'.format(python_path)]
 
 
 class VSDebugVSProjectConfiguration(resources.VSProjectConfiguration):
@@ -294,12 +298,16 @@ class VSDebugLibraryVSProjectConfiguration(VSDebugVSProjectConfiguration):
 class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
   """VSDebug Python DLL Visual Studio project configuration."""
 
-  def __init__(self):
-    """Initializes a Visual Studio project configuration."""
+  def __init__(self, python_path='C:\\Python27'):
+    """Initializes a Visual Studio project configuration.
+
+    Args:
+      python_path (Optional[str]): path to the Python installation.
+    """
     super(VSDebugPythonDllVSProjectConfiguration, self).__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
-    self.library_directories = 'C:\\Python27\\libs'
+    self.library_directories = ['{0:s}\\libs'.format(python_path)]
 
 
 class LibyalSourceVSSolution(solutions.VSSolution):
@@ -309,7 +317,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       'bzip2', 'dokan', 'zlib'])
 
   def _ConfigureAsBzip2Dll(
-      self, project_information, release_project_configuration,
+      self, unused_project_information, release_project_configuration,
       debug_project_configuration):
     """Configures the project as the bzip2 DLL.
 
@@ -340,7 +348,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         preprocessor_definitions)
 
   def _ConfigureAsDokanDll(
-      self, project_information, release_project_configuration,
+      self, unused_project_information, release_project_configuration,
       debug_project_configuration):
     """Configures the project as the dokan DLL.
 
@@ -377,7 +385,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         module_definition_file)
 
   def _ConfigureAsZlibDll(
-      self, project_information, release_project_configuration,
+      self, unused_project_information, release_project_configuration,
       debug_project_configuration):
     """Configures the project as the zlib DLL.
 
@@ -502,8 +510,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       project_information.root_name_space = project_name
 
       if project_name in ('bzip2', 'dokan', 'zlib'):
-          release_project_configuration = ReleaseDllVSProjectConfiguration()
-          debug_project_configuration = VSDebugDllVSProjectConfiguration()
+        release_project_configuration = ReleaseDllVSProjectConfiguration()
+        debug_project_configuration = VSDebugDllVSProjectConfiguration()
       else:
         release_project_configuration = ReleaseVSProjectConfiguration()
         debug_project_configuration = VSDebugVSProjectConfiguration()
@@ -828,7 +836,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
           '{0:s}_DLL_IMPORT'.format(solution_name.upper()))
 
     if project_name.startswith('py'):
-      include_directories.append('C:\\Python27\\include')
+      include_directories.append('{0:s}\\include'.format(self._python_path))
 
     release_project_configuration.include_directories = include_directories
     release_project_configuration.preprocessor_definitions = ';'.join(
@@ -1008,8 +1016,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
         elif project_name.startswith('py'):
           release_project_configuration = (
-              ReleasePythonDllVSProjectConfiguration())
-          debug_project_configuration = VSDebugPythonDllVSProjectConfiguration()
+              ReleasePythonDllVSProjectConfiguration(
+                  python_path=self._python_path))
+          debug_project_configuration = VSDebugPythonDllVSProjectConfiguration(
+              python_path=self._python_path)
 
         elif project_name.startswith('lib'):
           release_project_configuration = ReleaseLibraryVSProjectConfiguration()

@@ -215,10 +215,9 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
       self._WriteConfigurationOption(
           project_configuration, definition, name, is_optional, 4)
 
-    library_directories = '&quot;$(OutDir)&quot;'
-    if project_configuration.library_directories:
-      library_directories = '{0:s};{1:s}'.format(
-          library_directories, project_configuration.library_directories)
+    library_directories = ['&quot;$(OutDir)&quot;']
+    library_directories.extend(project_configuration.library_directories)
+    library_directories = ';'.join(library_directories)
 
     self.WriteLine('\t\t\t\tAdditionalLibraryDirectories="{0:s}"'.format(
         library_directories))
@@ -754,11 +753,10 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
                 project_configuration.module_definition_file))
 
     if project_configuration.library_directories:
+      library_directories = ';'.join(project_configuration.library_directories)
       library_directories = re.sub(
-          r'[$][(]OutDir[)]\\', r'$(OutDir)',
-          project_configuration.library_directories)
-      library_directories = re.sub(
-          r'&quot;', r'', library_directories)
+          r'[$][(]OutDir[)]\\', r'$(OutDir)', library_directories)
+      library_directories = re.sub(r'&quot;', r'', library_directories)
 
       if library_directories and library_directories[-1] != ';':
         library_directories = '{0:s};'.format(library_directories)
@@ -1306,11 +1304,10 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
                 project_configuration.module_definition_file))
 
     if project_configuration.library_directories:
+      library_directories = ';'.join(project_configuration.library_directories)
       library_directories = re.sub(
-          r'[$][(]OutDir[)]\\', r'$(OutDir)',
-          project_configuration.library_directories)
-      library_directories = re.sub(
-          r'&quot;', r'', library_directories)
+          r'[$][(]OutDir[)]\\', r'$(OutDir)', library_directories)
+      library_directories = re.sub(r'&quot;', r'', library_directories)
 
       if library_directories and library_directories[-1] != ';':
         library_directories = '{0:s};'.format(library_directories)

@@ -50,25 +50,24 @@ def Main():
   argument_parser.add_argument(
       'solution_file', nargs='?', action='store', metavar='FILENAME',
       default=None, help=(
-          'The location of the source directory or the Visual Studio solution '
+          'location of the source directory or the Visual Studio solution '
           'file (.sln).'))
 
   argument_parser.add_argument(
       '--no_python_dll', '--no-python-dll', dest='generate_python_dll',
       action='store_false', default=True, help=(
-          'Do not generate a project file to build the Python module DLL if '
+          'do not generate a project file to build the Python module DLL if '
           'present.'))
 
   argument_parser.add_argument(
       '--output_format', '--output-format', '--to', dest='output_format',
       nargs='?', choices=sorted(output_formats), action='store',
-      metavar='FORMAT', default='2010', help='The output format.')
+      metavar='FORMAT', default='2010', help='output format.')
 
   argument_parser.add_argument(
-      '--python_include', '--python-include', dest='python_include_path',
-      nargs='?', action='store', metavar='PATH',
-      default='C:\\Python27\\include', help=(
-          'The path to the Python include headers.'))
+      '--python_path', '--python-path', dest='python_path',
+      nargs='?', action='store', metavar='PATH', default='C:\\Python27',
+      help='location of the Python installation.')
 
   options = argument_parser.parse_args()
 
@@ -90,11 +89,11 @@ def Main():
   if os.path.isdir(options.solution_file):
     input_solution = libyal.LibyalSourceVSSolution(
         generate_python_dll=options.generate_python_dll,
-        python_include_path=options.python_include_path)
+        python_path=options.python_path)
   else:
     input_solution = solutions.VSSolution(
         generate_python_dll=options.generate_python_dll,
-        python_include_path=options.python_include_path)
+        python_path=options.python_path)
 
   if not input_solution.Convert(options.solution_file, options.output_format):
     print('Unable to convert Visual Studio solution file.')

@@ -991,6 +991,26 @@ class VSSolutionFileWriterTest(test_lib.BaseTestCase):
 
   # pylint: disable=protected-access
 
+  # TODO: add tests for _WriteProjectConfigurationPlatforms.
+  # TODO: add tests for _WriteSolutionConfigurationPlatforms.
+
+  def testWriteSolutionProperties(self):
+    """Tests the _WriteSolutionProperties function."""
+    file_writer = writers.VSSolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteSolutionProperties()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\tGlobalSection(SolutionProperties) = preSolution\r\n'
+        b'\t\tHideSolutionNode = FALSE\r\n'
+        b'\tEndGlobalSection\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
   def testWriteProjects(self):
     """Tests the WriteProjects function."""
     solution_project = resources.VSSolutionProject('name', 'file', 'guid')
@@ -1182,6 +1202,70 @@ class VS2015SolutionFileWriterTest(test_lib.BaseTestCase):
         b'Microsoft Visual Studio Solution File, Format Version 12.00\r\n'
         b'# Visual Studio 14\r\n'
         b'VisualStudioVersion = 14.0.25420.1\r\n'
+        b'MinimumVisualStudioVersion = 10.0.40219.1\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+
+class VS2017SolutionFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2017 solution file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testWriteExtensibilityGlobals(self):
+    """Tests the _WriteExtensibilityGlobals function."""
+    file_writer = writers.VS2017SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer._WriteExtensibilityGlobals()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    expected_output_data = (
+        b'\tGlobalSection(ExtensibilityGlobals) = postSolution\r\n'
+        b'\t\tSolutionGuid = {E41FC29C-7FE6-4F98-85AD-1ED968E86446}\r\n'
+        b'\tEndGlobalSection\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteConfigurations(self):
+    """Tests the WriteConfigurations function."""
+    solution_configurations = resources.VSConfigurations()
+    solution_project = resources.VSSolutionProject('name', 'filename', 'guid')
+
+    file_writer = writers.VS2017SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteConfigurations(solution_configurations, [solution_project])
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+
+    # TODO: add ExtensibilityGlobals
+    expected_output_data = (
+        b'Global\r\n'
+        b'\tGlobalSection(SolutionProperties) = preSolution\r\n'
+        b'\t\tHideSolutionNode = FALSE\r\n'
+        b'\tEndGlobalSection\r\n'
+        b'EndGlobal\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+  def testWriteHeader(self):
+    """Tests the WriteHeader function."""
+    file_writer = writers.VS2017SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteHeader()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+    expected_output_data = (
+        b'\xef\xbb\xbf\r\n'
+        b'Microsoft Visual Studio Solution File, Format Version 12.00\r\n'
+        b'# Visual Studio 15\r\n'
+        b'VisualStudioVersion = 15.0.26730.10\r\n'
         b'MinimumVisualStudioVersion = 10.0.40219.1\r\n')
     self.assertEqual(output_data, expected_output_data)
 

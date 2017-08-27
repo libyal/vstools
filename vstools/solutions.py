@@ -23,6 +23,7 @@ class VSSolution(object):
       python_path (Optional[str]): path to the Python installation.
     """
     super(VSSolution, self).__init__()
+    self._extend_with_x64 = False
     self._generate_python_dll = generate_python_dll
     self._python_path = python_path
 
@@ -83,8 +84,9 @@ class VSSolution(object):
           project_configuration.library_directories.append(
               '{0:s}\\libs'.format(self._python_path))
 
-    # Add x64 as a platform.
-    project_information.configurations.ExtendWithX64(output_version)
+    if self._extend_with_x64:
+      # Add x64 as a platform.
+      project_information.configurations.ExtendWithX64(output_version)
 
     self._WriteProject(
         output_version, solution_project, project_information,
@@ -104,7 +106,7 @@ class VSSolution(object):
     """
     if version == '2008':
       return '{0:s}.vcproj'.format(project_filename)
-    elif version in ('2010', '2012', '2013', '2015'):
+    elif version in ('2010', '2012', '2013', '2015', '2017'):
       return '{0:s}.vcxproj'.format(project_filename)
 
   def _GetProjectFileReader(self, input_version):
@@ -127,6 +129,8 @@ class VSSolution(object):
       return readers.VS2013ProjectFileReader()
     elif input_version == '2015':
       return readers.VS2015ProjectFileReader()
+    elif input_version == '2017':
+      return readers.VS2017ProjectFileReader()
 
   def _GetProjectFileWriter(self, output_version):
     """Retrieves a Visual Studio project file writer.
@@ -148,6 +152,8 @@ class VSSolution(object):
       return writers.VS2013ProjectFileWriter()
     elif output_version == '2015':
       return writers.VS2015ProjectFileWriter()
+    elif output_version == '2017':
+      return writers.VS2017ProjectFileWriter()
 
   def _GetSolutionFileReader(self, input_version):
     """Retrieves a Visual Studio solution file reader.
@@ -169,6 +175,8 @@ class VSSolution(object):
       return readers.VS2013SolutionFileReader()
     elif input_version == '2015':
       return readers.VS2015SolutionFileReader()
+    elif input_version == '2017':
+      return readers.VS2017SolutionFileReader()
 
   def _GetSolutionFileWriter(self, output_version):
     """Retrieves a Visual Studio solution file writer.
@@ -190,6 +198,8 @@ class VSSolution(object):
       return writers.VS2013SolutionFileWriter()
     elif output_version == '2015':
       return writers.VS2015SolutionFileWriter()
+    elif output_version == '2017':
+      return writers.VS2017SolutionFileWriter()
 
   def _WriteProject(
       self, output_version, solution_project, project_information,
@@ -299,8 +309,9 @@ class VSSolution(object):
       if python_module_name:
         solution_configurations.RemoveByName(python_module_name)
 
-    # Add x64 as a platform.
-    solution_configurations.ExtendWithX64(output_version)
+    if self._extend_with_x64:
+      # Add x64 as a platform.
+      solution_configurations.ExtendWithX64(output_version)
 
     solution_filename = os.path.basename(input_sln_path)
     self._WriteSolution(

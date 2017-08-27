@@ -457,6 +457,12 @@ class VS2015ProjectFileReader(VSProjectFileReader):
   # TODO: implement.
 
 
+class VS2017ProjectFileReader(VSProjectFileReader):
+  """Visual Studio 2017 project file reader."""
+
+  # TODO: implement.
+
+
 class VSSolutionFileReader(FileReader):
   """Visual Studio solution file reader."""
 
@@ -470,6 +476,17 @@ class VSSolutionFileReader(FileReader):
     Returns:
       bool: True if successful or false otherwise.
     """
+
+  def _CheckVisualStudioVersion(self, unused_line):
+    """Checks the Visual Studio version.
+
+    Args:
+      line (str): line containing the Visual Studio format version.
+
+    Returns:
+      bool: True if successful or false otherwise.
+    """
+    return False
 
   def ReadConfigurations(self):
     """Reads the configurations.
@@ -547,9 +564,9 @@ class VSSolutionFileReader(FileReader):
 
       line = self._ReadLine(look_ahead=True)
 
-    if visual_studio_version_line:
-      # TODO: add check for VisualStudioVersion
-      pass
+    if visual_studio_version_line and not self._CheckVisualStudioVersion(
+        visual_studio_version_line):
+      return False
 
     return True
 
@@ -644,7 +661,7 @@ class VS2008SolutionFileReader(VSSolutionFileReader):
     return line.endswith(' 10.00')
 
 
-class VS2010SolutionFileReader(object):
+class VS2010SolutionFileReader(VSSolutionFileReader):
   """Visual Studio 2010 solution file reader."""
 
   def _CheckFormatVersion(self, line):
@@ -659,7 +676,7 @@ class VS2010SolutionFileReader(object):
     return line.endswith(' 11.00')
 
 
-class VS2012SolutionFileReader(object):
+class VS2012SolutionFileReader(VSSolutionFileReader):
   """Visual Studio 2012 solution file reader."""
 
   def _CheckFormatVersion(self, line):
@@ -677,10 +694,46 @@ class VS2012SolutionFileReader(object):
 class VS2013SolutionFileReader(VS2012SolutionFileReader):
   """Visual Studio 2013 solution file reader."""
 
-  # TODO: add check for VisualStudioVersion
+  def _CheckVisualStudioVersion(self, line):
+    """Checks the Visual Studio version.
+
+    Args:
+      line (str): line containing the Visual Studio format version.
+
+    Returns:
+      bool: True if successful or false otherwise.
+    """
+    version = line.split(' = ')[1]
+    return version.startswith('12.')
 
 
 class VS2015SolutionFileReader(VS2012SolutionFileReader):
   """Visual Studio 2015 solution file reader."""
 
-  # TODO: add check for VisualStudioVersion
+  def _CheckVisualStudioVersion(self, line):
+    """Checks the Visual Studio version.
+
+    Args:
+      line (str): line containing the Visual Studio format version.
+
+    Returns:
+      bool: True if successful or false otherwise.
+    """
+    version = line.split(' = ')[1]
+    return version.startswith('14.')
+
+
+class VS2017SolutionFileReader(VS2012SolutionFileReader):
+  """Visual Studio 2017 solution file reader."""
+
+  def _CheckVisualStudioVersion(self, line):
+    """Checks the Visual Studio version.
+
+    Args:
+      line (str): line containing the Visual Studio format version.
+
+    Returns:
+      bool: True if successful or false otherwise.
+    """
+    version = line.split(' = ')[1]
+    return version.startswith('15.')

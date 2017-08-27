@@ -12,6 +12,7 @@ Currently supported output formats:
 * 2012 (11.0)
 * 2013 (12.0)
 * 2015 (14.0)
+* 2017 (15.0)
 """
 
 # TODO: add automated tests.
@@ -20,7 +21,6 @@ Currently supported output formats:
 # TODO: add vs2013 reader.
 # TODO: add vs2015 reader.
 # TODO: add vs2017 reader.
-# TODO: add vs2017 writer.
 
 from __future__ import print_function
 from __future__ import unicode_literals
@@ -40,7 +40,7 @@ def Main():
   Returns:
     bool: True if successful or False if not.
   """
-  output_formats = frozenset(['2008', '2010', '2012', '2013', '2015'])
+  output_formats = frozenset(['2008', '2010', '2012', '2013', '2015', '2017'])
 
   argument_parser = argparse.ArgumentParser(description=(
       'Converts source directory (autoconf and automake files) into '

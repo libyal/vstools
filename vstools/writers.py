@@ -1479,8 +1479,234 @@ class VS2015ProjectFileWriter(VS2012ProjectFileWriter):
       self.WriteLine('  </PropertyGroup>')
 
 
+class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
+  """Visual Studio 2017 project file writer."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project file writer."""
+    super(VS2017ProjectFileWriter, self).__init__()
+    self._project_file_version = '15.0.26730.3'
+    self._tools_version = '15.0'
+    self._version = 2017
+
+  def _WriteLinkerSection(self, project_configuration):
+    """Writes the linker section.
+
+    Args:
+      project_configuration (VSProjectConfiguration): configuration.
+    """
+    self.WriteLine('    <Link>')
+
+    # Visual Studio will convert an empty additional dependencies value.
+    if project_configuration.additional_dependencies:
+      additional_dependencies = ';'.join(
+          sorted(project_configuration.additional_dependencies))
+
+      additional_dependencies = re.sub(
+          r'[$][(]OutDir[)]\\', r'$(OutDir)', additional_dependencies)
+
+      if additional_dependencies and additional_dependencies[-1] != ';':
+        additional_dependencies = '{0:s};'.format(additional_dependencies)
+
+      additional_dependencies = '{0:s}%(AdditionalDependencies)'.format(
+          additional_dependencies)
+
+      self.WriteLine((
+          '      <AdditionalDependencies>{0:s}'
+          '</AdditionalDependencies>').format(
+              additional_dependencies))
+
+    if project_configuration.linker_output_file:
+      linker_output_file = re.sub(
+          r'[$][(]OutDir[)]\\', r'$(OutDir)',
+          project_configuration.linker_output_file)
+
+      self.WriteLine('      <OutputFile>{0:s}</OutputFile>'.format(
+          linker_output_file))
+
+      if project_configuration.module_definition_file != '':
+        self.WriteLine((
+            '      <ModuleDefinitionFile>{0:s}'
+            '</ModuleDefinitionFile>').format(
+                project_configuration.module_definition_file))
+
+    if project_configuration.library_directories:
+      library_directories = ';'.join(project_configuration.library_directories)
+      library_directories = re.sub(
+          r'[$][(]OutDir[)]\\', r'$(OutDir)', library_directories)
+      library_directories = re.sub(r'&quot;', r'', library_directories)
+
+      if library_directories and library_directories[-1] != ';':
+        library_directories = '{0:s};'.format(library_directories)
+
+      library_directories = '{0:s}%(AdditionalLibraryDirectories)'.format(
+          library_directories)
+
+      self.WriteLine((
+          '      <AdditionalLibraryDirectories>{0:s}'
+          '</AdditionalLibraryDirectories>').format(
+              library_directories))
+
+    if project_configuration.generate_debug_information != '':
+      self.WriteLine((
+          '      <GenerateDebugInformation>{0:s}'
+          '</GenerateDebugInformation>').format(
+              project_configuration.generate_debug_information))
+
+    if project_configuration.sub_system != '':
+      self.WriteLine('      <SubSystem>{0:s}</SubSystem>'.format(
+          project_configuration.sub_system_string))
+
+    if project_configuration.optimize_references == '0':
+      self.WriteLines([
+          '      <OptimizeReferences>',
+          '      </OptimizeReferences>'])
+
+    elif project_configuration.optimize_references != '':
+      self.WriteLine((
+          '      <OptimizeReferences>{0:s}</OptimizeReferences>').format(
+              project_configuration.optimize_references_string))
+
+    if project_configuration.enable_comdat_folding == '0':
+      self.WriteLines([
+          '      <EnableCOMDATFolding>',
+          '      </EnableCOMDATFolding>'])
+
+    elif project_configuration.enable_comdat_folding != '':
+      self.WriteLine((
+          '      <EnableCOMDATFolding>{0:s}</EnableCOMDATFolding>').format(
+              project_configuration.enable_comdat_folding_string))
+
+    if project_configuration.randomized_base_address != '':
+      self.WriteLine((
+          '      <RandomizedBaseAddress>{0:s}'
+          '</RandomizedBaseAddress>').format(
+              project_configuration.randomized_base_address_string))
+
+    if project_configuration.fixed_base_address == '0':
+      self.WriteLines([
+          '      <FixedBaseAddress>',
+          '      </FixedBaseAddress>'])
+
+    if project_configuration.data_execution_prevention != '':
+      # A value of 0 is represented by a new line.
+      if project_configuration.data_execution_prevention == '0':
+        self.WriteLines([
+            '      <DataExecutionPrevention>',
+            '      </DataExecutionPrevention>'])
+      else:
+        self.WriteLine((
+            '      <DataExecutionPrevention>{0:s}'
+            '</DataExecutionPrevention>').format(
+                project_configuration.data_execution_prevention_string))
+
+    if project_configuration.import_library:
+      import_library = re.sub(
+          r'[$][(]OutDir[)]\\', r'$(OutDir)',
+          project_configuration.import_library)
+
+      self.WriteLine('      <ImportLibrary>{0:s}</ImportLibrary>'.format(
+          import_library))
+
+    if project_configuration.target_machine != '':
+      self.WriteLine('      <TargetMachine>{0:s}</TargetMachine>'.format(
+          project_configuration.target_machine_string))
+
+    self.WriteLine(
+        '      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>')
+
+    self.WriteLine('    </Link>')
+
+  def _WriteOutIntDirConditions(
+      self, configuration_name, project_configurations):
+    """Writes the OutDir and IntDir conditions.
+
+    Args:
+      configuration_name (str): name of the configuration.
+      project_configurations (VSConfigurations): configurations.
+    """
+    for configuration_platform in sorted(project_configurations.platforms):
+      project_configuration = project_configurations.GetByIdentifier(
+          configuration_name, configuration_platform)
+
+      self.WriteLines([
+          ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+           '\'{0:s}|{1:s}\'">').format(
+               project_configuration.name, project_configuration.platform),
+          '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
+          '    <IntDir>$(Configuration)\\</IntDir>'])
+
+      self.WriteLine('  </PropertyGroup>')
+
+  def WriteHeader(self):
+    """Writes a file header."""
+    self.WriteLines([
+        '<?xml version="1.0" encoding="utf-8"?>',
+        ('<Project DefaultTargets="Build" ToolsVersion="{0:s}" '
+         'xmlns="http://schemas.microsoft.com/developer/msbuild/2003">').format(
+             self._tools_version)])
+
+
 class VSSolutionFileWriter(FileWriter):
   """Visual Studio solution file writer."""
+
+  def _WriteProjectConfigurationPlatforms(
+      self, solution_configurations, solution_projects):
+    """Writes the project configuration platforms.
+
+    Args:
+      solution_configurations (VSConfigurations): configurations.
+      solution_projects (list[VSSolutionProject]): projects.
+    """
+    if solution_configurations.number_of_configurations > 0:
+      self.WriteLine(
+          '\tGlobalSection(ProjectConfigurationPlatforms) = postSolution')
+
+      for configuration_platform in sorted(solution_configurations.platforms):
+        for solution_project in solution_projects:
+          for configuration_name in sorted(solution_configurations.names):
+            configuration = solution_configurations.GetByIdentifier(
+                configuration_name, configuration_platform)
+
+            self.WriteLine((
+                '\t\t{{{0:s}}}.{1:s}|{2:s}.ActiveCfg = {1:s}|{2:s}').format(
+                    solution_project.guid.upper(), configuration.name,
+                    configuration.platform))
+            self.WriteLine((
+                '\t\t{{{0:s}}}.{1:s}|{2:s}.Build.0 = {1:s}|{2:s}').format(
+                    solution_project.guid.upper(), configuration.name,
+                    configuration.platform))
+
+      self.WriteLine('\tEndGlobalSection')
+
+  def _WriteSolutionConfigurationPlatforms(
+      self, solution_configurations, solution_projects):
+    """Writes the solution configuration platforms.
+
+    Args:
+      solution_configurations (VSConfigurations): configurations.
+      solution_projects (list[VSSolutionProject]): projects.
+    """
+    if solution_configurations.number_of_configurations > 0:
+      self.WriteLine(
+          '\tGlobalSection(SolutionConfigurationPlatforms) = preSolution')
+
+      for configuration_platform in sorted(solution_configurations.platforms):
+        for configuration_name in sorted(solution_configurations.names):
+          configuration = solution_configurations.GetByIdentifier(
+              configuration_name, configuration_platform)
+
+          self.WriteLine('\t\t{0:s}|{1:s} = {0:s}|{1:s}'.format(
+              configuration.name, configuration.platform))
+
+      self.WriteLine('\tEndGlobalSection')
+
+  def _WriteSolutionProperties(self):
+    """Writes the solution properties."""
+    self.WriteLines([
+        '\tGlobalSection(SolutionProperties) = preSolution',
+        '\t\tHideSolutionNode = FALSE',
+        '\tEndGlobalSection'])
 
   @abc.abstractmethod
   def WriteHeader(self):
@@ -1516,47 +1742,15 @@ class VS2008SolutionFileWriter(VSSolutionFileWriter):
     """
     self.WriteLine('Global')
 
-    if solution_configurations.number_of_configurations > 0:
-      self.WriteLine(
-          '\tGlobalSection(SolutionConfigurationPlatforms) = preSolution')
+    self._WriteSolutionConfigurationPlatforms(
+        solution_configurations, solution_projects)
 
-      for configuration_platform in sorted(solution_configurations.platforms):
-        for configuration_name in sorted(solution_configurations.names):
-          configuration = solution_configurations.GetByIdentifier(
-              configuration_name, configuration_platform)
+    self._WriteProjectConfigurationPlatforms(
+        solution_configurations, solution_projects)
 
-          self.WriteLine('\t\t{0:s}|{1:s} = {0:s}|{1:s}'.format(
-              configuration.name, configuration.platform))
+    self._WriteSolutionProperties()
 
-      self.WriteLine('\tEndGlobalSection')
-
-    if solution_configurations.number_of_configurations > 0:
-      self.WriteLine(
-          '\tGlobalSection(ProjectConfigurationPlatforms) = postSolution')
-
-      for configuration_platform in sorted(solution_configurations.platforms):
-        for solution_project in solution_projects:
-          for configuration_name in sorted(solution_configurations.names):
-            configuration = solution_configurations.GetByIdentifier(
-                configuration_name, configuration_platform)
-
-            self.WriteLine((
-                '\t\t{{{0:s}}}.{1:s}|{2:s}.ActiveCfg = '
-                '{1:s}|{2:s}').format(
-                    solution_project.guid.upper(), configuration.name,
-                    configuration.platform))
-            self.WriteLine((
-                '\t\t{{{0:s}}}.{1:s}|{2:s}.Build.0 = {1:s}|{2:s}').format(
-                    solution_project.guid.upper(), configuration.name,
-                    configuration.platform))
-
-      self.WriteLine('\tEndGlobalSection')
-
-    self.WriteLines([
-        '\tGlobalSection(SolutionProperties) = preSolution',
-        '\t\tHideSolutionNode = FALSE',
-        '\tEndGlobalSection',
-        'EndGlobal'])
+    self.WriteLine('EndGlobal')
 
   def WriteHeader(self):
     """Writes a file header."""
@@ -1605,46 +1799,15 @@ class VS2010SolutionFileWriter(VSSolutionFileWriter):
     """
     self.WriteLine('Global')
 
-    if solution_configurations.number_of_configurations > 0:
-      self.WriteLine(
-          '\tGlobalSection(SolutionConfigurationPlatforms) = preSolution')
+    self._WriteSolutionConfigurationPlatforms(
+        solution_configurations, solution_projects)
 
-      for configuration_platform in sorted(solution_configurations.platforms):
-        for configuration_name in sorted(solution_configurations.names):
-          configuration = solution_configurations.GetByIdentifier(
-              configuration_name, configuration_platform)
+    self._WriteProjectConfigurationPlatforms(
+        solution_configurations, solution_projects)
 
-          self.WriteLine('\t\t{0:s}|{1:s} = {0:s}|{1:s}'.format(
-              configuration.name, configuration.platform))
+    self._WriteSolutionProperties()
 
-      self.WriteLine('\tEndGlobalSection')
-
-    if solution_configurations.number_of_configurations > 0:
-      self.WriteLine(
-          '\tGlobalSection(ProjectConfigurationPlatforms) = postSolution')
-
-      for configuration_platform in sorted(solution_configurations.platforms):
-        for solution_project in solution_projects:
-          for configuration_name in sorted(solution_configurations.names):
-            configuration = solution_configurations.GetByIdentifier(
-                configuration_name, configuration_platform)
-
-            self.WriteLine((
-                '\t\t{{{0:s}}}.{1:s}|{2:s}.ActiveCfg = {1:s}|{2:s}').format(
-                    solution_project.guid.upper(), configuration.name,
-                    configuration.platform))
-            self.WriteLine((
-                '\t\t{{{0:s}}}.{1:s}|{2:s}.Build.0 = {1:s}|{2:s}').format(
-                    solution_project.guid.upper(), configuration.name,
-                    configuration.platform))
-
-      self.WriteLine('\tEndGlobalSection')
-
-    self.WriteLines([
-        '\tGlobalSection(SolutionProperties) = preSolution',
-        '\t\tHideSolutionNode = FALSE',
-        '\tEndGlobalSection',
-        'EndGlobal'])
+    self.WriteLine('EndGlobal')
 
   def WriteHeader(self):
     """Writes a file header."""
@@ -1727,4 +1890,45 @@ class VS2015SolutionFileWriter(VS2010SolutionFileWriter):
         'Microsoft Visual Studio Solution File, Format Version 12.00',
         '# Visual Studio 14',
         'VisualStudioVersion = 14.0.25420.1',
+        'MinimumVisualStudioVersion = 10.0.40219.1'])
+
+
+class VS2017SolutionFileWriter(VS2010SolutionFileWriter):
+  """Visual Studio 2017 solution file writer."""
+
+  def _WriteExtensibilityGlobals(self):
+    """Writes the extensibility globals."""
+    # TODO: determine if GUID is unique.
+    self.WriteLines([
+        '\tGlobalSection(ExtensibilityGlobals) = postSolution',
+        '\t\tSolutionGuid = {E41FC29C-7FE6-4F98-85AD-1ED968E86446}',
+        '\tEndGlobalSection'])
+
+  def WriteConfigurations(self, solution_configurations, solution_projects):
+    """Writes the configurations.
+
+    Args:
+      solution_configurations (VSConfigurations): configurations.
+      solution_projects (list[VSSolutionProject]): projects.
+    """
+    self.WriteLine('Global')
+
+    self._WriteSolutionConfigurationPlatforms(
+        solution_configurations, solution_projects)
+
+    self._WriteProjectConfigurationPlatforms(
+        solution_configurations, solution_projects)
+
+    self._WriteSolutionProperties()
+    # self._WriteExtensibilityGlobals()
+
+    self.WriteLine('EndGlobal')
+
+  def WriteHeader(self):
+    """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
+    self.WriteLines([
+        'Microsoft Visual Studio Solution File, Format Version 12.00',
+        '# Visual Studio 15',
+        'VisualStudioVersion = 15.0.26730.10',
         'MinimumVisualStudioVersion = 10.0.40219.1'])

@@ -258,17 +258,15 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
         project_information, release_project_configuration,
         debug_project_configuration)
 
-    self.assertTrue(
-        release_project_configuration.include_directories.endswith(
-            '..\\..\\..\\bzip2'))
+    self.assertIn(
+        '..\\..\\..\\bzip2', release_project_configuration.include_directories)
 
     self.assertTrue(
         release_project_configuration.preprocessor_definitions.endswith(
             ';BZ_DLL'))
 
-    self.assertTrue(
-        debug_project_configuration.include_directories.endswith(
-            '..\\..\\..\\bzip2'))
+    self.assertIn(
+        '..\\..\\..\\bzip2', debug_project_configuration.include_directories)
 
     self.assertTrue(
         debug_project_configuration.preprocessor_definitions.endswith(
@@ -286,9 +284,9 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
         project_information, release_project_configuration,
         debug_project_configuration)
 
-    self.assertTrue(
-        release_project_configuration.include_directories.endswith(
-            '..\\..\\..\\dokan\\sys\\'))
+    self.assertIn(
+        '..\\..\\..\\dokan\\sys\\',
+        release_project_configuration.include_directories)
 
     self.assertTrue(
         release_project_configuration.preprocessor_definitions.endswith(
@@ -298,9 +296,9 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
         release_project_configuration.module_definition_file,
         '..\\..\\..\\dokan\\dokan\\dokan.def')
 
-    self.assertTrue(
-        debug_project_configuration.include_directories.endswith(
-            '..\\..\\..\\dokan\\sys\\'))
+    self.assertIn(
+        '..\\..\\..\\dokan\\sys\\',
+        debug_project_configuration.include_directories)
 
     self.assertTrue(
         debug_project_configuration.preprocessor_definitions.endswith(
@@ -322,17 +320,15 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
         project_information, release_project_configuration,
         debug_project_configuration)
 
-    self.assertTrue(
-        release_project_configuration.include_directories.endswith(
-            '..\\..\\..\\zlib'))
+    self.assertIn(
+        '..\\..\\..\\zlib', release_project_configuration.include_directories)
 
     self.assertTrue(
         release_project_configuration.preprocessor_definitions.endswith(
             ';ZLIB_DLL'))
 
-    self.assertTrue(
-        debug_project_configuration.include_directories.endswith(
-            '..\\..\\..\\zlib'))
+    self.assertIn(
+        '..\\..\\..\\zlib', debug_project_configuration.include_directories)
 
     self.assertTrue(
         debug_project_configuration.preprocessor_definitions.endswith(

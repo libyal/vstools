@@ -246,6 +246,9 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
       indentation_level (int): indentation level.
     """
     configuration_value = getattr(project_configuration, name, '')
+    if name == 'include_directories':
+      configuration_value = ';'.join(configuration_value)
+
     if not is_optional or configuration_value:
       indentation = '\t' * indentation_level
       line = '{0:s}{1:s}="{2:s}"'.format(
@@ -479,8 +482,9 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    include_directories = re.sub(
-        r'&quot;', r'', project_configuration.include_directories)
+    include_directories = ';'.join(project_configuration.include_directories)
+
+    include_directories = re.sub(r'&quot;', r'', include_directories)
 
     if include_directories and include_directories[-1] != ';':
       include_directories = '{0:s};'.format(
@@ -1085,8 +1089,9 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): configuration.
     """
-    include_directories = re.sub(
-        r'&quot;', r'', project_configuration.include_directories)
+    include_directories = ';'.join(project_configuration.include_directories)
+
+    include_directories = re.sub(r'&quot;', r'', include_directories)
 
     if include_directories and include_directories[-1] != ';':
       include_directories = '{0:s};'.format(

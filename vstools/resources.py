@@ -7,7 +7,12 @@ import abc
 
 
 class VSConfiguration(object):
-  """Visual Studio configuration."""
+  """Visual Studio configuration.
+
+  Attributes:
+    name (str): configuration name.
+    platform (str): configuration platform.
+  """
 
   def __init__(self, name='', platform=''):
     """Initializes a Visual Studio configuration.
@@ -25,7 +30,12 @@ class VSConfiguration(object):
 
 
 class VSConfigurations(object):
-  """Visual Studio solution and project configurations."""
+  """Visual Studio solution and project configurations.
+
+  Attributes:
+    names (list[str]): names of the configurations.
+    platforms (list[str]): platforms of the configurations.
+  """
 
   def __init__(self):
     """Initializes a Visual Studio configurations."""
@@ -117,7 +127,49 @@ class VSConfigurations(object):
 
 
 class VSProjectConfiguration(VSConfiguration):
-  """Visual Studio project configuration."""
+  """Visual Studio project configuration.
+
+  Attributes:
+    additional_dependencies (list[str]): additional dependencies.
+    basic_runtime_checks (str): basic runtime checks.
+    character_set (str): character set.
+    compile_as (str): compile as.
+    data_execution_prevention (str): data execution prevention.
+    debug_information_format (str): debug information format.
+    detect_64bit_portability_problems (str): detect 64bit portability problems.
+    enable_comdat_folding (str): enable comdat folding.
+    enable_function_level_linking (str): enable function level linking.
+    enable_intrinsic_functions (str): enable intrinsic functions.
+    fixed_base_address (str): fixed base address.
+    generate_debug_information (str): generate debug information.
+    import_library (str): import library.
+    include_directories (list[str]): include directories.
+    librarian_ignore_defaults (str): librarian ignore defaults.
+    librarian_output_file (str): librarian output file.
+    library_directories (str): library directories.
+    link_incremental (str): link incremental.
+    linker_output_directory (str): linker output directory.
+    linker_output_file (str): linker output file.
+    linker_values_set (bool): True if linker values are set.
+    managed_extensions (str): managed extensions.
+    module_definition_file (str): module definition file.
+    name (str): project name.
+    optimize_references (str): optimize references.
+    optimization (str): optimization.
+    output_type (str): output type.
+    platform (str): platform.
+    platform_toolset (str): platform toolset.
+    precompiled_header (str): precompiled header.
+    preprocessor_definitions (str): preprocessor definitions.
+    randomized_base_address (str): randomized base address.
+    runtime_library (str): runtime library.
+    smaller_type_check (str): smaller type check.
+    sub_system (str): sub system.
+    target_machine (str): target machine.
+    warning_as_error (str): warning as error.
+    warning_level (str): warning level.
+    whole_program_optimization (str): whole program optimization.
+  """
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
@@ -137,7 +189,7 @@ class VSProjectConfiguration(VSConfiguration):
     self.fixed_base_address = ''
     self.generate_debug_information = ''
     self.import_library = ''
-    self.include_directories = ''
+    self.include_directories = []
     self.librarian_ignore_defaults = ''
     self.librarian_output_file = ''
     self.library_directories = ''
@@ -396,7 +448,7 @@ class VSProjectConfiguration(VSConfiguration):
     """Copies the Visual Studio project configuration to an x64 equivalent."""
     copy = VSProjectConfiguration()
 
-    copy.additional_dependencies = self.additional_dependencies
+    copy.additional_dependencies = list(self.additional_dependencies)
     copy.basic_runtime_checks = self.basic_runtime_checks
     copy.character_set = self.character_set
     copy.compile_as = self.compile_as
@@ -410,7 +462,7 @@ class VSProjectConfiguration(VSConfiguration):
     copy.generate_debug_information = self.generate_debug_information
     copy.fixed_base_address = self.fixed_base_address
     copy.import_library = self.import_library
-    copy.include_directories = self.include_directories
+    copy.include_directories = list(self.include_directories)
     copy.librarian_ignore_defaults = self.librarian_ignore_defaults
     copy.librarian_output_file = self.librarian_output_file
     copy.library_directories = self.library_directories
@@ -457,7 +509,20 @@ class VSProjectConfiguration(VSConfiguration):
 
 
 class VSProjectInformation(object):
-  """Visual Studio project information."""
+  """Visual Studio project information.
+
+  Attributes:
+    configurations (VSConfigurations): configurations.
+    dependencies (list[str]): dependencies.
+    guid (str): project identifier (GUID).
+    header_files (list[str]): header files.
+    keyword (str): keyword.
+    name (str): project name.
+    resource_files (list[str]): resource files.
+    root_name_space (str): root name space.
+    source_files (list[str]): source files.
+    third_party_dependencies (list[str]): third party dependencies.
+  """
 
   def __init__(self):
     """Initializes Visual Studio project information."""
@@ -487,7 +552,13 @@ class VSSolutionConfiguration(VSConfiguration):
 
 
 class VSSolutionProject(object):
-  """Visual Studio solution project."""
+  """Visual Studio solution project.
+
+  Attributes:
+    name (str): project name.
+    filename (str): name of the project file without extension.
+    guid (str): project identifier (GUID).
+  """
 
   def __init__(self, name, filename, guid):
     """Initializes a Visual Studio solution project.

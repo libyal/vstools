@@ -331,13 +331,11 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         '_CRT_SECURE_NO_WARNINGS',
         'BZ_DLL']
 
-    release_project_configuration.include_directories = ';'.join(
-        include_directories)
+    release_project_configuration.include_directories = include_directories
     release_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
-    debug_project_configuration.include_directories = ';'.join(
-        include_directories)
+    debug_project_configuration.include_directories = include_directories
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
@@ -366,15 +364,13 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     module_definition_file = '..\\..\\..\\dokan\\dokan\\dokan.def'
 
-    release_project_configuration.include_directories = ';'.join(
-        include_directories)
+    release_project_configuration.include_directories = include_directories
     release_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
     release_project_configuration.module_definition_file = (
         module_definition_file)
 
-    debug_project_configuration.include_directories = ';'.join(
-        include_directories)
+    debug_project_configuration.include_directories = include_directories
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
     debug_project_configuration.module_definition_file = (
@@ -403,13 +399,11 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         '_CRT_SECURE_NO_WARNINGS',
         'ZLIB_DLL']
 
-    release_project_configuration.include_directories = ';'.join(
-        include_directories)
+    release_project_configuration.include_directories = include_directories
     release_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
-    debug_project_configuration.include_directories = ';'.join(
-        include_directories)
+    debug_project_configuration.include_directories = include_directories
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
@@ -836,13 +830,11 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     if project_name.startswith('py'):
       include_directories.append('C:\\Python27\\include')
 
-    release_project_configuration.include_directories = ';'.join(
-        include_directories)
+    release_project_configuration.include_directories = include_directories
     release_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
-    debug_project_configuration.include_directories = ';'.join(
-        include_directories)
+    debug_project_configuration.include_directories = include_directories
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 

@@ -203,6 +203,11 @@ class VS2008ProjectFileReader(VSProjectFileReader):
               project_configuration, self._TOOL_COMPILER_CONFIGURATION_OPTIONS,
               line)
 
+          if isinstance(
+              project_configuration.include_directories, py2to3.STRING_TYPES):
+            project_configuration.include_directories = (
+                project_configuration.include_directories.split(';'))
+
         elif found_tool_librarian:
           self._ParseConfigurationOptions(
               project_configuration, self._TOOL_LIBRARIAN_CONFIGURATION_OPTIONS,

@@ -72,6 +72,16 @@ class VSConfigurationsTest(test_lib.BaseTestCase):
     sorted_configurations = list(configurations.GetSorted())
     self.assertEqual(len(sorted_configurations), 1)
 
+  def testRemoveByName(self):
+    """Tests the RemoveByName function."""
+    configurations = resources.VSConfigurations()
+
+    configuration = resources.VSSolutionConfiguration(
+        name='test', platform='Win32')
+    configurations.Append(configuration)
+
+    configurations.RemoveByName('test')
+
 
 class VSProjectConfigurationTests(test_lib.BaseTestCase):
   """Visual Studio project configuration tests."""

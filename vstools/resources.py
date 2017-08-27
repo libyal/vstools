@@ -100,6 +100,21 @@ class VSConfigurations(object):
       for platform in sorted(self.platforms):
         yield self.GetByIdentifier(name, platform)
 
+  def RemoveByName(self, name):
+    """Removes a configuration by name.
+
+    Args:
+      name (str): name of the configuration to remove.
+    """
+    if name not in self.names:
+      return
+
+    self.names.remove(name)
+
+    for platform in self.platforms:
+      identifier = '{0:s}|{1:s}'.format(name, platform)
+      del self._configurations[identifier]
+
 
 class VSProjectConfiguration(VSConfiguration):
   """Visual Studio project configuration."""

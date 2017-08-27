@@ -13,6 +13,16 @@ from vstools import writers
 class VSSolution(object):
   """Visual Studio solution."""
 
+  def __init__(self, generate_python_dll=True):
+    """Initializes a Visual Studio solution.
+
+    Args:
+      generate_python_dll (Optional[bool]): True if a Python module DLL
+          should be generated.
+    """
+    super(VSSolution, self).__init__()
+    self._generate_python_dll = generate_python_dll
+
   def _ConvertProject(
       self, input_version, input_directory, output_version, solution_project,
       solution_projects_by_guid):
@@ -262,6 +272,15 @@ class VSSolution(object):
     solution_projects = solution_reader.ReadProjects()
     solution_configurations = solution_reader.ReadConfigurations()
     solution_reader.Close()
+
+    if not self._generate_python_dll:
+      python_module_name = None
+      for solution_project in solution_projects:
+        if solution_project.name.startswith('py'):
+          python_module_name = solution_project.name
+
+      if python_module_name:
+        solution_configurations.RemoveByName(python_module_name)
 
     # Add x64 as a platform.
     solution_configurations.ExtendWithX64(output_version)

@@ -54,9 +54,15 @@ def Main():
           'file (.sln).'))
 
   argument_parser.add_argument(
+      '--no_python_dll', '--no-python-dll', dest='python_dll',
+      action='store_false', default=True, help=(
+          'Do not generate a project file to build the Python module DLL if '
+          'present.'))
+
+  argument_parser.add_argument(
       '--to', dest='output_format', nargs='?', choices=sorted(output_formats),
-      action='store', metavar='FORMAT', default='2010',
-      help='The format to convert to.')
+      action='store', metavar='FORMAT', default='2010', help=(
+          'The format to convert to.'))
 
   options = argument_parser.parse_args()
 
@@ -76,9 +82,11 @@ def Main():
       level=logging.INFO, format='[%(levelname)s] %(message)s')
 
   if os.path.isdir(options.solution_file):
-    input_solution = libyal.LibyalSourceVSSolution()
+    input_solution = libyal.LibyalSourceVSSolution(
+        generate_python_dll=options.python_dll)
   else:
-    input_solution = solutions.VSSolution()
+    input_solution = solutions.VSSolution(
+        generate_python_dll=options.python_dll)
 
   if not input_solution.Convert(options.solution_file, options.output_format):
     print('Unable to convert Visual Studio solution file.')

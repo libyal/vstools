@@ -303,7 +303,7 @@ class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
 
 
 class LibyalSourceVSSolution(solutions.VSSolution):
-  """Libyal source Visual Studio solution generator."""
+  """Libyal source Visual Studio solution."""
 
   _SUPPORTED_THIRD_PARTY_DEPENDENCIES = frozenset([
       'bzip2', 'dokan', 'zlib'])
@@ -969,7 +969,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       # Ignore the Python version specific build directories.
       if (directory_entry.startswith('py') and (
           directory_entry.endswith('2') or
-          directory_entry.endswith('3'))):
+          directory_entry.endswith('3') or
+          not self._generate_python_dll)):
         continue
 
       makefile_am_path = os.path.join(
@@ -1009,11 +1010,13 @@ class LibyalSourceVSSolution(solutions.VSSolution):
           debug_project_configuration = VSDebugDllVSProjectConfiguration()
 
         elif project_name.endswith('.net'):
-          release_project_configuration = ReleaseDotNetDllVSProjectConfiguration()
+          release_project_configuration = (
+              ReleaseDotNetDllVSProjectConfiguration())
           debug_project_configuration = VSDebugDotNetDllVSProjectConfiguration()
 
         elif project_name.startswith('py'):
-          release_project_configuration = ReleasePythonDllVSProjectConfiguration()
+          release_project_configuration = (
+              ReleasePythonDllVSProjectConfiguration())
           debug_project_configuration = VSDebugPythonDllVSProjectConfiguration()
 
         elif project_name.startswith('lib'):
@@ -1035,7 +1038,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         # TODO: add additional Python 3 project.
 
         project_information.configurations.Append(release_project_configuration)
-        project_information.configurations.Append(debug_project_configuration)
+        if debug_project_configuration:
+          project_information.configurations.Append(debug_project_configuration)
 
         projects_by_guid[project_guid] = project_information
 

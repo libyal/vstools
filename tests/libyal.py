@@ -142,7 +142,7 @@ class ReleasePythonDllVSProjectConfiguration(test_lib.BaseTestCase):
 
     self.assertEqual(
         configuration.linker_output_file, '$(OutDir)\\$(ProjectName).pyd')
-    self.assertEqual(configuration.library_directories, 'C:\\Python27\\libs')
+    self.assertEqual(configuration.library_directories, ['C:\\Python27\\libs'])
 
 
 class VSDebugVSProjectConfigurationTest(test_lib.BaseTestCase):
@@ -238,7 +238,7 @@ class VSDebugPythonDllVSProjectConfiguration(test_lib.BaseTestCase):
 
     self.assertEqual(
         configuration.linker_output_file, '$(OutDir)\\$(ProjectName).pyd')
-    self.assertEqual(configuration.library_directories, 'C:\\Python27\\libs')
+    self.assertEqual(configuration.library_directories, ['C:\\Python27\\libs'])
 
 
 class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):

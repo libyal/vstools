@@ -14,7 +14,7 @@ class VSSolution(object):
   """Visual Studio solution."""
 
   def __init__(
-      self, generate_python_dll=True, python_path='C:\\Python27\\include'):
+      self, generate_python_dll=True, python_path='C:\\Python27'):
     """Initializes a Visual Studio solution.
 
     Args:
@@ -68,6 +68,20 @@ class VSSolution(object):
 
     project_information = project_reader.ReadProject()
     project_reader.Close()
+
+    if solution_project.name.startswith('py'):
+      for project_configuration in (
+          project_information.configurations.GetSorted()):
+        if 'C:\\Python27\\include' in project_configuration.include_directories:
+          project_configuration.include_directories.remove(
+              'C:\\Python27\\include')
+          project_configuration.include_directories.append(
+              '{0:s}\\include'.format(self._python_path))
+
+        if 'C:\\Python27\\libs' in project_configuration.library_directories:
+          project_configuration.library_directories.remove('C:\\Python27\\libs')
+          project_configuration.library_directories.append(
+              '{0:s}\\libs'.format(self._python_path))
 
     # Add x64 as a platform.
     project_information.configurations.ExtendWithX64(output_version)

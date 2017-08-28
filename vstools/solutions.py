@@ -14,16 +14,19 @@ class VSSolution(object):
   """Visual Studio solution."""
 
   def __init__(
-      self, generate_python_dll=True, python_path='C:\\Python27'):
+      self, extend_with_x64=True, generate_python_dll=True,
+      python_path='C:\\Python27'):
     """Initializes a Visual Studio solution.
 
     Args:
+      extend_with_x64 (Optional[bool]): True if the solution should be
+          extended with configuration for the x64 platform.
       generate_python_dll (Optional[bool]): True if a Python module DLL
           should be generated.
       python_path (Optional[str]): path to the Python installation.
     """
     super(VSSolution, self).__init__()
-    self._extend_with_x64 = False
+    self._extend_with_x64 = extend_with_x64
     self._generate_python_dll = generate_python_dll
     self._python_path = python_path
 

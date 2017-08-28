@@ -54,6 +54,11 @@ def Main():
           'file (.sln).'))
 
   argument_parser.add_argument(
+      '--extend_with_x64', '--extend-with-x64', dest='extend_with_x64',
+      action='store_true', default=False, help=(
+          'extend the solution with configurations for the x64 patform.'))
+
+  argument_parser.add_argument(
       '--no_python_dll', '--no-python-dll', dest='generate_python_dll',
       action='store_false', default=True, help=(
           'do not generate a project file to build the Python module DLL if '
@@ -88,10 +93,12 @@ def Main():
 
   if os.path.isdir(options.solution_file):
     input_solution = libyal.LibyalSourceVSSolution(
+        extend_with_x64=options.extend_with_x64,
         generate_python_dll=options.generate_python_dll,
         python_path=options.python_path)
   else:
     input_solution = solutions.VSSolution(
+        extend_with_x64=options.extend_with_x64,
         generate_python_dll=options.generate_python_dll,
         python_path=options.python_path)
 

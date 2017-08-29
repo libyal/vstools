@@ -304,13 +304,13 @@ class VSSolution(object):
     solution_reader.Close()
 
     if not self._generate_python_dll:
-      python_module_name = None
+      python_module_project = None
       for solution_project in solution_projects:
         if solution_project.name.startswith('py'):
-          python_module_name = solution_project.name
+          python_module_project = solution_project
 
-      if python_module_name:
-        solution_configurations.RemoveByName(python_module_name)
+      if python_module_project:
+        solution_projects.remove(python_module_project)
 
     if self._extend_with_x64:
       # Add x64 as a platform.

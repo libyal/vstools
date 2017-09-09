@@ -222,7 +222,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
               project_configuration.additional_dependencies,
               py2to3.STRING_TYPES):
             project_configuration.additional_dependencies = (
-                project_configuration.additional_dependencies.split(';'))
+                project_configuration.additional_dependencies.split(' '))
 
           if isinstance(
               project_configuration.library_directories, py2to3.STRING_TYPES):

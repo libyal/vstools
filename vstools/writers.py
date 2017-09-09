@@ -661,7 +661,9 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
       self._WriteLibrarianSection(project_configuration)
 
     # Write the linker specific section.
-    if project_configuration.linker_values_set:
+    if (project_configuration.linker_values_set or
+        project_configuration.output_type == (
+            definitions.OUTPUT_TYPE_APPLICATION)):
       self._WriteLinkerSection(project_configuration)
 
     self._WriteItemDefinitionGroupFooter()
@@ -1228,7 +1230,9 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
       self._WriteLibrarianSection(project_configuration)
 
     # Write the linker specific section.
-    if project_configuration.linker_values_set:
+    if (project_configuration.linker_values_set or
+        project_configuration.output_type == (
+            definitions.OUTPUT_TYPE_APPLICATION)):
       self._WriteLinkerSection(project_configuration)
 
     self._WriteItemDefinitionGroupFooter()

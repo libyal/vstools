@@ -852,20 +852,33 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
       project_configuration = project_configurations.GetByIdentifier(
           configuration_name, configuration_platform)
 
-      self.WriteLine((
-          '    <OutDir Condition="\'$(Configuration)|$(Platform)\'=='
-          '\'{0:s}|{1:s}\'">$(SolutionDir)$(Configuration)\\'
-          '</OutDir>').format(
-              project_configuration.name, project_configuration.platform))
+      if len(project_configurations.platforms) == 1:
+        self.WriteLine((
+            '    <OutDir Condition="\'$(Configuration)|$(Platform)\'=='
+            '\'{0:s}|{1:s}\'">$(SolutionDir)$(Configuration)\\'
+            '</OutDir>').format(
+                project_configuration.name, project_configuration.platform))
+      else:
+        self.WriteLine((
+            '    <OutDir Condition="\'$(Configuration)|$(Platform)\'=='
+            '\'{0:s}|{1:s}\'">$(SolutionDir)$(Configuration)\\$(Platform)\\'
+            '</OutDir>').format(
+                project_configuration.name, project_configuration.platform))
 
     for configuration_platform in sorted(project_configurations.platforms):
       project_configuration = project_configurations.GetByIdentifier(
           configuration_name, configuration_platform)
 
-      self.WriteLine((
-          '    <IntDir Condition="\'$(Configuration)|$(Platform)\'=='
-          '\'{0:s}|{1:s}\'">$(Configuration)\\</IntDir>').format(
-              project_configuration.name, project_configuration.platform))
+      if len(project_configurations.platforms) == 1:
+        self.WriteLine((
+            '    <IntDir Condition="\'$(Configuration)|$(Platform)\'=='
+            '\'{0:s}|{1:s}\'">$(Configuration)\\</IntDir>').format(
+                project_configuration.name, project_configuration.platform))
+      else:
+        self.WriteLine((
+            '    <IntDir Condition="\'$(Configuration)|$(Platform)\'=='
+            '\'{0:s}|{1:s}\'">$(Configuration)\\$(Platform)\\</IntDir>').format(
+                project_configuration.name, project_configuration.platform))
 
   def _WriteOutIntDirPropertyGroups(self, project_configurations):
     """Writes the OutDir and IntDir property groups.
@@ -1400,12 +1413,21 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
       project_configuration = project_configurations.GetByIdentifier(
           configuration_name, configuration_platform)
 
-      self.WriteLines([
-          ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-           '\'{0:s}|{1:s}\'">').format(
-               project_configuration.name, project_configuration.platform),
-          '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
-          '    <IntDir>$(Configuration)\\</IntDir>'])
+      if len(project_configurations.platforms) == 1:
+        self.WriteLines([
+            ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+             '\'{0:s}|{1:s}\'">').format(
+                 project_configuration.name, project_configuration.platform),
+            '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
+            '    <IntDir>$(Configuration)\\</IntDir>'])
+      else:
+        self.WriteLines([
+            ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+             '\'{0:s}|{1:s}\'">').format(
+                 project_configuration.name, project_configuration.platform),
+            ('    <OutDir>$(SolutionDir)$(Configuration)\\$(Platform)\\'
+             '</OutDir>'),
+            '    <IntDir>$(Configuration)\\$(Platform)\\</IntDir>'])
 
       if project_configuration.linker_values_set:
         self.WriteLine('    <LinkIncremental>false</LinkIncremental>')
@@ -1475,12 +1497,21 @@ class VS2015ProjectFileWriter(VS2012ProjectFileWriter):
       project_configuration = project_configurations.GetByIdentifier(
           configuration_name, configuration_platform)
 
-      self.WriteLines([
-          ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-           '\'{0:s}|{1:s}\'">').format(
-               project_configuration.name, project_configuration.platform),
-          '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
-          '    <IntDir>$(Configuration)\\</IntDir>'])
+      if len(project_configurations.platforms) == 1:
+        self.WriteLines([
+            ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+             '\'{0:s}|{1:s}\'">').format(
+                 project_configuration.name, project_configuration.platform),
+            '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
+            '    <IntDir>$(Configuration)\\</IntDir>'])
+      else:
+        self.WriteLines([
+            ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+             '\'{0:s}|{1:s}\'">').format(
+                 project_configuration.name, project_configuration.platform),
+            ('    <OutDir>$(SolutionDir)$(Configuration)\\$(Platform)\\'
+             '</OutDir>'),
+            '    <IntDir>$(Configuration)\\$(Platform)\\</IntDir>'])
 
       self.WriteLine('  </PropertyGroup>')
 
@@ -1659,12 +1690,21 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
       project_configuration = project_configurations.GetByIdentifier(
           configuration_name, configuration_platform)
 
-      self.WriteLines([
-          ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
-           '\'{0:s}|{1:s}\'">').format(
-               project_configuration.name, project_configuration.platform),
-          '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
-          '    <IntDir>$(Configuration)\\</IntDir>'])
+      if len(project_configurations.platforms) == 1:
+        self.WriteLines([
+            ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+             '\'{0:s}|{1:s}\'">').format(
+                 project_configuration.name, project_configuration.platform),
+            '    <OutDir>$(SolutionDir)$(Configuration)\\</OutDir>',
+            '    <IntDir>$(Configuration)\\</IntDir>'])
+      else:
+        self.WriteLines([
+            ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
+             '\'{0:s}|{1:s}\'">').format(
+                 project_configuration.name, project_configuration.platform),
+             ('    <OutDir>$(SolutionDir)$(Configuration)\\$(Platform)\\'
+             '</OutDir>'),
+            '    <IntDir>$(Configuration)\\$(Platform)\\</IntDir>'])
 
       if project_configuration.output_type == (
           definitions.OUTPUT_TYPE_APPLICATION):

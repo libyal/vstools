@@ -1702,7 +1702,7 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
             ('  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
              '\'{0:s}|{1:s}\'">').format(
                  project_configuration.name, project_configuration.platform),
-             ('    <OutDir>$(SolutionDir)$(Configuration)\\$(Platform)\\'
+            ('    <OutDir>$(SolutionDir)$(Configuration)\\$(Platform)\\'
              '</OutDir>'),
             '    <IntDir>$(Configuration)\\$(Platform)\\</IntDir>'])
 
@@ -1754,7 +1754,7 @@ class VSSolutionFileWriter(FileWriter):
       self.WriteLine('\tEndGlobalSection')
 
   def _WriteSolutionConfigurationPlatforms(
-      self, solution_configurations, solution_projects):
+      self, solution_configurations, unused_solution_projects):
     """Writes the solution configuration platforms.
 
     Args:

@@ -231,6 +231,8 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 class VSSolutionFileReaderTest(test_lib.BaseTestCase):
   """Visual Studio solution file reader tests."""
 
+  # pylint: disable=protected-access
+
   def testCheckVisualStudioVersion(self):
     """Tests the _CheckVisualStudioVersion function."""
     file_reader = readers.VS2012SolutionFileReader()

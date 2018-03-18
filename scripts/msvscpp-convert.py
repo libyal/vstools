@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# pylint: disable=invalid-name
 """Script to generate different versions of Visual Studio (express) files.
 
 Currently supported input formats:

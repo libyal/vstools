@@ -33,41 +33,6 @@ class Bzip2VSProjectInformation(resources.VSProjectInformation):
         '..\\..\\..\\bzip2\\randtable.c'])
 
 
-class DokanVSProjectInformation(resources.VSProjectInformation):
-  """Dokan Visual Studio project information."""
-
-  def __init__(self):
-    """Initializes dokan Visual Studio project information."""
-    super(DokanVSProjectInformation, self).__init__()
-
-    self.header_files = sorted([
-        '..\\..\\..\\dokan\\dokan\\dokan.h',
-        '..\\..\\..\\dokan\\dokan\\dokanc.h',
-        '..\\..\\..\\dokan\\dokan\\dokani.h',
-        '..\\..\\..\\dokan\\dokan\\fileinfo.h',
-        '..\\..\\..\\dokan\\dokan\\list.h'])
-
-    self.source_files = sorted([
-        '..\\..\\..\\dokan\\dokan\\access.c',
-        '..\\..\\..\\dokan\\dokan\\cleanup.c',
-        '..\\..\\..\\dokan\\dokan\\close.c',
-        '..\\..\\..\\dokan\\dokan\\create.c',
-        '..\\..\\..\\dokan\\dokan\\directory.c',
-        '..\\..\\..\\dokan\\dokan\\dokan.c',
-        '..\\..\\..\\dokan\\dokan\\fileinfo.c',
-        '..\\..\\..\\dokan\\dokan\\flush.c',
-        '..\\..\\..\\dokan\\dokan\\lock.c',
-        '..\\..\\..\\dokan\\dokan\\mount.c',
-        '..\\..\\..\\dokan\\dokan\\read.c',
-        '..\\..\\..\\dokan\\dokan\\security.c',
-        '..\\..\\..\\dokan\\dokan\\setfile.c',
-        '..\\..\\..\\dokan\\dokan\\status.c',
-        '..\\..\\..\\dokan\\dokan\\timeout.c',
-        '..\\..\\..\\dokan\\dokan\\version.c',
-        '..\\..\\..\\dokan\\dokan\\volume.c',
-        '..\\..\\..\\dokan\\dokan\\write.c'])
-
-
 class ZlibVSProjectInformation(resources.VSProjectInformation):
   """Zlib Visual Studio project information."""
 
@@ -313,8 +278,7 @@ class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
 class LibyalSourceVSSolution(solutions.VSSolution):
   """Libyal source Visual Studio solution."""
 
-  _SUPPORTED_THIRD_PARTY_DEPENDENCIES = frozenset([
-      'bzip2', 'dokan', 'zlib'])
+  _SUPPORTED_THIRD_PARTY_DEPENDENCIES = frozenset(['bzip2', 'zlib'])
 
   def _ConfigureAsBzip2Dll(
       self, unused_project_information, release_project_configuration,
@@ -346,43 +310,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.include_directories = include_directories
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
-
-  def _ConfigureAsDokanDll(
-      self, unused_project_information, release_project_configuration,
-      debug_project_configuration):
-    """Configures the project as the dokan DLL.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-      release_project_configuration (ReleaseVSProjectConfiguration):
-          release project configuration.
-      debug_project_configuration (VSDebugVSProjectConfiguration):
-          debug project configuration.
-    """
-    include_directories = sorted([
-        '..\\..\\..\\dokan\\sys\\'])
-
-    preprocessor_definitions = [
-        'WIN32',
-        'NDEBUG',
-        '_WINDOWS',
-        '_USRDLL',
-        '_CRT_SECURE_NO_WARNINGS',
-        'DOKAN_DLL']
-
-    module_definition_file = '..\\..\\..\\dokan\\dokan\\dokan.def'
-
-    release_project_configuration.include_directories = include_directories
-    release_project_configuration.preprocessor_definitions = ';'.join(
-        preprocessor_definitions)
-    release_project_configuration.module_definition_file = (
-        module_definition_file)
-
-    debug_project_configuration.include_directories = include_directories
-    debug_project_configuration.preprocessor_definitions = ';'.join(
-        preprocessor_definitions)
-    debug_project_configuration.module_definition_file = (
-        module_definition_file)
 
   def _ConfigureAsZlibDll(
       self, unused_project_information, release_project_configuration,
@@ -496,9 +423,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       if project_name == 'bzip2':
         project_information = Bzip2VSProjectInformation()
 
-      elif project_name == 'dokan':
-        project_information = DokanVSProjectInformation()
-
       elif project_name == 'zlib':
         project_information = ZlibVSProjectInformation()
 
@@ -509,7 +433,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       project_information.guid = project_guid
       project_information.root_name_space = project_name
 
-      if project_name in ('bzip2', 'dokan', 'zlib'):
+      if project_name in ('bzip2', 'zlib'):
         release_project_configuration = ReleaseDllVSProjectConfiguration()
         debug_project_configuration = VSDebugDllVSProjectConfiguration()
       else:
@@ -518,11 +442,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
       if project_name == 'bzip2':
         self._ConfigureAsBzip2Dll(
-            project_information, release_project_configuration,
-            debug_project_configuration)
-
-      elif project_name == 'dokan':
-        self._ConfigureAsDokanDll(
             project_information, release_project_configuration,
             debug_project_configuration)
 
@@ -569,6 +488,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     preprocessor_definitions.append('_CRT_SECURE_NO_DEPRECATE')
 
+    additional_dependencies = []
     alternate_dependencies = []
     dependencies = []
     source_files = []
@@ -615,7 +535,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
               preprocessor_definitions.append('HAVE_LIBDOKAN')
 
-              alternate_dependencies.append('dokan')
+              additional_dependencies.append(
+                  '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\dokan.lib')
 
             elif directory_name == 'zlib':
               include_directories.append('..\\..\\..\\zlib')
@@ -751,15 +672,12 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                   project_information, release_project_configuration,
                   debug_project_configuration)
 
-            elif dependency_name == 'libfuse':
-              dependencies.append('dokan')
-
             elif dependency_name == 'libuuid':
               self._ConfigureLibuuid(
                   project_information, release_project_configuration,
                   debug_project_configuration)
 
-            else:
+            elif dependency_name != 'libfuse':
               dependencies.append(dependency_name)
 
       elif in_sources_section:
@@ -817,9 +735,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     if 'bzip2' in project_information.dependencies:
       project_information.third_party_dependencies.append('bzip2')
 
-    if 'dokan' in project_information.dependencies:
-      project_information.third_party_dependencies.append('dokan')
-
     if 'zlib' in project_information.dependencies:
       project_information.third_party_dependencies.append('zlib')
 
@@ -848,7 +763,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     if project_name.endswith('.net'):
       dependency = '{0:s}.lib'.format(solution_name)
+      additional_dependencies.append(dependency)
 
+    for dependency in additional_dependencies:
       release_project_configuration.additional_dependencies.append(
           dependency)
       debug_project_configuration.additional_dependencies.append(

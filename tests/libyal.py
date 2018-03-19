@@ -25,20 +25,6 @@ class Bzip2VSProjectInformationTest(test_lib.BaseTestCase):
         '..\\..\\..\\bzip2\\bzlib.h', project_information.header_files)
 
 
-class DokanVSProjectInformationTest(test_lib.BaseTestCase):
-  """Dokan Visual Studio project information tests."""
-
-  def testInitialize(self):
-    """Tests the __init__ function."""
-    project_information = libyal.DokanVSProjectInformation()
-
-    self.assertIn(
-        '..\\..\\..\\dokan\\dokan\\dokan.c', project_information.source_files)
-
-    self.assertIn(
-        '..\\..\\..\\dokan\\dokan\\dokan.h', project_information.header_files)
-
-
 class ZlibVSProjectInformationTest(test_lib.BaseTestCase):
   """Zlib Visual Studio project information tests."""
 
@@ -271,42 +257,6 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     self.assertTrue(
         debug_project_configuration.preprocessor_definitions.endswith(
             ';BZ_DLL'))
-
-  def testConfigureAsDokanDll(self):
-    """Tests the _ConfigureAsDokanDll function."""
-    solution = libyal.LibyalSourceVSSolution()
-
-    project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
-
-    solution._ConfigureAsDokanDll(
-        project_information, release_project_configuration,
-        debug_project_configuration)
-
-    self.assertIn(
-        '..\\..\\..\\dokan\\sys\\',
-        release_project_configuration.include_directories)
-
-    self.assertTrue(
-        release_project_configuration.preprocessor_definitions.endswith(
-            ';DOKAN_DLL'))
-
-    self.assertEqual(
-        release_project_configuration.module_definition_file,
-        '..\\..\\..\\dokan\\dokan\\dokan.def')
-
-    self.assertIn(
-        '..\\..\\..\\dokan\\sys\\',
-        debug_project_configuration.include_directories)
-
-    self.assertTrue(
-        debug_project_configuration.preprocessor_definitions.endswith(
-            ';DOKAN_DLL'))
-
-    self.assertEqual(
-        debug_project_configuration.module_definition_file,
-        '..\\..\\..\\dokan\\dokan\\dokan.def')
 
   def testConfigureAsZlibDll(self):
     """Tests the _ConfigureAsZlibDll function."""

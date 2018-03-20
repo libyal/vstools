@@ -89,10 +89,16 @@ class VSSolution(object):
               '..\\..\\..\\dokany\\sys'])
 
         if library_path in project_configuration.additional_dependencies:
+          configuration = '$(Configuration)'
+          if project_configuration.name == 'Release':
+            configuration = 'Release'
+          elif project_configuration.name == 'VSDebug':
+            configuration = 'Debug'
+
           project_configuration.additional_dependencies.remove(library_path)
-          project_configuration.additional_dependencies.append(
-              '..\\..\\..\\dokany\\dokan\\$(Platform)\\$(Configuration)\\'
-              'dokan1.lib')
+          project_configuration.additional_dependencies.append((
+              '..\\..\\..\\dokany\\dokan\\$(Platform)\\{0:s}\\'
+              'dokan1.lib').format(configuration))
 
     elif solution_project.name.startswith('py'):
       include_path = 'C:\\Python27\\include'

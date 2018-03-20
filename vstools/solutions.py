@@ -15,7 +15,7 @@ class VSSolution(object):
 
   def __init__(
       self, extend_with_x64=True, generate_python_dll=True,
-      python_path='C:\\Python27'):
+      python_path='C:\\Python27', with_dokany=False):
     """Initializes a Visual Studio solution.
 
     Args:
@@ -24,11 +24,14 @@ class VSSolution(object):
       generate_python_dll (Optional[bool]): True if a Python module DLL
           should be generated.
       python_path (Optional[str]): path to the Python installation.
+      with_dokany (Optional[bool]): True if DokanY should be used instead
+          of Dokan.
     """
     super(VSSolution, self).__init__()
     self._extend_with_x64 = extend_with_x64
     self._generate_python_dll = generate_python_dll
     self._python_path = python_path
+    self._with_dokany = with_dokany
 
   def _ConvertProject(
       self, input_version, input_directory, output_version, solution_project,
@@ -73,17 +76,37 @@ class VSSolution(object):
     project_information = project_reader.ReadProject()
     project_reader.Close()
 
-    if solution_project.name.startswith('py'):
+    if solution_project.name.endswith('mount') and self._with_dokany:
+      include_path = '..\\..\\..\\dokan\\dokan'
+      library_path = '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\dokan.lib'
+
       for project_configuration in (
           project_information.configurations.GetSorted()):
-        if 'C:\\Python27\\include' in project_configuration.include_directories:
-          project_configuration.include_directories.remove(
-              'C:\\Python27\\include')
+        if include_path in project_configuration.include_directories:
+          project_configuration.include_directories.remove(include_path)
+          project_configuration.include_directories.extend([
+              '..\\..\\..\\dokany\\dokan',
+              '..\\..\\..\\dokany\\sys'])
+
+        if library_path in project_configuration.additional_dependencies:
+          project_configuration.additional_dependencies.remove(library_path)
+          project_configuration.additional_dependencies.append(
+              '..\\..\\..\\dokany\\dokan\\$(Platform)\\$(Configuration)\\'
+              'dokan1.lib')
+
+    elif solution_project.name.startswith('py'):
+      include_path = 'C:\\Python27\\include'
+      library_path = 'C:\\Python27\\libs'
+
+      for project_configuration in (
+          project_information.configurations.GetSorted()):
+        if include_path in project_configuration.include_directories:
+          project_configuration.include_directories.remove(include_path)
           project_configuration.include_directories.append(
               '{0:s}\\include'.format(self._python_path))
 
-        if 'C:\\Python27\\libs' in project_configuration.library_directories:
-          project_configuration.library_directories.remove('C:\\Python27\\libs')
+        if library_path in project_configuration.library_directories:
+          project_configuration.library_directories.remove(library_path)
           project_configuration.library_directories.append(
               '{0:s}\\libs'.format(self._python_path))
 

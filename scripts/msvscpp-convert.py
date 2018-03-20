@@ -75,6 +75,10 @@ def Main():
       nargs='?', action='store', metavar='PATH', default='C:\\Python27',
       help='location of the Python installation.')
 
+  argument_parser.add_argument(
+      '--with_dokany', '--with-dokany', dest='with_dokany',
+      action='store_true', default=False, help='use DokanY instead of Dokan.')
+
   options = argument_parser.parse_args()
 
   if not options.solution_file:
@@ -96,12 +100,12 @@ def Main():
     input_solution = libyal.LibyalSourceVSSolution(
         extend_with_x64=options.extend_with_x64,
         generate_python_dll=options.generate_python_dll,
-        python_path=options.python_path)
+        python_path=options.python_path, with_dokany=options.with_dokany)
   else:
     input_solution = solutions.VSSolution(
         extend_with_x64=options.extend_with_x64,
         generate_python_dll=options.generate_python_dll,
-        python_path=options.python_path)
+        python_path=options.python_path, with_dokany=options.with_dokany)
 
   if not input_solution.Convert(options.solution_file, options.output_format):
     print('Unable to convert Visual Studio solution file.')

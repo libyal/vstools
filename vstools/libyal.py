@@ -531,12 +531,22 @@ class LibyalSourceVSSolution(solutions.VSSolution):
               alternate_dependencies.append('bzip2')
 
             elif directory_name == 'libfuse' and project_name.endswith('mount'):
-              include_directories.append('..\\..\\..\\dokan\\dokan')
+              if self._with_dokany:
+                include_directories.extend([
+                    '..\\..\\..\\dokany\\dokan',
+                    '..\\..\\..\\dokany\\sys'])
+              else:
+                include_directories.append('..\\..\\..\\dokan\\dokan')
 
               preprocessor_definitions.append('HAVE_LIBDOKAN')
 
-              additional_dependencies.append(
-                  '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\dokan.lib')
+              if self._with_dokany:
+                additional_dependencies.append(
+                    '..\\..\\..\\dokany\\dokan\\$(Configuration)\\$(Platform)\\'
+                    'dokan1.lib')
+              else:
+                additional_dependencies.append(
+                    '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\dokan.lib')
 
             elif directory_name == 'zlib':
               include_directories.append('..\\..\\..\\zlib')

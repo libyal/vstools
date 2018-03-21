@@ -776,21 +776,25 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       additional_dependencies.append(dependency)
 
     for dependency in additional_dependencies:
-      if self._with_dokany and dependency == (
-          '..\\..\\..\\dokany\\dokan\\{0:s}\\$(Platform)\\$(Configuration)\\'
-          'dokan1.lib'):
-        dependency = dependency.replace('$(Configuration)', 'Release')
+      release_dependency = dependency
+      if 'dokan' in release_dependency:
+        release_dependency = release_dependency.replace(
+            '$(Configuration)', 'Release')
 
       release_project_configuration.additional_dependencies.append(
-          dependency)
+          release_dependency)
 
-      if self._with_dokany and dependency == (
-          '..\\..\\..\\dokany\\dokan\\{0:s}\\$(Platform)\\$(Configuration)\\'
-          'dokan1.lib'):
-        dependency = dependency.replace('$(Configuration)', 'Debug')
+      debug_dependency = dependency
+      if 'dokan' in debug_dependency:
+        if self._with_dokany:
+          debug_dependency = debug_dependency.replace(
+              '$(Configuration)', 'Debug')
+        else:
+          debug_dependency = debug_dependency.replace(
+              '$(Configuration)', 'VSDebug')
 
       debug_project_configuration.additional_dependencies.append(
-          dependency)
+          debug_dependency)
 
     project_information.source_files = sorted(source_files)
     project_information.header_files = sorted(header_files)

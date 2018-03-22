@@ -777,7 +777,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     for dependency in additional_dependencies:
       release_dependency = dependency
-      if 'dokan' in release_dependency:
+      if 'dokan' in release_dependency and self._with_dokany:
         release_dependency = release_dependency.replace(
             '$(Configuration)', 'Release')
 
@@ -785,13 +785,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
           release_dependency)
 
       debug_dependency = dependency
-      if 'dokan' in debug_dependency:
-        if self._with_dokany:
-          debug_dependency = debug_dependency.replace(
-              '$(Configuration)', 'Debug')
-        else:
-          debug_dependency = debug_dependency.replace(
-              '$(Configuration)', 'VSDebug')
+      if 'dokan' in debug_dependency and self._with_dokany:
+        debug_dependency = debug_dependency.replace(
+            '$(Configuration)', 'Debug')
 
       debug_project_configuration.additional_dependencies.append(
           debug_dependency)

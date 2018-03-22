@@ -76,29 +76,41 @@ class VSSolution(object):
     project_information = project_reader.ReadProject()
     project_reader.Close()
 
-    if solution_project.name.endswith('mount') and self._with_dokany:
+    if solution_project.name.endswith('mount'):
       include_path = '..\\..\\..\\dokan\\dokan'
       library_path = '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\dokan.lib'
 
       for project_configuration in (
           project_information.configurations.GetSorted()):
         if include_path in project_configuration.include_directories:
-          project_configuration.include_directories.remove(include_path)
-          project_configuration.include_directories.extend([
-              '..\\..\\..\\dokany\\dokan',
-              '..\\..\\..\\dokany\\sys'])
+          if self._with_dokany:
+            project_configuration.include_directories.remove(include_path)
+            project_configuration.include_directories.extend([
+                '..\\..\\..\\dokany\\dokan',
+                '..\\..\\..\\dokany\\sys'])
 
         if library_path in project_configuration.additional_dependencies:
-          configuration = '$(Configuration)'
-          if project_configuration.name == 'Release':
-            configuration = 'Release'
-          elif project_configuration.name == 'VSDebug':
-            configuration = 'Debug'
+          if self._with_dokany:
+            configuration = '$(Configuration)'
+            if project_configuration.name == 'Release':
+              configuration = 'Release'
+            elif project_configuration.name == 'VSDebug':
+              configuration = 'Debug'
 
-          project_configuration.additional_dependencies.remove(library_path)
-          project_configuration.additional_dependencies.append((
-              '..\\..\\..\\dokany\\dokan\\$(Platform)\\{0:s}\\'
-              'dokan1.lib').format(configuration))
+            project_configuration.additional_dependencies.remove(library_path)
+            library_path = (
+                '..\\..\\..\\dokany\\dokan\\$(Platform)\\{0:s}\\'
+                'dokan1.lib').format(configuration)
+
+            project_configuration.additional_dependencies.append(library_path)
+
+          elif self._extend_with_x64:
+            project_configuration.additional_dependencies.remove(library_path)
+            library_path = (
+                '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\$(Platform)\\'
+                'dokan.lib')
+
+            project_configuration.additional_dependencies.append(library_path)
 
     elif solution_project.name.startswith('py'):
       include_path = 'C:\\Python27\\include'

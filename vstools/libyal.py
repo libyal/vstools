@@ -675,7 +675,18 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             dependency_name = ''
 
           if dependency_name:
-            if dependency_name == 'libcrypto':
+            # The libcaes and libhmac tests exectuables depend on wincrypt.
+            if 'tests' in makefile_am_path and dependency_name in (
+                'libcaes', 'libhmac'):
+              preprocessor_definitions.append('HAVE_WINCRYPT')
+
+              self._ConfigureLibcrypto(
+                  project_information, release_project_configuration,
+                  debug_project_configuration)
+
+              dependencies.append(dependency_name)
+
+            elif dependency_name == 'libcrypto':
               preprocessor_definitions.append('HAVE_WINCRYPT')
 
               self._ConfigureLibcrypto(

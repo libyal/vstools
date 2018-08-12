@@ -342,26 +342,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
-  def _ConfigureLibcrypto(
-      self, unused_project_information, release_project_configuration,
-      debug_project_configuration):
-    """Configures the project for the Windows libcrypto equivalent.
-
-    Args:
-      project_information (VSProjectInformation): project information.
-      release_project_configuration (ReleaseVSProjectConfiguration):
-          release project configuration.
-      debug_project_configuration (VSDebugVSProjectConfiguration):
-          debug project configuration.
-    """
-    dependency = 'advapi32.lib'
-
-    if dependency not in release_project_configuration.additional_dependencies:
-      release_project_configuration.additional_dependencies.append(dependency)
-
-    if dependency not in debug_project_configuration.additional_dependencies:
-      debug_project_configuration.additional_dependencies.append(dependency)
-
   def _ConfigureLibuuid(
       self, unused_project_information, release_project_configuration,
       debug_project_configuration):
@@ -614,19 +594,12 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             dependency_name = ''
 
           if dependency_name:
-            if dependency_name == 'libcrypto':
-              preprocessor_definitions.append('HAVE_WINCRYPT')
-
-              self._ConfigureLibcrypto(
-                  project_information, release_project_configuration,
-                  debug_project_configuration)
-
-            elif dependency_name == 'libuuid':
+            if dependency_name == 'libuuid':
               self._ConfigureLibuuid(
                   project_information, release_project_configuration,
                   debug_project_configuration)
 
-            else:
+            elif dependency_name != 'libcrypto':
               dependencies.append(dependency_name)
 
       elif in_la_sources_section:
@@ -675,30 +648,12 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             dependency_name = ''
 
           if dependency_name:
-            # The libcaes and libhmac tests exectuables depend on wincrypt.
-            if 'tests' in makefile_am_path and dependency_name in (
-                'libcaes', 'libhmac'):
-              preprocessor_definitions.append('HAVE_WINCRYPT')
-
-              self._ConfigureLibcrypto(
-                  project_information, release_project_configuration,
-                  debug_project_configuration)
-
-              dependencies.append(dependency_name)
-
-            elif dependency_name == 'libcrypto':
-              preprocessor_definitions.append('HAVE_WINCRYPT')
-
-              self._ConfigureLibcrypto(
-                  project_information, release_project_configuration,
-                  debug_project_configuration)
-
-            elif dependency_name == 'libuuid':
+            if dependency_name == 'libuuid':
               self._ConfigureLibuuid(
                   project_information, release_project_configuration,
                   debug_project_configuration)
 
-            elif dependency_name != 'libfuse':
+            elif dependency_name not in ('libcrypto', 'libfuse'):
               dependencies.append(dependency_name)
 
       elif in_sources_section:
@@ -740,10 +695,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         in_extra_dist_section = True
 
     file_object.close()
-
-    if project_name in ('libcaes', 'libhmac'):
-      if 'HAVE_WINCRYPT' not in preprocessor_definitions:
-        preprocessor_definitions.append('HAVE_WINCRYPT')
 
     if project_name.endswith('.net'):
       dependencies.append(solution_name)

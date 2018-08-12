@@ -284,24 +284,6 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
         debug_project_configuration.preprocessor_definitions.endswith(
             ';ZLIB_DLL'))
 
-  def testConfigureLibcrypto(self):
-    """Tests the _ConfigureLibcrypto function."""
-    solution = libyal.LibyalSourceVSSolution()
-
-    project_information = resources.VSProjectInformation()
-    release_project_configuration = libyal.ReleaseVSProjectConfiguration()
-    debug_project_configuration = libyal.VSDebugVSProjectConfiguration()
-
-    solution._ConfigureLibcrypto(
-        project_information, release_project_configuration,
-        debug_project_configuration)
-
-    self.assertIn(
-        'advapi32.lib', release_project_configuration.additional_dependencies)
-
-    self.assertIn(
-        'advapi32.lib', debug_project_configuration.additional_dependencies)
-
   def testConfigureLibuuid(self):
     """Tests the _ConfigureLibuuid function."""
     solution = libyal.LibyalSourceVSSolution()

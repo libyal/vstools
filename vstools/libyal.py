@@ -280,8 +280,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
   _SUPPORTED_THIRD_PARTY_DEPENDENCIES = frozenset(['bzip2', 'zlib'])
 
+  # pylint: disable=unused-argument
   def _ConfigureAsBzip2Dll(
-      self, unused_project_information, release_project_configuration,
+      self, project_information, release_project_configuration,
       debug_project_configuration):
     """Configures the project as the bzip2 DLL.
 
@@ -311,8 +312,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
+  # pylint: disable=unused-argument
   def _ConfigureAsZlibDll(
-      self, unused_project_information, release_project_configuration,
+      self, project_information, release_project_configuration,
       debug_project_configuration):
     """Configures the project as the zlib DLL.
 
@@ -342,8 +344,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     debug_project_configuration.preprocessor_definitions = ';'.join(
         preprocessor_definitions)
 
+  # pylint: disable=unused-argument
   def _ConfigureLibuuid(
-      self, unused_project_information, release_project_configuration,
+      self, project_information, release_project_configuration,
       debug_project_configuration):
     """Configures the project for the Windows libuuid equivalent.
 
@@ -362,7 +365,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     if dependency not in debug_project_configuration.additional_dependencies:
       debug_project_configuration.additional_dependencies.append(dependency)
 
-  def _CreateThirdPartyDepencies(
+  def _CreateThirdPartyDependencies(
       self, solution_projects, projects_by_guid, project_guids_by_name):
     """Creates the project files for third party dependencies.
 
@@ -945,7 +948,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
         projects_by_guid[project_guid] = project_information
 
-    self._CreateThirdPartyDepencies(
+    self._CreateThirdPartyDependencies(
         solution_projects, projects_by_guid, project_guids_by_name)
 
     # Set-up the solution configurations.

@@ -138,7 +138,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """Writes the project configuration.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self.WriteLine('\t\t<Configuration')
 
@@ -204,7 +204,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """Writes the project configuration linker tool.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self._WriteConfigurationToolHeader('VCLinkerTool')
 
@@ -240,7 +240,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     value is not set.
 
     Args:
-      project_information (VSProjectInformation): project information.
+      project_configuration (VSProjectConfiguration): project configuration.
       definition (str): definition of the configuration value in file.
       name (str): name of the configuration value in the project information.
       is_optional (bool): True if the configuration option is optional.
@@ -261,10 +261,10 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """Writes a project configuration tool.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
       name (str): name of the tool.
       configuration_options (list[tuple[str, str, bool]]): configuration
-          options defined as a tupe of definition, name and is optional.
+          options defined as a tuple of definition, name and is optional.
     """
     self._WriteConfigurationToolHeader(name)
 
@@ -379,8 +379,8 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t<References>',
         '\t</References>'])
 
-  def WriteDependencies(
-      self, unused_dependencies, unused_solution_projects_by_guid):
+  # pylint: disable=unused-argument
+  def WriteDependencies(self, dependencies, solution_projects_by_guid):
     """Writes the dependencies.
 
     Args:
@@ -418,7 +418,8 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """Writes a file header."""
     self.WriteLine('<?xml version="1.0" encoding="Windows-1252"?>')
 
-  def WriteProjectConfigurations(self, unused_project_configurations):
+  # pylint: disable=unused-argument
+  def WriteProjectConfigurations(self, project_configurations):
     """Writes the project configurations.
 
     Args:
@@ -481,7 +482,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the CLCompile section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     include_directories = ';'.join(project_configuration.include_directories)
 
@@ -589,7 +590,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the configuration property group.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self._WriteConfigurationPropertyGroupHeader(project_configuration)
 
@@ -624,7 +625,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the configuration property group header.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self.WriteLine((
         '  <PropertyGroup Condition="\'$(Configuration)|$(Platform)\'=='
@@ -649,7 +650,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the item definition group.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self._WriteItemDefinitionGroupHeader(project_configuration)
 
@@ -676,7 +677,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the item definition group header.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self.WriteLine((
         '  <ItemDefinitionGroup Condition="\'$(Configuration)|'
@@ -687,7 +688,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the librarian section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     librarian_output_file = re.sub(
         r'[$][(]OutDir[)]\\', r'$(OutDir)',
@@ -719,7 +720,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     """Writes the linker section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self.WriteLine('    <Link>')
 
@@ -989,7 +990,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
 
       dependencies_by_name = {}
 
-      # Mimic Visual Studio behavior and ouput the depencies in order
+      # Mimic Visual Studio behavior and output the dependencies in order
       # of name (perhaps filename?).
       for dependency_guid in dependencies:
         dependency_project = solution_projects_by_guid[dependency_guid]
@@ -1102,7 +1103,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     """Writes the CLCompile section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     include_directories = ';'.join(project_configuration.include_directories)
 
@@ -1200,7 +1201,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     """Writes the configuration property group.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self._WriteConfigurationPropertyGroupHeader(project_configuration)
 
@@ -1231,7 +1232,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     """Writes the item definition group.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self._WriteItemDefinitionGroupHeader(project_configuration)
 
@@ -1254,7 +1255,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     """Writes the librarian section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     librarian_output_file = re.sub(
         r'[$][(]OutDir[)]\\', r'$(OutDir)',
@@ -1284,7 +1285,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
     """Writes the linker section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self.WriteLine('    <Link>')
 
@@ -1530,7 +1531,7 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
     """Writes the item definition group.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self._WriteItemDefinitionGroupHeader(project_configuration)
 
@@ -1553,7 +1554,7 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
     """Writes the linker section.
 
     Args:
-      project_configuration (VSProjectConfiguration): configuration.
+      project_configuration (VSProjectConfiguration): project configuration.
     """
     self.WriteLine('    <Link>')
 
@@ -1753,8 +1754,9 @@ class VSSolutionFileWriter(FileWriter):
 
       self.WriteLine('\tEndGlobalSection')
 
+  # pylint: disable=unused-argument
   def _WriteSolutionConfigurationPlatforms(
-      self, solution_configurations, unused_solution_projects):
+      self, solution_configurations, solution_projects):
     """Writes the solution configuration platforms.
 
     Args:

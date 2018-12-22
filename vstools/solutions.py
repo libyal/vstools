@@ -150,8 +150,10 @@ class VSSolution(object):
     """
     if version == '2008':
       return '{0:s}.vcproj'.format(project_filename)
-    elif version in ('2010', '2012', '2013', '2015', '2017'):
+    if version in ('2010', '2012', '2013', '2015', '2017'):
       return '{0:s}.vcxproj'.format(project_filename)
+
+    return None
 
   def _GetProjectFileReader(self, input_version):
     """Retrieves a Visual Studio project file reader.
@@ -165,16 +167,18 @@ class VSSolution(object):
     """
     if input_version == '2008':
       return readers.VS2008ProjectFileReader()
-    elif input_version == '2010':
+    if input_version == '2010':
       return readers.VS2010ProjectFileReader()
-    elif input_version == '2012':
+    if input_version == '2012':
       return readers.VS2012ProjectFileReader()
-    elif input_version == '2013':
+    if input_version == '2013':
       return readers.VS2013ProjectFileReader()
-    elif input_version == '2015':
+    if input_version == '2015':
       return readers.VS2015ProjectFileReader()
-    elif input_version == '2017':
+    if input_version == '2017':
       return readers.VS2017ProjectFileReader()
+
+    return None
 
   def _GetProjectFileWriter(self, output_version):
     """Retrieves a Visual Studio project file writer.
@@ -188,16 +192,18 @@ class VSSolution(object):
     """
     if output_version == '2008':
       return writers.VS2008ProjectFileWriter()
-    elif output_version == '2010':
+    if output_version == '2010':
       return writers.VS2010ProjectFileWriter()
-    elif output_version == '2012':
+    if output_version == '2012':
       return writers.VS2012ProjectFileWriter()
-    elif output_version == '2013':
+    if output_version == '2013':
       return writers.VS2013ProjectFileWriter()
-    elif output_version == '2015':
+    if output_version == '2015':
       return writers.VS2015ProjectFileWriter()
-    elif output_version == '2017':
+    if output_version == '2017':
       return writers.VS2017ProjectFileWriter()
+
+    return None
 
   def _GetSolutionFileReader(self, input_version):
     """Retrieves a Visual Studio solution file reader.
@@ -211,16 +217,18 @@ class VSSolution(object):
     """
     if input_version == '2008':
       return readers.VS2008SolutionFileReader()
-    elif input_version == '2010':
+    if input_version == '2010':
       return readers.VS2010SolutionFileReader()
-    elif input_version == '2012':
+    if input_version == '2012':
       return readers.VS2012SolutionFileReader()
-    elif input_version == '2013':
+    if input_version == '2013':
       return readers.VS2013SolutionFileReader()
-    elif input_version == '2015':
+    if input_version == '2015':
       return readers.VS2015SolutionFileReader()
-    elif input_version == '2017':
+    if input_version == '2017':
       return readers.VS2017SolutionFileReader()
+
+    return None
 
   def _GetSolutionFileWriter(self, output_version):
     """Retrieves a Visual Studio solution file writer.
@@ -234,16 +242,18 @@ class VSSolution(object):
     """
     if output_version == '2008':
       return writers.VS2008SolutionFileWriter()
-    elif output_version == '2010':
+    if output_version == '2010':
       return writers.VS2010SolutionFileWriter()
-    elif output_version == '2012':
+    if output_version == '2012':
       return writers.VS2012SolutionFileWriter()
-    elif output_version == '2013':
+    if output_version == '2013':
       return writers.VS2013SolutionFileWriter()
-    elif output_version == '2015':
+    if output_version == '2015':
       return writers.VS2015SolutionFileWriter()
-    elif output_version == '2017':
+    if output_version == '2017':
       return writers.VS2017SolutionFileWriter()
+
+    return None
 
   def _WriteProject(
       self, output_version, solution_project, project_information,

@@ -302,7 +302,7 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
     self.assertIn(
         'rpcrt4.lib', debug_project_configuration.additional_dependencies)
 
-  # TODO: add tests for _CreateThirdPartyDepencies
+  # TODO: add tests for _CreateThirdPartyDependencies
   # TODO: add tests for _ReadMakefile
   # TODO: add tests for _ReadMakefilePrograms
   # TODO: add tests for Convert

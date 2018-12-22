@@ -46,7 +46,7 @@ class FileReader(object):
       str: line stripped of leading and trailing white space or None if no
           input is available.
     """
-    if self._line != None:
+    if self._line is not None:
       line = self._line
       if not look_ahead:
         self._line = None
@@ -135,7 +135,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
     """Parses a configuration option.
 
     Args:
-      project_information (VSProjectInformation): project information.
+      project_configuration (VSProjectConfiguration): project configuration.
       definition (str): definition of the configuration value in file.
       name (str): name of the configuration value in the project information.
       line (str): line that contains the configuration value.
@@ -150,7 +150,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
     """Parses configuration options.
 
     Args:
-      project_information (VSProjectInformation): project information.
+      project_configuration (VSProjectConfiguration): project configuration.
       configuration_options (dict[str, str]): configuration options defined
           as a name per definition.
       line (str): line that contains the configuration value.
@@ -176,7 +176,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
           found.
     """
     if not line or not line.startswith('<Configuration'):
-      return
+      return None
 
     project_configuration = resources.VSProjectConfiguration()
 
@@ -472,6 +472,10 @@ class VS2017ProjectFileReader(VSProjectFileReader):
 class VSSolutionFileReader(FileReader):
   """Visual Studio solution file reader."""
 
+  # Note that redundant-returns-doc is broken for pylint 1.7.x for abstract
+  # methods
+  # pylint: disable=redundant-returns-doc
+
   @abc.abstractmethod
   def _CheckFormatVersion(self, line):
     """Checks the format version.
@@ -483,7 +487,8 @@ class VSSolutionFileReader(FileReader):
       bool: True if successful or false otherwise.
     """
 
-  def _CheckVisualStudioVersion(self, unused_line):
+  # pylint: disable=unused-argument
+  def _CheckVisualStudioVersion(self, line):
     """Checks the Visual Studio version.
 
     Args:
@@ -498,13 +503,13 @@ class VSSolutionFileReader(FileReader):
     """Reads the configurations.
 
     Returns:
-      VSConfigurations: configurations.
+      VSConfigurations: configurations or None if not available.
     """
     solution_configurations = resources.VSConfigurations()
 
     line = self._ReadLine(look_ahead=True)
     if not line or line != 'Global':
-      return
+      return None
 
     found_section = False
 
@@ -587,7 +592,7 @@ class VSSolutionFileReader(FileReader):
     line = self._ReadLine(look_ahead=True)
     if not line or not line.startswith(
         'Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = '):
-      return
+      return None
 
     # For more than 1 match findall will return a list with a tuple.
     values = re.findall(
@@ -597,11 +602,11 @@ class VSSolutionFileReader(FileReader):
         line)
 
     if len(values) != 1:
-      return
+      return None
 
     values = values[0]
     if len(values) != 3:
-      return
+      return None
 
     solution_project = resources.VSSolutionProject(
         values[0], values[1], values[2])

@@ -65,7 +65,8 @@ class VSConfigurations(object):
 
     self._configurations[identifier] = configuration
 
-  def ExtendWithX64(self, unused_output_version):
+  # pylint: disable=unused-argument
+  def ExtendWithX64(self, output_version):
     """Extends the configurations with the x64 platform.
 
     Args:
@@ -79,7 +80,7 @@ class VSConfigurations(object):
           self.Append(x64_configuration)
 
   def GetByIdentifier(self, name, platform):
-    """Retrieves a specific configuration by identtifier.
+    """Retrieves a specific configuration by identifier.
 
     The identifier is formatted as: name|platform.
 
@@ -96,8 +97,8 @@ class VSConfigurations(object):
   def GetSorted(self, reverse=False):
     """Retrieves configurations in sorted order.
 
-    The sorting order is first alphabetacally by name,
-    secondly alphabetacally by platform.
+    The sorting order is first alphabetically by name,
+    secondly alphabetically by platform.
 
     Args:
       reverse (Optional[bool]): True if the name sort order should be
@@ -217,7 +218,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if basic_runtime_checks == 0:
       return 'Default'
-    elif basic_runtime_checks == 3:
+    if basic_runtime_checks == 3:
       return 'EnableFastChecks'
     return ''
 
@@ -243,7 +244,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if compile_as == 1:
       return 'CompileAsC'
-    elif compile_as == 2:
+    if compile_as == 2:
       return 'CompileAsCpp'
     return ''
 
@@ -319,7 +320,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if optimization == 0:
       return 'Disabled'
-    elif optimization == 2:
+    if optimization == 2:
       return 'MaxSpeed'
     return ''
 
@@ -354,7 +355,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if randomized_base_address == 1:
       return 'false'
-    elif randomized_base_address == 2:
+    if randomized_base_address == 2:
       return 'true'
     return ''
 
@@ -382,7 +383,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if sub_system == 0:
       return 'NotSet'
-    elif sub_system == 1:
+    if sub_system == 1:
       return 'Console'
     return ''
 
@@ -397,7 +398,7 @@ class VSProjectConfiguration(VSConfiguration):
     if target_machine == 1:
       return 'MachineX86'
     # TODO: assuming here that 2 is x64.
-    elif target_machine == 2:
+    if target_machine == 2:
       return 'MachineX64'
     return ''
 
@@ -411,7 +412,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if warning_level == 3:
       return 'Level3'
-    elif warning_level == 4:
+    if warning_level == 4:
       return 'Level4'
     return ''
 
@@ -425,7 +426,7 @@ class VSProjectConfiguration(VSConfiguration):
 
     if whole_program_optimization == 0:
       return 'false'
-    elif whole_program_optimization == 1:
+    if whole_program_optimization == 1:
       return 'true'
     return ''
 
@@ -480,7 +481,10 @@ class VSProjectConfiguration(VSConfiguration):
     """Retrieves the platform toolset.
 
     Args:
-      output_version (str): platform toolsset version.
+      output_version (str): output Visual Studio version.
+
+    Returns:
+      str: platform toolset version.
     """
     platform_toolset = self.platform_toolset
     if not platform_toolset:

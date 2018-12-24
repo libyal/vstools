@@ -218,11 +218,16 @@ class VS2008ProjectFileReader(VSProjectFileReader):
               project_configuration, self._TOOL_LINKER_CONFIGURATION_OPTIONS,
               line)
 
-          if isinstance(
-              project_configuration.additional_dependencies,
-              py2to3.STRING_TYPES):
-            project_configuration.additional_dependencies = (
-                project_configuration.additional_dependencies.split(' '))
+          additional_dependencies = (
+              project_configuration.additional_dependencies)
+          if isinstance(additional_dependencies, py2to3.STRING_TYPES):
+            # pylint: disable=no-member
+            additional_dependencies = additional_dependencies.split(' ')
+
+          project_configuration.additional_dependencies = []
+          for dependency in additional_dependencies:
+            dependency.replace('$(ConfigurationName)', '$(Configuration)')
+            project_configuration.additional_dependencies.append(dependency)
 
           if isinstance(
               project_configuration.library_directories, py2to3.STRING_TYPES):

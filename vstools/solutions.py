@@ -78,7 +78,8 @@ class VSSolution(object):
 
     if solution_project.name.endswith('mount'):
       include_path = '..\\..\\..\\dokan\\dokan'
-      library_path = '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\dokan.lib'
+      library_path = (
+          '..\\..\\..\\dokan\\msvscpp\\$(ConfigurationName)\\dokan.lib')
 
       for project_configuration in (
           project_information.configurations.GetSorted()):
@@ -91,7 +92,7 @@ class VSSolution(object):
 
         if library_path in project_configuration.additional_dependencies:
           if self._with_dokany:
-            configuration = '$(Configuration)'
+            configuration = '$(ConfigurationName)'
             if project_configuration.name == 'Release':
               configuration = 'Release'
             elif project_configuration.name == 'VSDebug':
@@ -107,8 +108,8 @@ class VSSolution(object):
           elif self._extend_with_x64:
             project_configuration.additional_dependencies.remove(library_path)
             library_path = (
-                '..\\..\\..\\dokan\\msvscpp\\$(Configuration)\\$(Platform)\\'
-                'dokan.lib')
+                '..\\..\\..\\dokan\\msvscpp\\$(ConfigurationName)\\'
+                '$(Platform)\\dokan.lib')
 
             project_configuration.additional_dependencies.append(library_path)
 

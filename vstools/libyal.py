@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals
 
+import io
 import logging
 import os
 import uuid
@@ -378,7 +379,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
           to preserve the existing GUIDs.
     """
     third_party_dependencies = []
-    for project_information in projects_by_guid.itervalues():
+    for project_information in projects_by_guid.values():
       for dependency in project_information.third_party_dependencies:
         if dependency not in third_party_dependencies:
           third_party_dependencies.append(dependency)
@@ -454,7 +455,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     """
     project_name = project_information.name
 
-    file_object = open(makefile_am_path, 'r')
+    file_object = io.open(makefile_am_path, 'r', encoding='utf8')
 
     include_directories = []
     preprocessor_definitions = []
@@ -771,7 +772,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     Returns:
       list[str]: binary program names.
     """
-    file_object = open(makefile_am_path, 'r')
+    file_object = io.open(makefile_am_path, 'r', encoding='utf8')
 
     bin_programs = []
 
@@ -814,7 +815,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       return False
 
     solution_name = None
-    file_object = open(configure_ac_path, 'r')
+    file_object = io.open(configure_ac_path, 'r', encoding='utf8')
 
     in_ac_init_section = False
 
@@ -1034,8 +1035,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     filename = os.path.join('vs{0:s}'.format(output_version), 'Makefile.am')
     logging.info('Writing: {0:s}'.format(filename))
 
-    makefile_am = open(filename, 'wb')
-    makefile_am.write('\n'.join(makefile_am_lines))
-    makefile_am.close()
+    with io.open(filename, 'w', encoding='utf8') as makefile_am:
+      lines = '\n'.join(makefile_am_lines)
+      makefile_am.write(lines)
 
     return True

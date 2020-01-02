@@ -442,7 +442,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
   def _ReadMakefile(
       self, makefile_am_path, solution_name, project_information,
       release_project_configuration, debug_project_configuration):
-    """Reads the Makefile.am.
+    """Reads a Makefile.am.
 
     Args:
       makefile_am_path (str): path of the Makefile.am file.
@@ -673,13 +673,16 @@ class LibyalSourceVSSolution(solutions.VSSolution):
               makefile_am_path).rpartition(os.path.sep)
 
           for filename in line.split(' '):
+            if filename.startswith('../'):
+              filename = '\\'.join(['..', filename.replace('/', '\\')])
+            else:
+              filename = '\\'.join(['..', '..', directory_name, filename])
+
             if filename.endswith('.c') or filename.endswith('.cpp'):
-              source_files.append('\\'.join([
-                  '..', '..', directory_name, filename]))
+              source_files.append(filename)
 
             elif filename.endswith('.h'):
-              header_files.append('\\'.join([
-                  '..', '..', directory_name, filename]))
+              header_files.append(filename)
 
       if line.startswith('AM_CFLAGS') or line.startswith('AM_CPPFLAGS'):
         in_am_cppflags_section = True
@@ -764,7 +767,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     project_information.resource_files = sorted(resource_files)
 
   def _ReadMakefilePrograms(self, makefile_am_path):
-    """Reads the programs section in the Makefile.am.
+    """Reads the programs section in a Makefile.am.
 
     Args:
       makefile_am_path (str): path of the Makefile.am file.

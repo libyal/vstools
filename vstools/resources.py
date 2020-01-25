@@ -496,6 +496,8 @@ class VSProjectConfiguration(VSConfiguration):
       #   platform_toolset = 'v140'
       elif output_version == 2017:
         platform_toolset = 'v141'
+      elif output_version == 2019:
+        platform_toolset = 'v142'
     return platform_toolset
 
 

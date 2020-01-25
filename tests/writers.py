@@ -1270,5 +1270,29 @@ class VS2017SolutionFileWriterTest(test_lib.BaseTestCase):
     self.assertEqual(output_data, expected_output_data)
 
 
+class VS2019SolutionFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2019 solution file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testWriteHeader(self):
+    """Tests the WriteHeader function."""
+    file_writer = writers.VS2019SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteHeader()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+    expected_output_data = (
+        b'\xef\xbb\xbf\r\n'
+        b'Microsoft Visual Studio Solution File, Format Version 12.00\r\n'
+        b'# Visual Studio 15\r\n'
+        b'VisualStudioVersion = 15.0.26730.10\r\n'
+        b'MinimumVisualStudioVersion = 10.0.40219.1\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+
 if __name__ == '__main__':
   unittest.main()

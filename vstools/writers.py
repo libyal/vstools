@@ -1722,6 +1722,17 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
              self._tools_version)])
 
 
+class VS2019ProjectFileWriter(VS2017ProjectFileWriter):
+  """Visual Studio 2019 project file writer."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project file writer."""
+    super(VS2019ProjectFileWriter, self).__init__()
+    self._project_file_version = '15.0.26730.3'
+    self._tools_version = '15.0'
+    self._version = 2019
+
+
 class VSSolutionFileWriter(FileWriter):
   """Visual Studio solution file writer."""
 
@@ -2008,3 +2019,7 @@ class VS2017SolutionFileWriter(VS2010SolutionFileWriter):
         '# Visual Studio 15',
         'VisualStudioVersion = 15.0.26730.10',
         'MinimumVisualStudioVersion = 10.0.40219.1'])
+
+
+class VS2019SolutionFileWriter(VS2017SolutionFileWriter):
+  """Visual Studio 2019 solution file writer."""

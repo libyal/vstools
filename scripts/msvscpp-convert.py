@@ -25,9 +25,6 @@ Currently supported output formats:
 # TODO: add vs2017 reader.
 # TODO: add vs2019 reader.
 
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import argparse
 import logging
 import os

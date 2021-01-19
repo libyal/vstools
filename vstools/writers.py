@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Project and solution file writer classes."""
 
-from __future__ import unicode_literals
-
 import abc
 import re
 

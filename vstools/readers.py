@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 """Project and solution file reader classes."""
 
-from __future__ import unicode_literals
-
 import abc
 import re
 
-from vstools import py2to3
 from vstools import resources
 
 
@@ -58,7 +55,7 @@ class FileReader(object):
       if look_ahead:
         self._line = line
 
-    if isinstance(line, py2to3.BYTES_TYPE):
+    if isinstance(line, bytes):
       line = line.decode(self._encoding)
 
     return line
@@ -191,7 +188,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
       if line.startswith('</Configuration>'):
         break
 
-      elif found_tool:
+      if found_tool:
         if line.startswith('/>'):
           found_tool = False
           found_tool_compiler = False
@@ -204,7 +201,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
               line)
 
           if isinstance(
-              project_configuration.include_directories, py2to3.STRING_TYPES):
+              project_configuration.include_directories, str):
             project_configuration.include_directories = (
                 project_configuration.include_directories.split(';'))
 
@@ -220,7 +217,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
 
           additional_dependencies = (
               project_configuration.additional_dependencies)
-          if isinstance(additional_dependencies, py2to3.STRING_TYPES):
+          if isinstance(additional_dependencies, str):
             # pylint: disable=no-member
             additional_dependencies = additional_dependencies.split(' ')
 
@@ -230,7 +227,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
             project_configuration.additional_dependencies.append(dependency)
 
           if isinstance(
-              project_configuration.library_directories, py2to3.STRING_TYPES):
+              project_configuration.library_directories, str):
             project_configuration.library_directories = (
                 project_configuration.library_directories.split(';'))
 
@@ -295,7 +292,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
       if line.startswith('</Configurations>'):
         break
 
-      elif line.startswith('<Configuration'):
+      if line.startswith('<Configuration'):
         project_configuration = self._ReadConfiguration(line)
 
         if project_configuration:
@@ -329,7 +326,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
         if line.startswith('</Files>'):
           break
 
-        elif found_filter:
+        if found_filter:
           if line.startswith('</Filter>'):
             found_filter = False
             found_filter_source_files = False
@@ -381,7 +378,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
       if line.startswith('>'):
         break
 
-      elif line.startswith('Name='):
+      if line.startswith('Name='):
         values = re.findall('Name="([^"]*)"', line)
         if len(values) == 1:
           project_information.name = values[0]

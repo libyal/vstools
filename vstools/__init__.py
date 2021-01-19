@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Digital Forensics Date and Time (dfDateTime).
+"""Visual Studio tools for the libyal projects."""
 
-dfDateTime, or Digital Forensics date and time, provides date and time
-objects to preserve accuracy and precision.
-"""
-
-__version__ = '20181224'
+__version__ = '20210119'

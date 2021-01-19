@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Project and solution classes."""
 
-from __future__ import unicode_literals
-
 import abc
 
 

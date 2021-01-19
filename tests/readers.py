@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Tests for the project and solution file reader classes."""
 
-from __future__ import unicode_literals
-
 import io
 import unittest
 

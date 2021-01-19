@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Solution classes."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 

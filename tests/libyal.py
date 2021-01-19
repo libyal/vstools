@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Tests for the libyal sources classes."""
 
-from __future__ import unicode_literals
-
 import unittest
 
 from vstools import libyal

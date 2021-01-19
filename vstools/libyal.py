@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Libyal sources classes."""
 
-from __future__ import unicode_literals
-
 import io
 import logging
 import os
@@ -830,7 +828,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
           solution_name = line[1:-2]
         break
 
-      elif line.startswith('AC_INIT('):
+      if line.startswith('AC_INIT('):
         in_ac_init_section = True
 
     file_object.close()

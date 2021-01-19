@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Tests for the solution classes."""
 
-from __future__ import unicode_literals
-
 import unittest
 
 from vstools import solutions

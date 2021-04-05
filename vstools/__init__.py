@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 """Visual Studio tools for the libyal projects."""
 
-__version__ = '20210119'
+__version__ = '20210405'

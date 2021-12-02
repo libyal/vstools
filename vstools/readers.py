@@ -70,7 +70,7 @@ class FileReader(object):
     Args:
       filename (str): path of the file.
     """
-    self._file = open(filename, 'rb')
+    self._file = open(filename, 'rb')  # pylint: disable=consider-using-with
 
 
 class VSProjectFileReader(FileReader):

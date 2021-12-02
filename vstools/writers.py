@@ -33,7 +33,7 @@ class FileWriter(object):
       filename (str): path of the file.
     """
     # Using binary mode to make sure to write Windows/DOS end of lines.
-    self._file = open(filename, 'wb')
+    self._file = open(filename, 'wb')  # pylint: disable=consider-using-with
 
   def WriteBinaryData(self, data):
     """Writes binary data.

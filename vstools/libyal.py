@@ -453,6 +453,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     """
     project_name = project_information.name
 
+    # pylint: disable=consider-using-with
     file_object = io.open(makefile_am_path, 'r', encoding='utf8')
 
     include_directories = []
@@ -773,6 +774,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     Returns:
       list[str]: binary program names.
     """
+    # pylint: disable=consider-using-with
     file_object = io.open(makefile_am_path, 'r', encoding='utf8')
 
     bin_programs = []
@@ -799,7 +801,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     return bin_programs
 
-  # pylint: disable=arguments-differ
+  # pylint: disable=arguments-differ,arguments-renamed
   def Convert(self, input_directory, output_version):
     """Converts a Visual Studio solution.
 
@@ -816,6 +818,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       return False
 
     solution_name = None
+    # pylint: disable=consider-using-with
     file_object = io.open(configure_ac_path, 'r', encoding='utf8')
 
     in_ac_init_section = False

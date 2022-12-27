@@ -23,10 +23,9 @@ except ImportError:
   bdist_rpm = None
 
 version_tuple = (sys.version_info[0], sys.version_info[1])
-if version_tuple < (3, 6):
-  print((
-      'Unsupported Python version: {0:s}, version 3.6 or higher '
-      'required.').format(sys.version))
+if version_tuple < (3, 7):
+  print(f'Unsupported Python version: {sys.version:s}, version 3.7 or higher '
+        f'required.')
   sys.exit(1)
 
 # Change PYTHONPATH to include vstools so that we can get the version.
@@ -83,8 +82,8 @@ else:
           summary = line[9:]
 
         elif line.startswith('BuildRequires: '):
-          line = 'BuildRequires: {0:s}-setuptools, {0:s}-devel'.format(
-              python_package)
+          line = (f'BuildRequires: {python_package:s}-setuptools, '
+                  f'{python_package:s}-devel')
 
         elif line.startswith('Requires: '):
           requires = line[10:]
@@ -107,10 +106,10 @@ else:
 
         elif line.startswith('%files'):
           lines = [
-              '%files -n {0:s}-%{{name}}'.format(python_package),
+              f'%files -n {python_package:s}-%{{name}}',
               '%defattr(644,root,root,755)',
               '%license LICENSE',
-              '%doc AUTHORS README']
+              '%doc ACKNOWLEDGEMENTS AUTHORS README']
 
           lines.extend([
               '%{python3_sitelib}/vstools/*.py',
@@ -126,17 +125,23 @@ else:
         elif line.startswith('%prep'):
           in_description = False
 
-          python_spec_file.append(
-              '%package -n {0:s}-%{{name}}'.format(python_package))
-          python_summary = 'Python 3 module of {0:s}'.format(summary)
-
-          if requires:
-            python_spec_file.append('Requires: {0:s}'.format(requires))
+          python_spec_file.append(f'%package -n {python_package:s}-%{{name}}')
+          python_summary = f'Python 3 module of {summary:s}'
 
           python_spec_file.extend([
-              'Summary: {0:s}'.format(python_summary),
+              f'Requires: {requires:s}',
+              f'Summary: {python_summary:s}',
               '',
-              '%description -n {0:s}-%{{name}}'.format(python_package)])
+              f'%description -n {python_package:s}-%{{name}}'])
+
+          python_spec_file.extend(description)
+
+          python_spec_file.extend([
+              '%package -n %{name}-tools',
+              f'Requires: {python_package:s}-vstools >= %{{version}}',
+              f'Summary: Tools for {summary:s}',
+              '',
+              '%description -n %{name}-tools'])
 
           python_spec_file.extend(description)
 
@@ -149,6 +154,11 @@ else:
 
         python_spec_file.append(line)
 
+      python_spec_file.extend([
+          '',
+          '%files -n %{name}-tools',
+          '%{_bindir}/*.py'])
+
       return python_spec_file
 
 
@@ -158,22 +168,24 @@ def parse_requirements_from_file(path):
   Args:
     path (str): path to the requirements file.
 
-  Yields:
-    str: name and optional version information of the required package.
+  Returns:
+    list[str]: name and optional version information of the required packages.
   """
-  with open(path, 'r') as file_object:
-    file_contents = file_object.read()
+  requirements = []
+  if os.path.isfile(path):
+    with open(path, 'r') as file_object:
+      file_contents = file_object.read()
 
-  for requirement in pkg_resources.parse_requirements(file_contents):
-    try:
-      name = str(requirement.req)
-    except AttributeError:
-      name = str(requirement)
+    for requirement in pkg_resources.parse_requirements(file_contents):
+      try:
+        name = str(requirement.req)
+      except AttributeError:
+        name = str(requirement)
 
-    if name.startswith('pip '):
-      continue
+      if not name.startswith('pip '):
+        requirements.append(name)
 
-    yield name
+  return requirements
 
 
 vstools_description = (
@@ -182,18 +194,23 @@ vstools_description = (
 vstools_long_description = (
     'Visual Studio tools for the libyal projects.')
 
+command_classes = {}
+if BdistMSICommand:
+  command_classes['bdist_msi'] = BdistMSICommand
+if BdistRPMCommand:
+  command_classes['bdist_rpm'] = BdistRPMCommand
+
 setup(
     name='vstools',
     version=vstools.__version__,
     description=vstools_description,
     long_description=vstools_long_description,
+    long_description_content_type='text/plain',
     license='Apache License, Version 2.0',
     url='https://github.com/libyal/vstools',
     maintainer='Joachim Metz',
     maintainer_email='joachim.metz@gmail.com',
-    cmdclass={
-        'bdist_msi': BdistMSICommand,
-        'bdist_rpm': BdistRPMCommand},
+    cmdclass=command_classes,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

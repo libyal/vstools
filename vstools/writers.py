@@ -1726,9 +1726,75 @@ class VS2019ProjectFileWriter(VS2017ProjectFileWriter):
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
     super(VS2019ProjectFileWriter, self).__init__()
-    self._project_file_version = '15.0.26730.3'
+    self._project_file_version = '16.0.33423.256'
     self._tools_version = '15.0'
     self._version = 2019
+
+
+class VS2022ProjectFileWriter(VS2017ProjectFileWriter):
+  """Visual Studio 2022 project file writer."""
+
+  def __init__(self):
+    """Initializes a Visual Studio project file writer."""
+    super(VS2022ProjectFileWriter, self).__init__()
+    self._project_file_version = '17.0.33516.290'
+    self._tools_version = 'Current'
+    self._version = 2022
+
+  def _WriteConfigurationPropertyGroup(self, project_configuration):
+    """Writes the configuration property group.
+
+    Args:
+      project_configuration (VSProjectConfiguration): project configuration.
+    """
+    self._WriteConfigurationPropertyGroupHeader(project_configuration)
+
+    self.WriteLine('    <ConfigurationType>{0:s}</ConfigurationType>'.format(
+        project_configuration.output_type_string))
+
+    self.WriteLine('    <PlatformToolset>v143</PlatformToolset>')
+
+    if project_configuration.character_set:
+      self.WriteLine('    <CharacterSet>{0:s}</CharacterSet>'.format(
+          project_configuration.character_set_string))
+
+    if project_configuration.managed_extensions == '1':
+      self.WriteLine('    <CLRSupport>true</CLRSupport>')
+
+    if project_configuration.whole_program_optimization:
+      self.WriteLine((
+          '    <WholeProgramOptimization>{0:s}'
+          '</WholeProgramOptimization>').format(
+              project_configuration.whole_program_optimization_string))
+
+    platform_toolset = project_configuration.GetPlatformToolset(self._version)
+    if platform_toolset:
+      self.WriteLine('    <PlatformToolset>{0:s}</PlatformToolset>'.format(
+          platform_toolset))
+
+    self._WriteConfigurationPropertyGroupFooter()
+
+  def WriteProjectInformation(self, project_information):
+    """Writes the project information.
+
+    Args:
+      project_information (VSProjectInformation): project information.
+    """
+    self.WriteLine('  <PropertyGroup Label="Globals">')
+
+    self.WriteLine('    <VCProjectVersion>17.0</VCProjectVersion>')
+
+    self.WriteLine('    <ProjectGuid>{{{0:s}}}</ProjectGuid>'.format(
+        project_information.guid))
+
+    self.WriteLine('    <RootNamespace>{0:s}</RootNamespace>'.format(
+        project_information.root_name_space))
+
+    if project_information.keyword:
+      self.WriteLine('    <Keyword>{0:s}</Keyword>'.format(
+          project_information.keyword))
+
+    self.WriteLine('  </PropertyGroup>')
 
 
 class VSSolutionFileWriter(FileWriter):
@@ -2021,3 +2087,25 @@ class VS2017SolutionFileWriter(VS2010SolutionFileWriter):
 
 class VS2019SolutionFileWriter(VS2017SolutionFileWriter):
   """Visual Studio 2019 solution file writer."""
+
+  def WriteHeader(self):
+    """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
+    self.WriteLines([
+        'Microsoft Visual Studio Solution File, Format Version 12.00',
+        '# Visual Studio Version 16',
+        'VisualStudioVersion = 16.0.33423.256',
+        'MinimumVisualStudioVersion = 10.0.40219.1'])
+
+
+class VS2022SolutionFileWriter(VS2017SolutionFileWriter):
+  """Visual Studio 2022 solution file writer."""
+
+  def WriteHeader(self):
+    """Writes a file header."""
+    self.WriteBinaryData(b'\xef\xbb\xbf\r\n')
+    self.WriteLines([
+        'Microsoft Visual Studio Solution File, Format Version 12.00',
+        '# Visual Studio Version 17',
+        'VisualStudioVersion = 17.5.33516.290',
+        'MinimumVisualStudioVersion = 10.0.40219.1'])

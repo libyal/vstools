@@ -477,6 +477,12 @@ class VS2019ProjectFileReader(VSProjectFileReader):
   # TODO: implement.
 
 
+class VS2022ProjectFileReader(VSProjectFileReader):
+  """Visual Studio 2022 project file reader."""
+
+  # TODO: implement.
+
+
 class VSSolutionFileReader(FileReader):
   """Visual Studio solution file reader."""
 
@@ -771,4 +777,20 @@ class VS2019SolutionFileReader(VS2012SolutionFileReader):
       bool: True if successful or false otherwise.
     """
     version = line.split(' = ')[1]
-    return version.startswith('15.')
+    return version.startswith('16.')
+
+
+class VS2022SolutionFileReader(VS2012SolutionFileReader):
+  """Visual Studio 2022 solution file reader."""
+
+  def _CheckVisualStudioVersion(self, line):
+    """Checks the Visual Studio version.
+
+    Args:
+      line (str): line containing the Visual Studio format version.
+
+    Returns:
+      bool: True if successful or false otherwise.
+    """
+    version = line.split(' = ')[1]
+    return version.startswith('17.')

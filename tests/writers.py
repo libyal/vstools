@@ -984,6 +984,39 @@ class VS2015ProjectFileWriterTest(test_lib.BaseTestCase):
     self.assertEqual(output_data, b'')
 
 
+class VS2017ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2017 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    file_writer = writers.VS2017ProjectFileWriter()
+    self.assertIsNotNone(file_writer)
+
+
+class VS2019ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2019 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    file_writer = writers.VS2019ProjectFileWriter()
+    self.assertIsNotNone(file_writer)
+
+
+class VS2022ProjectFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2022 project file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testInitialize(self):
+    """Tests the __init__ function."""
+    file_writer = writers.VS2022ProjectFileWriter()
+    self.assertIsNotNone(file_writer)
+
+
 class VSSolutionFileWriterTest(test_lib.BaseTestCase):
   """Visual Studio solution file writer test."""
 
@@ -1286,8 +1319,32 @@ class VS2019SolutionFileWriterTest(test_lib.BaseTestCase):
     expected_output_data = (
         b'\xef\xbb\xbf\r\n'
         b'Microsoft Visual Studio Solution File, Format Version 12.00\r\n'
-        b'# Visual Studio 15\r\n'
-        b'VisualStudioVersion = 15.0.26730.10\r\n'
+        b'# Visual Studio Version 16\r\n'
+        b'VisualStudioVersion = 16.0.33423.256\r\n'
+        b'MinimumVisualStudioVersion = 10.0.40219.1\r\n')
+    self.assertEqual(output_data, expected_output_data)
+
+
+class VS2022SolutionFileWriterTest(test_lib.BaseTestCase):
+  """Visual Studio 2022 solution file writer test."""
+
+  # pylint: disable=protected-access
+
+  def testWriteHeader(self):
+    """Tests the WriteHeader function."""
+    file_writer = writers.VS2022SolutionFileWriter()
+
+    file_writer._file = io.BytesIO()
+
+    file_writer.WriteHeader()
+
+    file_writer._file.seek(0, os.SEEK_SET)
+    output_data = file_writer._file.read()
+    expected_output_data = (
+        b'\xef\xbb\xbf\r\n'
+        b'Microsoft Visual Studio Solution File, Format Version 12.00\r\n'
+        b'# Visual Studio Version 17\r\n'
+        b'VisualStudioVersion = 17.5.33516.290\r\n'
         b'MinimumVisualStudioVersion = 10.0.40219.1\r\n')
     self.assertEqual(output_data, expected_output_data)
 

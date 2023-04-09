@@ -225,6 +225,7 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 # TODO: add tests for VS2015ProjectFileReader
 # TODO: add tests for VS2017ProjectFileReader
 # TODO: add tests for VS2019ProjectFileReader
+# TODO: add tests for VS2022ProjectFileReader
 
 
 class VSSolutionFileReaderTest(test_lib.BaseTestCase):
@@ -390,7 +391,25 @@ class VS2019SolutionFileReaderTest(test_lib.BaseTestCase):
     """Tests the _CheckVisualStudioVersion function."""
     file_reader = readers.VS2019SolutionFileReader()
 
-    line = 'VisualStudioVersion = 15.0.26730.10'
+    line = 'VisualStudioVersion = 16.0.33423.256'
+    result = file_reader._CheckVisualStudioVersion(line)
+    self.assertTrue(result)
+
+    line = 'VisualStudioVersion = BOGUS'
+    result = file_reader._CheckVisualStudioVersion(line)
+    self.assertFalse(result)
+
+
+class VS2022SolutionFileReaderTest(test_lib.BaseTestCase):
+  """Visual Studio 2022 solution file reader tests."""
+
+  # pylint: disable=protected-access
+
+  def testCheckVisualStudioVersion(self):
+    """Tests the _CheckVisualStudioVersion function."""
+    file_reader = readers.VS2022SolutionFileReader()
+
+    line = 'VisualStudioVersion = 17.5.33516.290'
     result = file_reader._CheckVisualStudioVersion(line)
     self.assertTrue(result)
 

@@ -149,7 +149,7 @@ class VSSolution(object):
     """
     if version == '2008':
       return '{0:s}.vcproj'.format(project_filename)
-    if version in ('2010', '2012', '2013', '2015', '2017', '2019'):
+    if version in ('2010', '2012', '2013', '2015', '2017', '2019', '2022'):
       return '{0:s}.vcxproj'.format(project_filename)
 
     return None
@@ -178,6 +178,8 @@ class VSSolution(object):
       return readers.VS2017ProjectFileReader()
     if input_version == '2019':
       return readers.VS2019ProjectFileReader()
+    if input_version == '2022':
+      return readers.VS2022ProjectFileReader()
 
     return None
 
@@ -205,6 +207,8 @@ class VSSolution(object):
       return writers.VS2017ProjectFileWriter()
     if output_version == '2019':
       return writers.VS2019ProjectFileWriter()
+    if output_version == '2022':
+      return writers.VS2022ProjectFileWriter()
 
     return None
 
@@ -232,6 +236,8 @@ class VSSolution(object):
       return readers.VS2017SolutionFileReader()
     if input_version == '2019':
       return readers.VS2019SolutionFileReader()
+    if input_version == '2022':
+      return readers.VS2022SolutionFileReader()
 
     return None
 
@@ -259,6 +265,8 @@ class VSSolution(object):
       return writers.VS2017SolutionFileWriter()
     if output_version == '2019':
       return writers.VS2019SolutionFileWriter()
+    if output_version == '2022':
+      return writers.VS2022SolutionFileWriter()
 
     return None
 

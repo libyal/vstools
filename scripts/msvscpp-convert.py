@@ -14,7 +14,8 @@ Currently supported output formats:
 * 2013 (12.0)
 * 2015 (14.0)
 * 2017 (15.0)
-* 2019 (15.0)
+* 2019 (16.0)
+* 2022 (17.0)
 """
 
 # TODO: add automated tests.
@@ -24,6 +25,7 @@ Currently supported output formats:
 # TODO: add vs2015 reader.
 # TODO: add vs2017 reader.
 # TODO: add vs2019 reader.
+# TODO: add vs2022 reader.
 
 import argparse
 import logging
@@ -41,7 +43,7 @@ def Main():
     bool: True if successful or False if not.
   """
   output_formats = frozenset([
-      '2008', '2010', '2012', '2013', '2015', '2017', '2019'])
+      '2008', '2010', '2012', '2013', '2015', '2017', '2019', '2022'])
 
   argument_parser = argparse.ArgumentParser(description=(
       'Converts source directory (autoconf and automake files) into '

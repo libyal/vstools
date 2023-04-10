@@ -471,6 +471,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     preprocessor_definitions.append('_CRT_SECURE_NO_DEPRECATE')
 
+    if project_name.startswith('py'):
+      preprocessor_definitions.append('HAVE_PYCONFIG_H')
+
     additional_dependencies = []
     alternate_dependencies = []
     dependencies = []

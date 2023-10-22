@@ -1035,7 +1035,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         '\tMakefile.in',
         '',
         'distclean: clean',
-        '\t/bin/rm -f Makefile',
+        '\t-rm -f Makefile',
         '',
         ''])
 

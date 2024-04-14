@@ -1031,11 +1031,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         'EXTRA_DIST = \\',
         '\t$(MSVSCPP_FILES)',
         '',
-        'MAINTAINERCLEANFILES = \\',
+        'DISTCLEANFILES = \\',
+        '\tMakefile \\',
         '\tMakefile.in',
-        '',
-        'distclean: clean',
-        '\t-rm -f Makefile',
         '',
         ''])
 

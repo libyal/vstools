@@ -44,6 +44,7 @@ def Main():
   """
   output_formats = frozenset([
       '2008', '2010', '2012', '2013', '2015', '2017', '2019', '2022'])
+  dokan_vers = frozenset([0, 1, 2])
 
   argument_parser = argparse.ArgumentParser(description=(
       'Converts source directory (autoconf and automake files) into '
@@ -79,7 +80,8 @@ def Main():
 
   argument_parser.add_argument(
       '--with_dokany', '--with-dokany', dest='with_dokany',
-      action='store_true', default=False, help='use DokanY instead of Dokan.')
+      choices=dokan_vers, type=int, default=0,
+      help='use DokanY instead of Dokan with DokanY version.')
 
   options = argument_parser.parse_args()
 

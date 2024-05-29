@@ -13,7 +13,7 @@ class VSSolution(object):
 
   def __init__(
       self, extend_with_x64=True, generate_python_dll=True,
-      python_path='C:\\Python27', with_dokany=False):
+      python_path='C:\\Python27', with_dokany=0):
     """Initializes a Visual Studio solution.
 
     Args:
@@ -22,8 +22,8 @@ class VSSolution(object):
       generate_python_dll (Optional[bool]): True if a Python module DLL
           should be generated.
       python_path (Optional[str]): path to the Python installation.
-      with_dokany (Optional[bool]): True if DokanY should be used instead
-          of Dokan.
+      with_dokany (Optional[int]): 1 or higher if DokanY should be used 
+          instead of Dokan.
     """
     super(VSSolution, self).__init__()
     self._extend_with_x64 = extend_with_x64
@@ -97,9 +97,14 @@ class VSSolution(object):
               configuration = 'Debug'
 
             project_configuration.additional_dependencies.remove(library_path)
-            library_path = (
-                '..\\..\\..\\dokany\\dokan\\$(Platform)\\{0:s}\\'
-                'dokan1.lib').format(configuration)
+            if self._with_dokany == 2:
+              library_path = (
+                  '..\\..\\..\\dokany\\dokan\\$(Platform)\\'
+                  '$(ConfigurationName)\\dokan2.lib')
+            else:
+              library_path = (
+                  '..\\..\\..\\dokany\\dokan\\$(Platform)\\{0:s}\\'
+                  'dokan1.lib').format(configuration)
 
             project_configuration.additional_dependencies.append(library_path)
 

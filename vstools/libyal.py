@@ -168,7 +168,7 @@ class ReleasePythonDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
     super(ReleasePythonDllVSProjectConfiguration, self).__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
-    self.library_directories = ['{0:s}\\libs'.format(python_path)]
+    self.library_directories = [f'{python_path:s}\\libs']
 
 
 class VSDebugVSProjectConfiguration(resources.VSProjectConfiguration):
@@ -271,7 +271,7 @@ class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
     super(VSDebugPythonDllVSProjectConfiguration, self).__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
-    self.library_directories = ['{0:s}\\libs'.format(python_path)]
+    self.library_directories = [f'{python_path:s}\\libs']
 
 
 class LibyalSourceVSSolution(solutions.VSSolution):
@@ -384,16 +384,14 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
     for project_name in third_party_dependencies:
       if project_name not in self._SUPPORTED_THIRD_PARTY_DEPENDENCIES:
-        logging.info('Unsupported third party dependency: {0:s}'.format(
-            project_name))
+        logging.warning(f'Unsupported third party dependency: {project_name:s}')
         continue
 
-      project_filename = '{0:s}\\{0:s}'.format(project_name)
+      project_filename = '\\'.join([project_name, project_name])
 
       project_guid = project_guids_by_name.get(project_name, '')
       if not project_guid:
-        project_guid = project_guids_by_name.get(
-            '{0:s}.dll'.format(project_name), '')
+        project_guid = project_guids_by_name.get(f'{project_name:s}.dll', '')
       if not project_guid:
         project_guid = str(uuid.uuid4())
 
@@ -502,9 +500,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
           elif line.endswith('\\'):
             logging.warning((
-                'Detected missing space before \\ in line: {0:d} '
-                '"{1:s}" ({2:s})').format(
-                    index, original_line, makefile_am_path))
+                f'Detected missing space before \\ in line: {index:d} '
+                f'"{original_line:s}" ({makefile_am_path:s})'))
+
             line = line[:-1]
 
           if line.startswith('@') and line.endswith('_CPPFLAGS@'):
@@ -546,8 +544,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
               include_directories.append(
                   '\\'.join(['..', '..', directory_name]))
 
-              preprocessor_definitions.append(
-                  'HAVE_LOCAL_{0:s}'.format(line[1:-10]))
+              library_name = line[1:-10]
+              preprocessor_definitions.append(f'HAVE_LOCAL_{library_name:s}')
 
               alternate_dependencies.append(directory_name)
 
@@ -561,9 +559,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
           elif line.endswith('\\'):
             logging.warning((
-                'Detected missing space before \\ in line: {0:d} '
-                '"{1:s}" ({2:s})').format(
-                    index, original_line, makefile_am_path))
+                f'Detected missing space before \\ in line: {index:d} '
+                f'"{original_line:s}" ({makefile_am_path:s})'))
+
             line = line[:-1]
 
           for filename in line.split(' '):
@@ -596,8 +594,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             _, _, dependency_name = line.rpartition('/')
             dependency_name = dependency_name[:-3]
           else:
-            logging.warning(
-                'Unuspported dependency definition: {0:s}'.format(line))
+            logging.warning(f'Unuspported dependency definition: {line:s}')
             dependency_name = ''
 
           if dependency_name:
@@ -619,9 +616,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
           elif line.endswith('\\'):
             logging.warning((
-                'Detected missing space before \\ in line: {0:d} '
-                '"{1:s}" ({2:s})').format(
-                    index, original_line, makefile_am_path))
+                f'Detected missing space before \\ in line: {index:d} '
+                f'"{original_line:s}" ({makefile_am_path:s})'))
+
             line = line[:-1]
 
           for filename in line.split(' '):
@@ -650,8 +647,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             _, _, dependency_name = line.rpartition('/')
             dependency_name = dependency_name[:-3]
           else:
-            logging.warning(
-                'Unuspported dependency definition: {0:s}'.format(line))
+            logging.warning(f'Unuspported dependency definition: {line:s}')
+
             dependency_name = ''
 
           if dependency_name:
@@ -689,16 +686,16 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       if line.startswith('AM_CFLAGS') or line.startswith('AM_CPPFLAGS'):
         in_am_cppflags_section = True
 
-      elif line.startswith('{0:s}_la_LIBADD'.format(project_name)):
+      elif line.startswith(f'{project_name:s}_la_LIBADD'):
         in_la_libadd_section = True
 
-      elif line.startswith('{0:s}_la_SOURCES'.format(project_name)):
+      elif line.startswith(f'{project_name:s}_la_SOURCES'):
         in_la_sources_section = True
 
-      elif line.startswith('{0:s}_LDADD'.format(project_name)):
+      elif line.startswith(f'{project_name:s}_LDADD'):
         in_ldadd_section = True
 
-      elif line.startswith('{0:s}_SOURCES'.format(project_name)):
+      elif line.startswith(f'{project_name:s}_SOURCES'):
         in_sources_section = True
 
       elif line.startswith('EXTRA_DIST'):
@@ -721,19 +718,19 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       project_information.third_party_dependencies.append('zlib')
 
     if project_name == solution_name:
-      preprocessor_definitions.append(
-          '{0:s}_DLL_EXPORT'.format(project_name.upper()))
+      project_name_upper = project_name.upper()
+      preprocessor_definitions.append(f'{project_name_upper:s}_DLL_EXPORT')
 
     elif project_name.startswith('lib'):
-      preprocessor_definitions.append(
-          'HAVE_LOCAL_{0:s}'.format(project_name.upper()))
+      project_name_upper = project_name.upper()
+      preprocessor_definitions.append(f'HAVE_LOCAL_{project_name_upper:s}')
 
     else:
-      preprocessor_definitions.append(
-          '{0:s}_DLL_IMPORT'.format(solution_name.upper()))
+      solution_name_upper = solution_name.upper()
+      preprocessor_definitions.append(f'{solution_name_upper:s}_DLL_IMPORT')
 
     if project_name.startswith('py'):
-      include_directories.append('{0:s}\\include'.format(self._python_path))
+      include_directories.append(f'{self._python_path:s}\\include')
 
     release_project_configuration.include_directories = include_directories
     release_project_configuration.preprocessor_definitions = ';'.join(
@@ -744,8 +741,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         preprocessor_definitions)
 
     if project_name.endswith('.net'):
-      dependency = '{0:s}.lib'.format(solution_name)
-      additional_dependencies.append(dependency)
+      additional_dependencies.append(f'{solution_name:s}.lib')
 
     for dependency in additional_dependencies:
       release_dependency = dependency
@@ -817,7 +813,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     """
     configure_ac_path = os.path.join(input_directory, 'configure.ac')
     if not os.path.exists(configure_ac_path):
-      logging.warning('No such file: {0:s}.'.format(configure_ac_path))
+      logging.warning(f'No such file: {configure_ac_path:s}.')
       return False
 
     solution_name = None
@@ -848,14 +844,14 @@ class LibyalSourceVSSolution(solutions.VSSolution):
     project_guids_by_name = {}
 
     input_sln_path = os.path.join(
-        input_directory, 'msvscpp', '{0:s}.sln'.format(solution_name))
+        input_directory, 'msvscpp', f'{solution_name:s}.sln')
     if os.path.exists(input_sln_path):
       solution_reader = readers.VS2008SolutionFileReader()
       solution_reader.Open(input_sln_path)
 
       if not solution_reader.ReadHeader():
-        logging.warning('Unable to read solution file: {0:s} header.'.format(
-            input_sln_path))
+        logging.warning(
+            f'Unable to read solution file: {input_sln_path:s} header.')
         return False
 
       solution_projects = solution_reader.ReadProjects()
@@ -888,7 +884,7 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       makefile_am_path = os.path.join(
           input_directory, directory_entry, 'Makefile.am')
       if not os.path.exists(makefile_am_path):
-        logging.warning('No such file: {0:s}.'.format(makefile_am_path))
+        logging.warning(f'No such file: {makefile_am_path:s}')
         continue
 
       if (directory_entry in ('src', 'tests') or
@@ -898,12 +894,11 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         project_names = [directory_entry]
 
       for project_name in project_names:
-        project_filename = '{0:s}\\{0:s}'.format(project_name)
+        project_filename = '\\'.join([project_name, project_name])
 
         project_guid = project_guids_by_name.get(project_name, '')
         if not project_guid:
-          project_guid = project_guids_by_name.get(
-              '{0:s}.dll'.format(project_name), '')
+          project_guid = project_guids_by_name.get(f'{project_name:s}.dll', '')
         if not project_guid:
           project_guid = str(uuid.uuid4())
 
@@ -993,11 +988,12 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
         dependency_guid = solution_project_guids_by_name.get(dependency, '')
         if not dependency_guid:
-          logging.info('Missing GUID for dependency: {0:s}'.format(dependency))
+          logging.warning(f'Missing GUID for dependency: {dependency:s}')
+          continue
 
         solution_project.AddDependency(dependency_guid)
 
-    solution_filename = '{0:s}.sln'.format(solution_name)
+    solution_filename = f'{solution_name:s}.sln'
     self._WriteSolution(
         solution_filename, output_version, solution_projects,
         solution_configurations)
@@ -1016,15 +1012,16 @@ class LibyalSourceVSSolution(solutions.VSSolution):
       else:
         solution_project_extension = 'vcxproj'
 
-      path_segments = solution_project.filename.split('\\')
-      solution_project_filenames.append('\t{0:s}.{1:s} \\'.format(
-          os.path.join(*path_segments), solution_project_extension))
+      solution_project_path_segments = solution_project.filename.split('\\')
+      solution_project_path = os.path.join(*solution_project_path_segments)
+      solution_project_filenames.append(
+          f'\t{solution_project_path:s}.{solution_project_extension:s} \\')
 
     makefile_am_lines = ['MSVSCPP_FILES = \\']
     for solution_project_filename in sorted(solution_project_filenames):
       makefile_am_lines.append(solution_project_filename)
 
-    makefile_am_lines.append('\t{0:s}'.format(solution_filename))
+    makefile_am_lines.append(f'\t{solution_filename:s}')
 
     makefile_am_lines.extend([
         '',
@@ -1037,8 +1034,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         '',
         ''])
 
-    filename = os.path.join('vs{0:s}'.format(output_version), 'Makefile.am')
-    logging.info('Writing: {0:s}'.format(filename))
+    filename = os.path.join(f'vs{output_version:s}', 'Makefile.am')
+    logging.info(f'Writing: {filename:s}')
 
     with io.open(filename, 'w', encoding='utf8') as makefile_am:
       lines = '\n'.join(makefile_am_lines)

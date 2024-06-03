@@ -138,12 +138,10 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     Args:
       project_configuration (VSProjectConfiguration): project configuration.
     """
-    self.WriteLine('\t\t<Configuration')
-
-    self.WriteLine('\t\t\tName="{0:s}|{1:s}"'.format(
-        project_configuration.name, project_configuration.platform))
-
     self.WriteLines([
+        '\t\t<Configuration',
+        (f'\t\t\tName="{project_configuration.name:s}|'
+         f'{project_configuration.platform:s}"'),
         '\t\t\tOutputDirectory="$(SolutionDir)$(ConfigurationName)"',
         '\t\t\tIntermediateDirectory="$(ConfigurationName)"'])
 
@@ -207,8 +205,10 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     self._WriteConfigurationToolHeader('VCLinkerTool')
 
     if project_configuration.additional_dependencies:
-      self.WriteLine('\t\t\t\tAdditionalDependencies="{0:s}"'.format(
-          ' '.join(sorted(project_configuration.additional_dependencies))))
+      additional_dependencies = ' '.join(sorted(
+          project_configuration.additional_dependencies))
+      self.WriteLine(
+          f'\t\t\t\tAdditionalDependencies="{additional_dependencies:s}"')
 
     for definition, name, is_optional in (
         self._TOOL_LINKER_CONFIGURATION_OPTIONS1):
@@ -219,8 +219,8 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     library_directories.extend(project_configuration.library_directories)
     library_directories = ';'.join(library_directories)
 
-    self.WriteLine('\t\t\t\tAdditionalLibraryDirectories="{0:s}"'.format(
-        library_directories))
+    self.WriteLine(
+        f'\t\t\t\tAdditionalLibraryDirectories="{library_directories:s}"')
 
     for definition, name, is_optional in (
         self._TOOL_LINKER_CONFIGURATION_OPTIONS2):
@@ -250,9 +250,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
     if not is_optional or configuration_value:
       indentation = '\t' * indentation_level
-      line = '{0:s}{1:s}="{2:s}"'.format(
-          indentation, definition, configuration_value)
-      self.WriteLine(line)
+      self.WriteLine(f'{indentation:s}{definition:s}="{configuration_value:s}"')
 
   def _WriteConfigurationTool(
       self, project_configuration, name, configuration_options):
@@ -285,7 +283,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
     """
     self.WriteLines([
         '\t\t\t<Tool',
-        '\t\t\t\tName="{0:s}"'.format(name)])
+        f'\t\t\t\tName="{name:s}"'])
 
   def _WriteHeaderFiles(self, header_files):
     """Writes the header files.
@@ -301,11 +299,9 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t>'])
 
     for filename in header_files:
-      self.WriteLine('\t\t\t<File')
-
-      self.WriteLine('\t\t\t\tRelativePath="{0:s}"'.format(filename))
-
       self.WriteLines([
+          '\t\t\t<File',
+          f'\t\t\t\tRelativePath="{filename:s}"',
           '\t\t\t\t>',
           '\t\t\t</File>'])
 
@@ -326,11 +322,9 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t>'])
 
     for filename in resource_files:
-      self.WriteLine('\t\t\t<File')
-
-      self.WriteLine('\t\t\t\tRelativePath="{0:s}"'.format(filename))
-
       self.WriteLines([
+          '\t\t\t<File',
+          f'\t\t\t\tRelativePath="{filename:s}"',
           '\t\t\t\t>',
           '\t\t\t</File>'])
 
@@ -350,11 +344,9 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\t\t\t>'])
 
     for filename in source_files:
-      self.WriteLine('\t\t\t<File')
-
-      self.WriteLine('\t\t\t\tRelativePath="{0:s}"'.format(filename))
-
       self.WriteLines([
+          '\t\t\t<File',
+          f'\t\t\t\tRelativePath="{filename:s}"',
           '\t\t\t\t>',
           '\t\t\t</File>'])
 
@@ -436,17 +428,14 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
         '\tProjectType="Visual C++"',
         '\tVersion="9,00"'])
 
-    self.WriteLine('\tName="{0:s}"'.format(project_information.name))
+    project_guid = project_information.guid.upper()
 
-    self.WriteLine('\tProjectGUID="{{{0:s}}}"'.format(
-        project_information.guid.upper()))
-
-    self.WriteLine(
-        '\tRootNamespace="{0:s}"'.format(project_information.root_name_space))
+    self.WriteLine(f'\tName="{project_information.name:s}"')
+    self.WriteLine(f'\tProjectGUID="{{{project_guid:s}}}"')
+    self.WriteLine(f'\tRootNamespace="{project_information.root_name_space:s}"')
 
     if project_information.keyword:
-      self.WriteLine(
-          '\tKeyword="{0:s}"'.format(project_information.keyword))
+      self.WriteLine(f'\tKeyword="{project_information.keyword:s}"')
 
     # Also seen 196613.
     self.WriteLines([
@@ -487,64 +476,66 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
     include_directories = re.sub(r'&quot;', r'', include_directories)
 
     if include_directories and include_directories[-1] != ';':
-      include_directories = '{0:s};'.format(
-          include_directories)
+      include_directories = ''.join([include_directories, ';'])
 
-    include_directories = '{0:s}%(AdditionalIncludeDirectories)'.format(
-        include_directories)
+    include_directories = ''.join([
+        include_directories, '%(AdditionalIncludeDirectories)'])
 
     preprocessor_definitions = project_configuration.preprocessor_definitions
 
     if preprocessor_definitions and preprocessor_definitions[-1] != ';':
-      preprocessor_definitions = '{0:s};'.format(preprocessor_definitions)
+      preprocessor_definitions = ''.join([preprocessor_definitions, ';'])
 
-    preprocessor_definitions = '{0:s}%(PreprocessorDefinitions)'.format(
-        preprocessor_definitions)
+    preprocessor_definitions = ''.join([
+        preprocessor_definitions, '%(PreprocessorDefinitions)'])
 
     self.WriteLine('    <ClCompile>')
 
     if project_configuration.optimization != '':
-      self.WriteLine('      <Optimization>{0:s}</Optimization>'.format(
-          project_configuration.optimization_string))
+      self.WriteLine((
+          f'      <Optimization>{project_configuration.optimization_string:s}'
+          f'</Optimization>'))
 
     if project_configuration.enable_intrinsic_functions != '':
       self.WriteLine((
-          '      <IntrinsicFunctions>{0:s}</IntrinsicFunctions>').format(
-              project_configuration.enable_intrinsic_functions))
+          f'      <IntrinsicFunctions>'
+          f'{project_configuration.enable_intrinsic_functions:s}'
+          f'</IntrinsicFunctions>'))
 
     if project_configuration.whole_program_optimization:
       self.WriteLine((
-          '      <WholeProgramOptimization>{0:s}'
-          '</WholeProgramOptimization>').format(
-              project_configuration.whole_program_optimization_string))
+          f'      <WholeProgramOptimization>'
+          f'{project_configuration.whole_program_optimization_string:s}'
+          f'</WholeProgramOptimization>'))
 
     self.WriteLine((
-        '      <AdditionalIncludeDirectories>{0:s}'
-        '</AdditionalIncludeDirectories>').format(include_directories))
+        f'      <AdditionalIncludeDirectories>{include_directories:s}'
+        f'</AdditionalIncludeDirectories>'))
 
     self.WriteLine((
-        '      <PreprocessorDefinitions>{0:s}'
-        '</PreprocessorDefinitions>').format(preprocessor_definitions))
+        f'      <PreprocessorDefinitions>{preprocessor_definitions:s}'
+        f'</PreprocessorDefinitions>'))
 
     if project_configuration.basic_runtime_checks != '':
       self.WriteLine((
-          '      <BasicRuntimeChecks>{0:s}'
-          '</BasicRuntimeChecks>').format(
-              project_configuration.basic_runtime_checks_string))
+          f'      <BasicRuntimeChecks>'
+          f'{project_configuration.basic_runtime_checks_string:s}'
+          f'</BasicRuntimeChecks>'))
 
     if project_configuration.smaller_type_check != '':
       self.WriteLine((
-          '      <SmallerTypeCheck>{0:s}</SmallerTypeCheck>').format(
-              project_configuration.smaller_type_check))
+          f'      <SmallerTypeCheck>'
+          f'{project_configuration.smaller_type_check:s}</SmallerTypeCheck>'))
 
     self.WriteLine((
-        '      <RuntimeLibrary>{0:s}</RuntimeLibrary>').format(
-            project_configuration.runtime_librarian_string))
+        f'      <RuntimeLibrary>'
+        f'{project_configuration.runtime_librarian_string:s}</RuntimeLibrary>'))
 
     if project_configuration.enable_function_level_linking != '':
       self.WriteLine((
-          '      <FunctionLevelLinking>{0:s}</FunctionLevelLinking>').format(
-              project_configuration.enable_function_level_linking))
+          f'      <FunctionLevelLinking>'
+          f'{project_configuration.enable_function_level_linking:s}'
+          f'</FunctionLevelLinking>'))
 
     if project_configuration.precompiled_header != '':
       # A value of 0 is represented by a new line.
@@ -554,17 +545,18 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
             '      </PrecompiledHeader>'])
       else:
         self.WriteLine((
-            '      <PrecompiledHeader>{0:s}</PrecompiledHeader>').format(
-                project_configuration.precompiled_header_string))
+            f'      <PrecompiledHeader>'
+            f'{project_configuration.precompiled_header_string:s}'
+            f'</PrecompiledHeader>'))
 
-    self.WriteLine('      <WarningLevel>{0:s}</WarningLevel>'.format(
-        project_configuration.warning_level_string))
+    self.WriteLine((
+        f'      <WarningLevel>{project_configuration.warning_level_string:s}'
+        f'</WarningLevel>'))
 
     if project_configuration.warning_as_error:
       self.WriteLine((
-          '      <TreatWarningAsError>{0:s}'
-          '</TreatWarningAsError>').format(
-              project_configuration.warning_as_error))
+          f'      <TreatWarningAsError>'
+          f'{project_configuration.warning_as_error:s}</TreatWarningAsError>'))
 
     if project_configuration.debug_information_format != '':
       # A value of 0 is represented by a new line.
@@ -574,13 +566,14 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
             '      </DebugInformationFormat>'])
       else:
         self.WriteLine((
-            '      <DebugInformationFormat>{0:s}'
-            '</DebugInformationFormat>').format(
-                project_configuration.debug_information_format_string))
+            f'      <DebugInformationFormat>'
+            f'{project_configuration.debug_information_format_string:s}'
+            '</DebugInformationFormat>'))
 
     if project_configuration.compile_as:
-      self.WriteLine('      <CompileAs>{0:s}</CompileAs>'.format(
-          project_configuration.compile_as_string))
+      self.WriteLine((
+          f'      <CompileAs>{project_configuration.compile_as_string:s}'
+          f'</CompileAs>'))
 
     self.WriteLine('    </ClCompile>')
 
@@ -1930,8 +1923,11 @@ class VS2008SolutionFileWriter(VSSolutionFileWriter):
           '\tProjectSection(ProjectDependencies) = postProject')
 
       for dependency_guid in solution_project.dependencies:
-        self.WriteLine('\t\t{{{0:s}}} = {{{0:s}}}'.format(
-            dependency_guid.upper()))
+        if dependency_guid:
+          dependency_guid_upper = dependency_guid.upper()
+          self.WriteLine((
+              f'\t\t{{{dependency_guid_upper:s}}} = '
+              f'{{{dependency_guid_upper:s}}}'))
 
       self.WriteLine('\tEndProjectSection')
 

@@ -137,8 +137,7 @@ class VS2008ProjectFileReader(VSProjectFileReader):
       name (str): name of the configuration value in the project information.
       line (str): line that contains the configuration value.
     """
-    regex_pattern = '{0:s}="([^"]*)"'.format(definition)
-    values = re.findall(regex_pattern, line)
+    values = re.findall(f'{definition:s}="([^"]*)"', line)
     if len(values) == 1:
       setattr(project_configuration, name, values[0])
 

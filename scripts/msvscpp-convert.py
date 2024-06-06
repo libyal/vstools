@@ -91,7 +91,7 @@ def Main():
     return False
 
   if options.output_format not in output_formats:
-    print('Unsupported output format: {0:s}.'.format(options.format_to))
+    print(f'Unsupported output format: {options.format_to:s}.')
     print('')
     return False
 

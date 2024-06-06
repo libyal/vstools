@@ -64,7 +64,7 @@ class VSSolution(object):
 
     project_reader = self._GetProjectFileReader(input_version)
 
-    logging.info('Reading: {0:s}'.format(input_project_filename))
+    logging.info(f'Reading: {input_project_filename:s}')
 
     project_reader.Open(input_project_filename)
 
@@ -98,8 +98,8 @@ class VSSolution(object):
 
             project_configuration.additional_dependencies.remove(library_path)
             library_path = (
-                '..\\..\\..\\dokany\\dokan\\$(Platform)\\{0:s}\\'
-                'dokan1.lib').format(configuration)
+                f'..\\..\\..\\dokany\\dokan\\$(Platform)\\{configuration:s}\\'
+                f'dokan1.lib')
 
             project_configuration.additional_dependencies.append(library_path)
 
@@ -120,12 +120,12 @@ class VSSolution(object):
         if include_path in project_configuration.include_directories:
           project_configuration.include_directories.remove(include_path)
           project_configuration.include_directories.append(
-              '{0:s}\\include'.format(self._python_path))
+              f'{self._python_path:s}\\include')
 
         if library_path in project_configuration.library_directories:
           project_configuration.library_directories.remove(library_path)
           project_configuration.library_directories.append(
-              '{0:s}\\libs'.format(self._python_path))
+              f'{self._python_path:s}\\libs')
 
     if self._extend_with_x64:
       # Add x64 as a platform.
@@ -148,9 +148,10 @@ class VSSolution(object):
       str: project filename with extension or None if version is not supported.
     """
     if version == '2008':
-      return '{0:s}.vcproj'.format(project_filename)
+      return f'{project_filename:s}.vcproj'
+
     if version in ('2010', '2012', '2013', '2015', '2017', '2019', '2022'):
-      return '{0:s}.vcxproj'.format(project_filename)
+      return f'{project_filename:s}.vcxproj'
 
     return None
 
@@ -282,8 +283,7 @@ class VSSolution(object):
       solution_projects_by_guid (dict[str, VSSolutionProject]): projects
           per lower case GUID.
     """
-    output_directory = 'vs{0:s}'.format(output_version)
-    output_project_filename = output_directory
+    output_project_filename = f'vs{output_version:s}'
     for path_segment in solution_project.filename.split('\\'):
       output_project_filename = os.path.join(
           output_project_filename, path_segment)
@@ -297,7 +297,7 @@ class VSSolution(object):
 
     project_writer = self._GetProjectFileWriter(output_version)
 
-    logging.info('Writing: {0:s}'.format(output_project_filename))
+    logging.info(f'Writing: {output_project_filename:s}')
 
     project_writer.Open(output_project_filename)
     project_writer.WriteHeader()
@@ -324,12 +324,12 @@ class VSSolution(object):
       solution_projects (list[VSSolutionProject]): projects.
       solution_configurations (VSConfigurations): configurations.
     """
-    output_directory = 'vs{0:s}'.format(output_version)
+    output_directory = f'vs{output_version:s}'
     os.mkdir(output_directory)
 
     output_sln_filename = os.path.join(output_directory, solution_filename)
 
-    logging.info('Writing: {0:s}'.format(output_sln_filename))
+    logging.info(f'Writing: {output_sln_filename:s}')
 
     solution_writer = self._GetSolutionFileWriter(output_version)
 
@@ -353,7 +353,7 @@ class VSSolution(object):
     if not os.path.exists(input_sln_path):
       return False
 
-    logging.info('Reading: {0:s}'.format(input_sln_path))
+    logging.info(f'Reading: {input_sln_path:s}')
 
     # TODO: detect input version based on solution file reader?
     input_version = '2008'

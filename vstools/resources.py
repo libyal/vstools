@@ -58,8 +58,7 @@ class VSConfigurations(object):
     if configuration.platform not in self.platforms:
       self.platforms.append(configuration.platform)
 
-    identifier = '{0:s}|{1:s}'.format(
-        configuration.name, configuration.platform)
+    identifier = '|'.join([configuration.name, configuration.platform])
 
     self._configurations[identifier] = configuration
 
@@ -89,7 +88,7 @@ class VSConfigurations(object):
     Returns:
       VSConfiguration: configuration.
     """
-    identifier = '{0:s}|{1:s}'.format(name, platform)
+    identifier = '|'.join([name, platform])
     return self._configurations[identifier]
 
   def GetSorted(self, reverse=False):

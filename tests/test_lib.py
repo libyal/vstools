@@ -25,7 +25,7 @@ def skipUnlessHasTestFile(path_segments):  # pylint: disable=invalid-name
 
   # Note that the message should be of type str which is different for
   # different versions of Python.
-  return unittest.skip('missing test file: {0:s}'.format(path))
+  return unittest.skip(f'missing test file: {path:s}')
 
 
 class BaseTestCase(unittest.TestCase):

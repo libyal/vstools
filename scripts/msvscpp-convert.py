@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # pylint: disable=invalid-name
 """Script to generate different versions of Visual Studio (express) files.

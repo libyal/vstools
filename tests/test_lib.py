@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Shared test case."""
 
 import os
@@ -51,12 +50,12 @@ class BaseTestCase(unittest.TestCase):
     return os.path.join(self._TEST_DATA_PATH, *path_segments)
 
 
-class TempDirectory(object):
+class TempDirectory:
   """Temporary directory."""
 
   def __init__(self):
     """Initializes a temporary directory."""
-    super(TempDirectory, self).__init__()
+    super().__init__()
     self.name = ''
 
   def __enter__(self):

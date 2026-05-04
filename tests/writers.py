@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Tests for the project and solution file writer classes."""
 
 import io

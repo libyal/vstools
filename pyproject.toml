@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vstools"
-version = "20251125"
+version = "20260501"
 description = "Visual Studio tools for the libyal projects"
 maintainers = [
     { name = "Joachim Metz", email = "joachim.metz@gmail.com" },
@@ -25,7 +25,5 @@ msvscpp_convert = "vstools.scripts.msvscpp_convert:Main"
 Homepage = "https://github.com/libyal/vstools"
 Repository = "https://github.com/libyal/vstools"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["vstools"]
-exclude = ["docs", "tests", "tests.*", "utils"]
+[tool.setuptools]
+package-dir = {"vstools" = "vstools"}

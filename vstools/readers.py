@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Project and solution file reader classes."""
 
 import abc
@@ -7,7 +6,7 @@ import re
 from vstools import resources
 
 
-class FileReader(object):
+class FileReader:
   """File reader."""
 
   def __init__(self, encoding='utf-8'):
@@ -16,7 +15,7 @@ class FileReader(object):
     Args:
       encoding (str): encoding.
     """
-    super(FileReader, self).__init__()
+    super().__init__()
     self._encoding = encoding
     self._file = None
     self._line = None

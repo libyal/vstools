@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """Project and solution classes."""
 
 import abc
 
 
-class VSConfiguration(object):
+class VSConfiguration:
   """Visual Studio configuration.
 
   Attributes:
@@ -27,7 +26,7 @@ class VSConfiguration(object):
     """Copies the Visual Studio solution configuration to an x64 equivalent."""
 
 
-class VSConfigurations(object):
+class VSConfigurations:
   """Visual Studio solution and project configurations.
 
   Attributes:
@@ -162,7 +161,7 @@ class VSProjectConfiguration(VSConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(VSProjectConfiguration, self).__init__()
+    super().__init__()
 
     # Note that name and platform are inherited from VSConfiguration.
     self.additional_dependencies = []
@@ -498,7 +497,7 @@ class VSProjectConfiguration(VSConfiguration):
     return platform_toolset
 
 
-class VSProjectInformation(object):
+class VSProjectInformation:
   """Visual Studio project information.
 
   Attributes:
@@ -541,7 +540,7 @@ class VSSolutionConfiguration(VSConfiguration):
     return copy
 
 
-class VSSolutionProject(object):
+class VSSolutionProject:
   """Visual Studio solution project.
 
   Attributes:

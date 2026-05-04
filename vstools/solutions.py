@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Solution classes."""
 
 import logging
@@ -8,7 +7,7 @@ from vstools import readers
 from vstools import writers
 
 
-class VSSolution(object):
+class VSSolution:
   """Visual Studio solution."""
 
   def __init__(
@@ -25,7 +24,7 @@ class VSSolution(object):
       with_dokany (Optional[bool]): True if DokanY should be used instead
           of Dokan.
     """
-    super(VSSolution, self).__init__()
+    super().__init__()
     self._extend_with_x64 = extend_with_x64
     self._generate_python_dll = generate_python_dll
     self._python_path = python_path

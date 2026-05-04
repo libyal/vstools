@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Project and solution file writer classes."""
 
 import abc
@@ -7,7 +6,7 @@ import re
 from vstools import definitions
 
 
-class FileWriter(object):
+class FileWriter:
   """File writer."""
 
   def __init__(self, encoding='utf-8', end_of_line='\r\n'):
@@ -17,7 +16,7 @@ class FileWriter(object):
       encoding (str): encoding.
       end_of_line (str): end of line.
     """
-    super(FileWriter, self).__init__()
+    super().__init__()
     self._encoding = encoding
     self._end_of_line = end_of_line
     self._file = None
@@ -65,7 +64,7 @@ class VSProjectFileWriter(FileWriter):
       encoding (str): encoding.
       end_of_line (str): end of line.
     """
-    super(VSProjectFileWriter, self).__init__(
+    super().__init__(
         encoding=encoding, end_of_line=end_of_line)
 
   @abc.abstractmethod
@@ -129,7 +128,7 @@ class VS2008ProjectFileWriter(VSProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2008ProjectFileWriter, self).__init__()
+    super().__init__()
     self._version = 2008
 
   def _WriteConfiguration(self, project_configuration):
@@ -460,7 +459,7 @@ class VS2010ProjectFileWriter(VSProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2010ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '10.0.40219.1'
     self._tools_version = '4.0'
     self._version = 2010
@@ -1084,7 +1083,7 @@ class VS2012ProjectFileWriter(VS2010ProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2012ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '11.0.61030.0'
     self._tools_version = '4.0'
     self._version = 2012
@@ -1464,7 +1463,7 @@ class VS2013ProjectFileWriter(VS2010ProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2013ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '12.0.21005.1'
     self._tools_version = '12.0'
     self._version = 2013
@@ -1475,7 +1474,7 @@ class VS2015ProjectFileWriter(VS2012ProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2015ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '14.0.25431.1'
     self._tools_version = '14.0'
     self._version = 2015
@@ -1516,7 +1515,7 @@ class VS2017ProjectFileWriter(VS2012ProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2017ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '15.0.26730.3'
     self._tools_version = '15.0'
     self._version = 2017
@@ -1721,7 +1720,7 @@ class VS2019ProjectFileWriter(VS2017ProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2019ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '16.0.33423.256'
     self._tools_version = '15.0'
     self._version = 2019
@@ -1732,7 +1731,7 @@ class VS2022ProjectFileWriter(VS2017ProjectFileWriter):
 
   def __init__(self):
     """Initializes a Visual Studio project file writer."""
-    super(VS2022ProjectFileWriter, self).__init__()
+    super().__init__()
     self._project_file_version = '17.0.33516.290'
     self._tools_version = 'Current'
     self._version = 2022

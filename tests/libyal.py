@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Tests for the libyal sources classes."""
 
 import unittest

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Libyal sources classes."""
 
 import io
@@ -16,7 +15,7 @@ class Bzip2VSProjectInformation(resources.VSProjectInformation):
 
   def __init__(self):
     """Initializes bzip2 Visual Studio project information."""
-    super(Bzip2VSProjectInformation, self).__init__()
+    super().__init__()
 
     self.header_files = sorted([
         '..\\..\\..\\bzip2\\bzlib.h',
@@ -37,7 +36,7 @@ class ZlibVSProjectInformation(resources.VSProjectInformation):
 
   def __init__(self):
     """Initializes zlib Visual Studio project information."""
-    super(ZlibVSProjectInformation, self).__init__()
+    super().__init__()
 
     self.header_files = sorted([
         '..\\..\\..\\zlib\\crc32.h',
@@ -78,7 +77,7 @@ class ReleaseVSProjectConfiguration(resources.VSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(ReleaseVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.name = 'Release'
     self.platform = 'Win32'
@@ -99,7 +98,7 @@ class ReleaseDllVSProjectConfiguration(ReleaseVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(ReleaseDllVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.output_type = '2'
     self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
@@ -115,7 +114,7 @@ class ReleaseDotNetDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(ReleaseDotNetDllVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.compile_as = '2'
     self.managed_extensions = '1'
@@ -126,7 +125,7 @@ class ReleaseExeVSProjectConfiguration(ReleaseVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(ReleaseExeVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.output_type = '1'
 
@@ -149,7 +148,7 @@ class ReleaseLibraryVSProjectConfiguration(ReleaseVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(ReleaseLibraryVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.output_type = '4'
     self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
@@ -165,7 +164,7 @@ class ReleasePythonDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
     Args:
       python_path (Optional[str]): path to the Python installation.
     """
-    super(ReleasePythonDllVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
     self.library_directories = [f'{python_path:s}\\libs']
@@ -176,7 +175,7 @@ class VSDebugVSProjectConfiguration(resources.VSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(VSDebugVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.name = 'VSDebug'
     self.platform = 'Win32'
@@ -200,7 +199,7 @@ class VSDebugDllVSProjectConfiguration(VSDebugVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(VSDebugDllVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.output_type = '2'
     self.linker_output_file = '$(OutDir)\\$(ProjectName).dll'
@@ -217,7 +216,7 @@ class VSDebugDotNetDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(VSDebugDotNetDllVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.compile_as = '2'
     self.managed_extensions = '1'
@@ -230,7 +229,7 @@ class VSDebugExeVSProjectConfiguration(VSDebugVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(VSDebugExeVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.output_type = '1'
 
@@ -252,7 +251,7 @@ class VSDebugLibraryVSProjectConfiguration(VSDebugVSProjectConfiguration):
 
   def __init__(self):
     """Initializes a Visual Studio project configuration."""
-    super(VSDebugLibraryVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.output_type = '4'
     self.librarian_output_file = '$(OutDir)\\$(ProjectName).lib'
@@ -268,7 +267,7 @@ class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
     Args:
       python_path (Optional[str]): path to the Python installation.
     """
-    super(VSDebugPythonDllVSProjectConfiguration, self).__init__()
+    super().__init__()
 
     self.linker_output_file = '$(OutDir)\\$(ProjectName).pyd'
     self.library_directories = [f'{python_path:s}\\libs']

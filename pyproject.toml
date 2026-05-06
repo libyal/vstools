@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vstools"
-version = "20260501"
+version = "20260506"
 description = "Visual Studio tools for the libyal projects"
 maintainers = [
     { name = "Joachim Metz", email = "joachim.metz@gmail.com" },

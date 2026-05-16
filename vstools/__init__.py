@@ -1,3 +1,3 @@
 """Visual Studio tools for the libyal projects."""
 
-__version__ = '20251125'
+__version__ = "20251125"

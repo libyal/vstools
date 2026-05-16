@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vstools"
-version = "20260506"
+version = "20260516"
 description = "Visual Studio tools for the libyal projects"
 maintainers = [
     { name = "Joachim Metz", email = "joachim.metz@gmail.com" },
@@ -24,6 +24,16 @@ msvscpp_convert = "vstools.scripts.msvscpp_convert:Main"
 [project.urls]
 Homepage = "https://github.com/libyal/vstools"
 Repository = "https://github.com/libyal/vstools"
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+include = "\\.pyi?$"
+
+[tool.docformatter]
+black = true
+non-cap = ["int:", "str:"]
+non-strict = true
 
 [tool.setuptools]
 package-dir = {"vstools" = "vstools"}

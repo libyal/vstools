@@ -20,7 +20,6 @@ class Bzip2VSProjectInformation(resources.VSProjectInformation):
         self.header_files = sorted(
             ["..\\..\\..\\bzip2\\bzlib.h", "..\\..\\..\\bzip2\\bzlib_private.h"]
         )
-
         self.source_files = sorted(
             [
                 "..\\..\\..\\bzip2\\blocksort.c",
@@ -56,7 +55,6 @@ class ZlibVSProjectInformation(resources.VSProjectInformation):
                 "..\\..\\..\\zlib\\zutil.h",
             ]
         )
-
         self.resource_files = sorted(["..\\..\\..\\zlib\\win32\\zlib1.rc"])
 
         self.source_files = sorted(
@@ -312,12 +310,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             "_CRT_SECURE_NO_WARNINGS",
             "BZ_DLL",
         ]
-
         release_project_configuration.include_directories = include_directories
         release_project_configuration.preprocessor_definitions = ";".join(
             preprocessor_definitions
         )
-
         debug_project_configuration.include_directories = include_directories
         debug_project_configuration.preprocessor_definitions = ";".join(
             preprocessor_definitions
@@ -349,12 +345,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             "_CRT_SECURE_NO_WARNINGS",
             "ZLIB_DLL",
         ]
-
         release_project_configuration.include_directories = include_directories
         release_project_configuration.preprocessor_definitions = ";".join(
             preprocessor_definitions
         )
-
         debug_project_configuration.include_directories = include_directories
         debug_project_configuration.preprocessor_definitions = ";".join(
             preprocessor_definitions
@@ -419,7 +413,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             solution_project = resources.VSSolutionProject(
                 project_name, project_filename, project_guid
             )
-
             solution_projects.append(solution_project)
 
             if project_name == "bzip2":
@@ -448,7 +441,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                     release_project_configuration,
                     debug_project_configuration,
                 )
-
             elif project_name == "zlib":
                 self._ConfigureAsZlibDll(
                     project_information,
@@ -538,7 +530,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                                 f'"{original_line:s}" ({makefile_am_path:s})'
                             )
                         )
-
                         line = line[:-1]
 
                     if line.startswith("@") and line.endswith("_CPPFLAGS@"):
@@ -587,12 +578,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                             include_directories.append(
                                 "\\".join(["..", "..", directory_name])
                             )
-
                             library_name = line[1:-10]
                             preprocessor_definitions.append(
                                 f"HAVE_LOCAL_{library_name:s}"
                             )
-
                             alternate_dependencies.append(directory_name)
 
             elif in_extra_dist_section:
@@ -605,12 +594,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
                     elif line.endswith("\\"):
                         logging.warning(
-                            (
-                                f"Detected missing space before \\ in line: {index:d} "
-                                f'"{original_line:s}" ({makefile_am_path:s})'
-                            )
+                            f"Space missing before '\\' in line: {index:d} "
+                            f"'{original_line:s}' ({makefile_am_path:s})"
                         )
-
                         line = line[:-1]
 
                     for filename in line.split(" "):
@@ -618,12 +604,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                             source_files.append(
                                 "\\".join(["..", "..", project_name, filename])
                             )
-
                         elif filename.endswith(".h"):
                             header_files.append(
                                 "\\".join(["..", "..", project_name, filename])
                             )
-
                         elif filename.endswith(".rc"):
                             resource_files.append(
                                 "\\".join(["..", "..", project_name, filename])
@@ -671,12 +655,9 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
                     elif line.endswith("\\"):
                         logging.warning(
-                            (
-                                f"Detected missing space before \\ in line: {index:d} "
-                                f'"{original_line:s}" ({makefile_am_path:s})'
-                            )
+                            f"Detected missing space before \\ in line: {index:d} "
+                            f'"{original_line:s}" ({makefile_am_path:s})'
                         )
-
                         line = line[:-1]
 
                     for filename in line.split(" "):
@@ -684,7 +665,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                             source_files.append(
                                 "\\".join(["..", "..", project_name, filename])
                             )
-
                         elif filename.endswith(".h"):
                             header_files.append(
                                 "\\".join(["..", "..", project_name, filename])
@@ -800,12 +780,10 @@ class LibyalSourceVSSolution(solutions.VSSolution):
         release_project_configuration.preprocessor_definitions = ";".join(
             preprocessor_definitions
         )
-
         debug_project_configuration.include_directories = include_directories
         debug_project_configuration.preprocessor_definitions = ";".join(
             preprocessor_definitions
         )
-
         if project_name.endswith(".net"):
             additional_dependencies.append(f"{solution_name:s}.lib")
 
@@ -819,7 +797,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             release_project_configuration.additional_dependencies.append(
                 release_dependency
             )
-
             debug_dependency = dependency
             if "dokan" in debug_dependency and self._with_dokany:
                 debug_dependency = debug_dependency.replace(
@@ -974,13 +951,13 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                     project_guid = project_guids_by_name.get(
                         f"{project_name:s}.dll", ""
                     )
+
                 if not project_guid:
                     project_guid = str(uuid.uuid4())
 
                 solution_project = resources.VSSolutionProject(
                     project_name, project_filename, project_guid
                 )
-
                 solution_projects.append(solution_project)
 
                 project_information = resources.VSProjectInformation()
@@ -1011,7 +988,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                             python_path=self._python_path
                         )
                     )
-
                 elif project_name.startswith("lib"):
                     release_project_configuration = (
                         ReleaseLibraryVSProjectConfiguration()
@@ -1096,7 +1072,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             solution_projects,
             solution_configurations,
         )
-
         for solution_project in solution_projects:
             project_information = projects_by_guid[solution_project.guid]
             self._WriteProject(
@@ -1139,7 +1114,6 @@ class LibyalSourceVSSolution(solutions.VSSolution):
                 "",
             ]
         )
-
         filename = os.path.join(f"vs{output_version:s}", "Makefile.am")
         logging.info(f"Writing: {filename:s}")
 

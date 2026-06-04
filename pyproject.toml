@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vstools"
-version = "20260516"
+version = "20260604"
 description = "Visual Studio tools for the libyal projects"
 maintainers = [
     { name = "Joachim Metz", email = "joachim.metz@gmail.com" },
@@ -34,6 +34,13 @@ include = "\\.pyi?$"
 black = true
 non-cap = ["int:", "str:"]
 non-strict = true
+
+[tool.l2tdevtools]
+name = "vstools"
+status = "alpha"
+description = """
+Visual Studio tools for the libyal projects. \
+"""
 
 [tool.setuptools]
 package-dir = {"vstools" = "vstools"}

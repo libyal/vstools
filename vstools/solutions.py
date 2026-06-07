@@ -10,11 +10,67 @@ from vstools import writers
 class VSSolution:
     """Visual Studio solution."""
 
+    _PROJECT_FILE_READERS = {
+        "2008": readers.VS2008ProjectFileReader(),
+        "2010": readers.VS2010ProjectFileReader(),
+        "2012": readers.VS2012ProjectFileReader(),
+        "2013": readers.VS2013ProjectFileReader(),
+        "2015": readers.VS2015ProjectFileReader(),
+        "2017": readers.VS2017ProjectFileReader(),
+        "2019": readers.VS2019ProjectFileReader(),
+        "2022": readers.VS2022ProjectFileReader(),
+        "2026": readers.VS2026ProjectFileReader(),
+    }
+
+    _PROJECT_FILE_WRITERS = {
+        "2008": writers.VS2008ProjectFileWriter(),
+        "2010": writers.VS2010ProjectFileWriter(),
+        "2012": writers.VS2012ProjectFileWriter(),
+        "2013": writers.VS2013ProjectFileWriter(),
+        "2015": writers.VS2015ProjectFileWriter(),
+        "2017": writers.VS2017ProjectFileWriter(),
+        "2019": writers.VS2019ProjectFileWriter(),
+        "2022": writers.VS2022ProjectFileWriter(),
+        "2026": writers.VS2026ProjectFileWriter(),
+    }
+
+    _SOLUTION_FILE_READERS = {
+        "2008": readers.VS2008SolutionFileReader(),
+        "2010": readers.VS2010SolutionFileReader(),
+        "2012": readers.VS2012SolutionFileReader(),
+        "2013": readers.VS2013SolutionFileReader(),
+        "2015": readers.VS2015SolutionFileReader(),
+        "2017": readers.VS2017SolutionFileReader(),
+        "2019": readers.VS2019SolutionFileReader(),
+        "2022": readers.VS2022SolutionFileReader(),
+        "2026": readers.VS2026SolutionFileReader(),
+    }
+
+    _SOLUTION_FILE_WRITERS = {
+        "2008": writers.VS2008SolutionFileWriter(),
+        "2010": writers.VS2010SolutionFileWriter(),
+        "2012": writers.VS2012SolutionFileWriter(),
+        "2013": writers.VS2013SolutionFileWriter(),
+        "2015": writers.VS2015SolutionFileWriter(),
+        "2017": writers.VS2017SolutionFileWriter(),
+        "2019": writers.VS2019SolutionFileWriter(),
+        "2022": writers.VS2022SolutionFileWriter(),
+        "2026": writers.VS2026SolutionFileWriter(),
+    }
+
+    # Visual Studio versions that use .vcproj extension for a project file.
+    _VERSIONS_THAT_USE_VCPROJ = frozenset(["2008"])
+
+    # Visual Studio versions that use .vcxproj extension for a project file.
+    _VERSIONS_THAT_USE_VCXPROJ = frozenset(
+        ["2010", "2012", "2013", "2015", "2017", "2019", "2022", "2026"]
+    )
+
     def __init__(
         self,
         extend_with_x64=True,
         generate_python_dll=True,
-        python_path="C:\\Python27",
+        python_path="C:\\Python314",
         with_dokany=False,
     ):
         """Initializes a Visual Studio solution.
@@ -124,8 +180,8 @@ class VSSolution:
                         )
 
         elif solution_project.name.startswith("py"):
-            include_path = "C:\\Python27\\include"
-            library_path = "C:\\Python27\\libs"
+            include_path = "C:\\Python314\\include"
+            library_path = "C:\\Python314\\libs"
 
             for project_configuration in project_information.configurations.GetSorted():
                 if include_path in project_configuration.include_directories:
@@ -163,10 +219,10 @@ class VSSolution:
         Returns:
           str: project filename with extension or None if version is not supported.
         """
-        if version == "2008":
+        if version in self._VERSIONS_THAT_USE_VCPROJ:
             return f"{project_filename:s}.vcproj"
 
-        if version in ("2010", "2012", "2013", "2015", "2017", "2019", "2022"):
+        if version in self._VERSIONS_THAT_USE_VCXPROJ:
             return f"{project_filename:s}.vcxproj"
 
         return None
@@ -181,24 +237,7 @@ class VSSolution:
           VSProjectFileReader: Visual Studio project file reader or None if version
               is not supported.
         """
-        if input_version == "2008":
-            return readers.VS2008ProjectFileReader()
-        if input_version == "2010":
-            return readers.VS2010ProjectFileReader()
-        if input_version == "2012":
-            return readers.VS2012ProjectFileReader()
-        if input_version == "2013":
-            return readers.VS2013ProjectFileReader()
-        if input_version == "2015":
-            return readers.VS2015ProjectFileReader()
-        if input_version == "2017":
-            return readers.VS2017ProjectFileReader()
-        if input_version == "2019":
-            return readers.VS2019ProjectFileReader()
-        if input_version == "2022":
-            return readers.VS2022ProjectFileReader()
-
-        return None
+        return self._PROJECT_FILE_READERS.get(input_version)
 
     def _GetProjectFileWriter(self, output_version):
         """Retrieves a Visual Studio project file writer.
@@ -210,24 +249,22 @@ class VSSolution:
           VSProjectFileWriter: Visual Studio project file writer or None if version
               is not supported.
         """
-        if output_version == "2008":
-            return writers.VS2008ProjectFileWriter()
-        if output_version == "2010":
-            return writers.VS2010ProjectFileWriter()
-        if output_version == "2012":
-            return writers.VS2012ProjectFileWriter()
-        if output_version == "2013":
-            return writers.VS2013ProjectFileWriter()
-        if output_version == "2015":
-            return writers.VS2015ProjectFileWriter()
-        if output_version == "2017":
-            return writers.VS2017ProjectFileWriter()
-        if output_version == "2019":
-            return writers.VS2019ProjectFileWriter()
-        if output_version == "2022":
-            return writers.VS2022ProjectFileWriter()
+        return self._PROJECT_FILE_WRITERS.get(output_version)
 
-        return None
+    def _GetSolutionFilename(self, solution_name, output_version):
+        """Determines the solution filename.
+
+        Args:
+          solution_name (str): name of the solution.
+          output_version (str): output Visual Studio version.
+
+        Returns:
+          str: solution filename.
+        """
+        if output_version == "2026":
+            return f"{solution_name:s}.slnx"
+
+        return f"{solution_name:s}.sln"
 
     def _GetSolutionFileReader(self, input_version):
         """Retrieves a Visual Studio solution file reader.
@@ -239,24 +276,7 @@ class VSSolution:
           VSSolutionFileReader: Visual Studio solution file reader or None if
               version is not supported.
         """
-        if input_version == "2008":
-            return readers.VS2008SolutionFileReader()
-        if input_version == "2010":
-            return readers.VS2010SolutionFileReader()
-        if input_version == "2012":
-            return readers.VS2012SolutionFileReader()
-        if input_version == "2013":
-            return readers.VS2013SolutionFileReader()
-        if input_version == "2015":
-            return readers.VS2015SolutionFileReader()
-        if input_version == "2017":
-            return readers.VS2017SolutionFileReader()
-        if input_version == "2019":
-            return readers.VS2019SolutionFileReader()
-        if input_version == "2022":
-            return readers.VS2022SolutionFileReader()
-
-        return None
+        return self._SOLUTION_FILE_READERS.get(input_version)
 
     def _GetSolutionFileWriter(self, output_version):
         """Retrieves a Visual Studio solution file writer.
@@ -268,24 +288,7 @@ class VSSolution:
           VSSolutionFileWriter: Visual Studio solution file writer or None if
               version is not supported.
         """
-        if output_version == "2008":
-            return writers.VS2008SolutionFileWriter()
-        if output_version == "2010":
-            return writers.VS2010SolutionFileWriter()
-        if output_version == "2012":
-            return writers.VS2012SolutionFileWriter()
-        if output_version == "2013":
-            return writers.VS2013SolutionFileWriter()
-        if output_version == "2015":
-            return writers.VS2015SolutionFileWriter()
-        if output_version == "2017":
-            return writers.VS2017SolutionFileWriter()
-        if output_version == "2019":
-            return writers.VS2019SolutionFileWriter()
-        if output_version == "2022":
-            return writers.VS2022SolutionFileWriter()
-
-        return None
+        return self._SOLUTION_FILE_WRITERS.get(output_version)
 
     def _WriteProject(
         self,
@@ -359,11 +362,21 @@ class VSSolution:
         logging.info(f"Writing: {output_sln_filename:s}")
 
         solution_writer = self._GetSolutionFileWriter(output_version)
-
         solution_writer.Open(output_sln_filename)
         solution_writer.WriteHeader()
-        solution_writer.WriteProjects(solution_projects)
-        solution_writer.WriteConfigurations(solution_configurations, solution_projects)
+
+        if output_version == "2026":
+            solution_writer.WriteConfigurations(
+                solution_configurations, solution_projects
+            )
+            solution_writer.WriteProjects(solution_projects)
+        else:
+            solution_writer.WriteProjects(solution_projects)
+            solution_writer.WriteConfigurations(
+                solution_configurations, solution_projects
+            )
+
+        solution_writer.WriteFooter()
         solution_writer.Close()
 
     def Convert(self, input_sln_path, output_version):
@@ -408,7 +421,9 @@ class VSSolution:
             # Add x64 as a platform.
             solution_configurations.ExtendWithX64(output_version)
 
-        solution_filename = os.path.basename(input_sln_path)
+        solution_name, _, _ = os.path.basename(input_sln_path).rpartition(".")
+        solution_filename = self._GetSolutionFilename(solution_name, output_version)
+
         self._WriteSolution(
             solution_filename,
             output_version,

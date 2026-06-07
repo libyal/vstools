@@ -164,7 +164,7 @@ class ReleaseLibraryVSProjectConfiguration(ReleaseVSProjectConfiguration):
 class ReleasePythonDllVSProjectConfiguration(ReleaseDllVSProjectConfiguration):
     """Release Python DLL Visual Studio project configuration."""
 
-    def __init__(self, python_path="C:\\Python27"):
+    def __init__(self, python_path="C:\\Python314"):
         """Initializes a Visual Studio project configuration.
 
         Args:
@@ -267,7 +267,7 @@ class VSDebugLibraryVSProjectConfiguration(VSDebugVSProjectConfiguration):
 class VSDebugPythonDllVSProjectConfiguration(VSDebugDllVSProjectConfiguration):
     """VSDebug Python DLL Visual Studio project configuration."""
 
-    def __init__(self, python_path="C:\\Python27"):
+    def __init__(self, python_path="C:\\Python314"):
         """Initializes a Visual Studio project configuration.
 
         Args:
@@ -884,8 +884,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
             logging.warning("Unable to determine solution name.")
             return False
 
-        # Use the existing msvscpp solution file to determine the project
-        # GUID so that they can be reused.
+        # Use the existing msvscpp solution file to determine the project GUID so that
+        # they can be reused.
         project_guids_by_name = {}
 
         input_sln_path = os.path.join(
@@ -1065,7 +1065,8 @@ class LibyalSourceVSSolution(solutions.VSSolution):
 
                 solution_project.AddDependency(dependency_guid)
 
-        solution_filename = f"{solution_name:s}.sln"
+        solution_filename = self._GetSolutionFilename(solution_name, output_version)
+
         self._WriteSolution(
             solution_filename,
             output_version,

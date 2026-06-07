@@ -15,6 +15,7 @@ Currently supported output formats:
 * 2017 (15.0)
 * 2019 (16.0)
 * 2022 (17.0)
+* 2026 (18.0)
 """
 
 # TODO: add automated tests.
@@ -25,6 +26,7 @@ Currently supported output formats:
 # TODO: add vs2017 reader.
 # TODO: add vs2019 reader.
 # TODO: add vs2022 reader.
+# TODO: add vs2026 reader.
 
 import argparse
 import logging
@@ -42,9 +44,8 @@ def Main():
       int: exit code that is provided to sys.exit().
     """
     output_formats = frozenset(
-        ["2008", "2010", "2012", "2013", "2015", "2017", "2019", "2022"]
+        ["2008", "2010", "2012", "2013", "2015", "2017", "2019", "2022", "2026"]
     )
-
     argument_parser = argparse.ArgumentParser(
         description=(
             "Converts source directory (autoconf and automake files) into "
@@ -52,7 +53,6 @@ def Main():
             "possible to convert from one version of Visual Studio to another."
         )
     )
-
     argument_parser.add_argument(
         "solution_file",
         nargs="?",
@@ -64,7 +64,6 @@ def Main():
             "file (.sln)."
         ),
     )
-
     argument_parser.add_argument(
         "--extend_with_x64",
         "--extend-with-x64",
@@ -73,7 +72,6 @@ def Main():
         default=False,
         help=("extend the solution with configurations for the x64 patform."),
     )
-
     argument_parser.add_argument(
         "--no_python_dll",
         "--no-python-dll",
@@ -85,7 +83,6 @@ def Main():
             "present."
         ),
     )
-
     argument_parser.add_argument(
         "--output_format",
         "--output-format",
@@ -98,7 +95,6 @@ def Main():
         default="2010",
         help="output format.",
     )
-
     argument_parser.add_argument(
         "--python_path",
         "--python-path",
@@ -106,10 +102,9 @@ def Main():
         nargs="?",
         action="store",
         metavar="PATH",
-        default="C:\\Python27",
+        default="C:\\Python310",
         help="location of the Python installation.",
     )
-
     argument_parser.add_argument(
         "--with_dokany",
         "--with-dokany",
@@ -118,7 +113,6 @@ def Main():
         default=False,
         help="use DokanY instead of Dokan.",
     )
-
     options = argument_parser.parse_args()
 
     if not options.solution_file:

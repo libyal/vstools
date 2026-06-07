@@ -491,11 +491,15 @@ class VS2022ProjectFileReader(VSProjectFileReader):
     # TODO: implement.
 
 
-class VSSolutionFileReader(FileReader):
-    """Visual Studio solution file reader."""
+class VS2026ProjectFileReader(VSProjectFileReader):
+    """Visual Studio 2026 project file reader."""
 
-    # Note that redundant-returns-doc is broken for pylint 1.7.x for abstract
-    # methods
+    # TODO: implement.
+
+
+class VSSolutionFileReader(FileReader):
+    """Visual Studio solution file (.sln) reader."""
+
     # pylint: disable=redundant-returns-doc
 
     @abc.abstractmethod
@@ -692,7 +696,7 @@ class VSSolutionFileReader(FileReader):
 
 
 class VS2008SolutionFileReader(VSSolutionFileReader):
-    """Visual Studio 2008 solution file reader."""
+    """Visual Studio 2008 solution file (.sln) reader."""
 
     def _CheckFormatVersion(self, line):
         """Checks the format version.
@@ -707,7 +711,7 @@ class VS2008SolutionFileReader(VSSolutionFileReader):
 
 
 class VS2010SolutionFileReader(VSSolutionFileReader):
-    """Visual Studio 2010 solution file reader."""
+    """Visual Studio 2010 solution file (.sln) reader."""
 
     def _CheckFormatVersion(self, line):
         """Checks the format version.
@@ -722,7 +726,7 @@ class VS2010SolutionFileReader(VSSolutionFileReader):
 
 
 class VS2012SolutionFileReader(VSSolutionFileReader):
-    """Visual Studio 2012 solution file reader."""
+    """Visual Studio 2012 solution file (.sln) reader."""
 
     def _CheckFormatVersion(self, line):
         """Checks the format version.
@@ -737,7 +741,7 @@ class VS2012SolutionFileReader(VSSolutionFileReader):
 
 
 class VS2013SolutionFileReader(VS2012SolutionFileReader):
-    """Visual Studio 2013 solution file reader."""
+    """Visual Studio 2013 solution file (.sln) reader."""
 
     def _CheckVisualStudioVersion(self, line):
         """Checks the Visual Studio version.
@@ -753,7 +757,7 @@ class VS2013SolutionFileReader(VS2012SolutionFileReader):
 
 
 class VS2015SolutionFileReader(VS2012SolutionFileReader):
-    """Visual Studio 2015 solution file reader."""
+    """Visual Studio 2015 solution file (.sln) reader."""
 
     def _CheckVisualStudioVersion(self, line):
         """Checks the Visual Studio version.
@@ -769,7 +773,7 @@ class VS2015SolutionFileReader(VS2012SolutionFileReader):
 
 
 class VS2017SolutionFileReader(VS2012SolutionFileReader):
-    """Visual Studio 2017 solution file reader."""
+    """Visual Studio 2017 solution file (.sln) reader."""
 
     def _CheckVisualStudioVersion(self, line):
         """Checks the Visual Studio version.
@@ -785,7 +789,7 @@ class VS2017SolutionFileReader(VS2012SolutionFileReader):
 
 
 class VS2019SolutionFileReader(VS2012SolutionFileReader):
-    """Visual Studio 2019 solution file reader."""
+    """Visual Studio 2019 solution file (.sln) reader."""
 
     def _CheckVisualStudioVersion(self, line):
         """Checks the Visual Studio version.
@@ -801,7 +805,7 @@ class VS2019SolutionFileReader(VS2012SolutionFileReader):
 
 
 class VS2022SolutionFileReader(VS2012SolutionFileReader):
-    """Visual Studio 2022 solution file reader."""
+    """Visual Studio 2022 solution file (.sln) reader."""
 
     def _CheckVisualStudioVersion(self, line):
         """Checks the Visual Studio version.
@@ -814,3 +818,9 @@ class VS2022SolutionFileReader(VS2012SolutionFileReader):
         """
         version = line.split(" = ")[1]
         return version.startswith("17.")
+
+
+class VS2026SolutionFileReader(FileReader):
+    """Visual Studio 2026 solution file (.slnx) reader."""
+
+    # TODO: implement.

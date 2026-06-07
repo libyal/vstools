@@ -155,6 +155,17 @@ class VSProjectConfiguration(VSConfiguration):
 
     _OUTPUT_TYPE_STRINGS = {1: "Application", 2: "DynamicLibrary", 4: "StaticLibrary"}
 
+    _PLATFORM_TOOLSETS = {
+        2010: "v100",
+        2012: "v110",
+        2013: "v120",
+        2015: "v140",
+        2017: "v141",
+        2019: "v142",
+        2022: "v143",
+        2026: "v145",
+    }
+
     def __init__(self):
         """Initializes a Visual Studio project configuration."""
         super().__init__()
@@ -481,14 +492,9 @@ class VSProjectConfiguration(VSConfiguration):
         if not platform_toolset:
             if output_version == 2010 and self.platform == "x64":
                 platform_toolset = "Windows7.1SDK"
-            elif output_version == 2012:
-                platform_toolset = "v110"
-            # elif output_version == 2015:
-            #   platform_toolset = 'v140'
-            elif output_version == 2017:
-                platform_toolset = "v141"
-            elif output_version == 2019:
-                platform_toolset = "v142"
+            else:
+                platform_toolset = self._PLATFORM_TOOLSETS.get(output_version)
+
         return platform_toolset
 
 

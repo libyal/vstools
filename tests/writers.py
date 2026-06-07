@@ -124,7 +124,6 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
         file_writer._WriteConfigurationOption(
             project_configuration, "CompileAs", "compile_as", False, 4
         )
-
         file_writer._file.seek(0, os.SEEK_SET)
         output_data = file_writer._file.read()
 
@@ -144,7 +143,6 @@ class VS2008ProjectFileWriterTest(test_lib.BaseTestCase):
             "VCCLCompilerTool",
             file_writer._TOOL_COMPILER_CONFIGURATION_OPTIONS,
         )
-
         file_writer._file.seek(0, os.SEEK_SET)
         output_data = file_writer._file.read()
 
@@ -415,6 +413,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
 
     # pylint: disable=protected-access
 
+    # TODO: add tests for _WriteAdditionalIncludeDirectories
+    # TODO: add tests for _WriteBasicRuntimeChecks
+
     def testWriteClCompileSection(self):
         """Tests the _WriteClCompileSection function."""
         project_configuration = resources.VSProjectConfiguration()
@@ -440,6 +441,10 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         )
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WriteClCompileSectionFooter
+    # TODO: add tests for _WriteClCompileSectionHeader
+    # TODO: add tests for _WriteCompileAs
+
     def testWriteConfigurationPropertyGroup(self):
         """Tests the _WriteConfigurationPropertyGroup function."""
         project_configuration = resources.VSProjectConfiguration()
@@ -457,6 +462,7 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
             b"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='|'\""
             b' Label="Configuration">\r\n'
             b"    <ConfigurationType></ConfigurationType>\r\n"
+            b"    <PlatformToolset>v100</PlatformToolset>\r\n"
             b"  </PropertyGroup>\r\n"
         )
         self.assertEqual(output_data, expected_output_data)
@@ -494,6 +500,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         )
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WriteDebugInformationFormat
+    # TODO: add tests for _WriteFunctionLevelLinking
+
     def testWriteHeaderFiles(self):
         """Tests the _WriteHeaderFiles function."""
         header_files = ["test.h"]
@@ -513,6 +522,8 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
             b"  </ItemGroup>\r\n"
         )
         self.assertEqual(output_data, expected_output_data)
+
+    # TODO: add tests for _WriteIntrinsicFunctions
 
     def testWriteItemDefinitionGroup(self):
         """Tests the _WriteItemDefinitionGroup function."""
@@ -613,19 +624,17 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         expected_output_data = b"    <Link>\r\n" b"    </Link>\r\n"
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WriteOptimization
+
     def testWriteOutIntDirConditions(self):
         """Tests the _WriteOutIntDirConditions function."""
-        configuration_name = "Release"
         project_configurations = resources.VSConfigurations()
 
         file_writer = writers.VS2010ProjectFileWriter()
 
         file_writer._file = io.BytesIO()
 
-        file_writer._WriteOutIntDirConditions(
-            configuration_name, project_configurations
-        )
-
+        file_writer._WriteOutIntDirConditions("Release", project_configurations)
         file_writer._file.seek(0, os.SEEK_SET)
         output_data = file_writer._file.read()
 
@@ -651,6 +660,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         )
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WritePrecompiledHeader
+    # TODO: add tests for _WritePreprocessorDefinitions
+
     def testWriteResourceFiles(self):
         """Tests the _WriteResourceFiles function."""
         resource_files = ["test.rc"]
@@ -671,6 +683,9 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
         )
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WriteRuntimeLibrary
+    # TODO: add tests for _WriteSmallerTypeCheck
+
     def testWriteSourceFiles(self):
         """Tests the _WriteSourceFiles function."""
         source_files = ["test.c"]
@@ -690,6 +705,10 @@ class VS2010ProjectFileWriterTest(test_lib.BaseTestCase):
             b"  </ItemGroup>\r\n"
         )
         self.assertEqual(output_data, expected_output_data)
+
+    # TODO: add tests for _WriteTreatWarningAsError
+    # TODO: add tests for _WriteWarningLevel
+    # TODO: add tests for _WriteWholeProgramOptimization
 
     def testWriteConfigurations(self):
         """Tests the WriteConfigurations function."""
@@ -869,6 +888,8 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
         )
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WriteDebugInformationFormat
+
     def testWriteItemDefinitionGroup(self):
         """Tests the _WriteItemDefinitionGroup function."""
         project_configuration = resources.VSProjectConfiguration()
@@ -936,17 +957,13 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
 
     def testWriteOutIntDirConditions(self):
         """Tests the _WriteOutIntDirConditions function."""
-        configuration_name = "Release"
         project_configurations = resources.VSConfigurations()
 
         file_writer = writers.VS2012ProjectFileWriter()
 
         file_writer._file = io.BytesIO()
 
-        file_writer._WriteOutIntDirConditions(
-            configuration_name, project_configurations
-        )
-
+        file_writer._WriteOutIntDirConditions("Release", project_configurations)
         file_writer._file.seek(0, os.SEEK_SET)
         output_data = file_writer._file.read()
 
@@ -972,6 +989,8 @@ class VS2012ProjectFileWriterTest(test_lib.BaseTestCase):
         )
         self.assertEqual(output_data, expected_output_data)
 
+    # TODO: add tests for _WritePrecompiledHeader
+
 
 class VS2013ProjectFileWriterTest(test_lib.BaseTestCase):
     """Visual Studio 2013 project file writer test."""
@@ -991,17 +1010,13 @@ class VS2015ProjectFileWriterTest(test_lib.BaseTestCase):
 
     def testWriteOutIntDirConditions(self):
         """Tests the _WriteOutIntDirConditions function."""
-        configuration_name = "Release"
         project_configurations = resources.VSConfigurations()
 
         file_writer = writers.VS2015ProjectFileWriter()
 
         file_writer._file = io.BytesIO()
 
-        file_writer._WriteOutIntDirConditions(
-            configuration_name, project_configurations
-        )
-
+        file_writer._WriteOutIntDirConditions("Release", project_configurations)
         file_writer._file.seek(0, os.SEEK_SET)
         output_data = file_writer._file.read()
 
@@ -1040,6 +1055,72 @@ class VS2022ProjectFileWriterTest(test_lib.BaseTestCase):
         file_writer = writers.VS2022ProjectFileWriter()
         self.assertIsNotNone(file_writer)
 
+    def testWriteClCompileSection(self):
+        """Tests the _WriteClCompileSection function."""
+        project_configuration = resources.VSProjectConfiguration()
+
+        file_writer = writers.VS2022ProjectFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer._WriteClCompileSection(project_configuration)
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        expected_output_data = (
+            b"    <ClCompile>\r\n"
+            b"      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)"
+            b"</AdditionalIncludeDirectories>\r\n"
+            b"      <RuntimeLibrary></RuntimeLibrary>\r\n"
+            b"      <WarningLevel></WarningLevel>\r\n"
+            b"      <SDLCheck>true</SDLCheck>\r\n"
+            b"      <PreprocessorDefinitions>%(PreprocessorDefinitions)"
+            b"</PreprocessorDefinitions>\r\n"
+            b"      <ConformanceMode>true</ConformanceMode>\r\n"
+            b"    </ClCompile>\r\n"
+        )
+        self.assertEqual(output_data, expected_output_data)
+
+
+class VS2026ProjectFileWriterTest(test_lib.BaseTestCase):
+    """Visual Studio 2026 project file writer test."""
+
+    # pylint: disable=protected-access
+
+    def testInitialize(self):
+        """Tests the __init__ function."""
+        file_writer = writers.VS2026ProjectFileWriter()
+        self.assertIsNotNone(file_writer)
+
+    def testWriteClCompileSection(self):
+        """Tests the _WriteClCompileSection function."""
+        project_configuration = resources.VSProjectConfiguration()
+
+        file_writer = writers.VS2026ProjectFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer._WriteClCompileSection(project_configuration)
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        expected_output_data = (
+            b"    <ClCompile>\r\n"
+            b"      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)"
+            b"</AdditionalIncludeDirectories>\r\n"
+            b"      <RuntimeLibrary></RuntimeLibrary>\r\n"
+            b"      <WarningLevel></WarningLevel>\r\n"
+            b"      <SDLCheck>true</SDLCheck>\r\n"
+            b"      <PreprocessorDefinitions>%(PreprocessorDefinitions)"
+            b"</PreprocessorDefinitions>\r\n"
+            b"      <ConformanceMode>true</ConformanceMode>\r\n"
+            b"      <LanguageStandard>Default</LanguageStandard>\r\n"
+            b"    </ClCompile>\r\n"
+        )
+        self.assertEqual(output_data, expected_output_data)
+
 
 class VSSolutionFileWriterTest(test_lib.BaseTestCase):
     """Visual Studio solution file writer test."""
@@ -1048,6 +1129,19 @@ class VSSolutionFileWriterTest(test_lib.BaseTestCase):
 
     # TODO: add tests for _WriteProjectConfigurationPlatforms.
     # TODO: add tests for _WriteSolutionConfigurationPlatforms.
+
+    def testWriteFooter(self):
+        """Tests the WriteFooter function."""
+        file_writer = writers.VSSolutionFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer.WriteFooter()
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        self.assertEqual(output_data, b"")
 
     def testWriteSolutionProperties(self):
         """Tests the _WriteSolutionProperties function."""
@@ -1091,6 +1185,9 @@ class VS2008SolutionFileWriter(test_lib.BaseTestCase):
     def testWriteConfigurations(self):
         """Tests the WriteConfigurations function."""
         solution_configurations = resources.VSConfigurations()
+        solution_configurations.names = ["Release"]
+        solution_configurations.platforms = ["x86"]
+
         solution_project = resources.VSSolutionProject("name", "filename", "guid")
 
         file_writer = writers.VS2008SolutionFileWriter()
@@ -1120,6 +1217,9 @@ class VS2010SolutionFileWriter(test_lib.BaseTestCase):
     def testWriteConfigurations(self):
         """Tests the WriteConfigurations function."""
         solution_configurations = resources.VSConfigurations()
+        solution_configurations.names = ["Release"]
+        solution_configurations.platforms = ["x86"]
+
         solution_project = resources.VSSolutionProject("name", "filename", "guid")
 
         file_writer = writers.VS2010SolutionFileWriter()
@@ -1296,6 +1396,9 @@ class VS2017SolutionFileWriterTest(test_lib.BaseTestCase):
     def testWriteConfigurations(self):
         """Tests the WriteConfigurations function."""
         solution_configurations = resources.VSConfigurations()
+        solution_configurations.names = ["Release"]
+        solution_configurations.platforms = ["x86"]
+
         solution_project = resources.VSSolutionProject("name", "filename", "guid")
 
         file_writer = writers.VS2017SolutionFileWriter()
@@ -1385,6 +1488,80 @@ class VS2022SolutionFileWriterTest(test_lib.BaseTestCase):
             b"MinimumVisualStudioVersion = 10.0.40219.1\r\n"
         )
         self.assertEqual(output_data, expected_output_data)
+
+
+class VS2026SolutionFileWriterTest(test_lib.BaseTestCase):
+    """Visual Studio 2026 solution file writer test."""
+
+    # pylint: disable=protected-access
+
+    def testWriteConfigurations(self):
+        """Tests the WriteConfigurations function."""
+        solution_configurations = resources.VSConfigurations()
+        solution_configurations.names = ["Release"]
+        solution_configurations.platforms = ["x86"]
+
+        solution_project = resources.VSSolutionProject("name", "filename", "guid")
+
+        file_writer = writers.VS2026SolutionFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer.WriteConfigurations(solution_configurations, [solution_project])
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        expected_output_data = (
+            b"  <Configurations>\r\n"
+            b'    <BuildType Name="Release" />\r\n'
+            b'    <Platform Name="x86" />\r\n'
+            b"  </Configurations>\r\n"
+        )
+        self.assertEqual(output_data, expected_output_data)
+
+    def testWriteFooter(self):
+        """Tests the WriteFooter function."""
+        file_writer = writers.VS2026SolutionFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer.WriteFooter()
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        self.assertEqual(output_data, b"</Solution>\r\n")
+
+    def testWriteHeader(self):
+        """Tests the WriteHeader function."""
+        file_writer = writers.VS2026SolutionFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer.WriteHeader()
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        self.assertEqual(output_data, b"<Solution>\r\n")
+
+    def testWriteProject(self):
+        """Tests the WriteProject function."""
+        solution_project = resources.VSSolutionProject("name", "filename", "guid")
+
+        file_writer = writers.VS2026SolutionFileWriter()
+
+        file_writer._file = io.BytesIO()
+
+        file_writer.WriteProject(solution_project)
+
+        file_writer._file.seek(0, os.SEEK_SET)
+        output_data = file_writer._file.read()
+
+        self.assertEqual(
+            output_data, b'  <Project Path="filename.vcxproj" Id="guid" />\r\n'
+        )
 
 
 if __name__ == "__main__":

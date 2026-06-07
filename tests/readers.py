@@ -237,6 +237,7 @@ class VS2008ProjectFileReaderTest(test_lib.BaseTestCase):
 # TODO: add tests for VS2017ProjectFileReader
 # TODO: add tests for VS2019ProjectFileReader
 # TODO: add tests for VS2022ProjectFileReader
+# TODO: add tests for VS2026ProjectFileReader
 
 
 class VSSolutionFileReaderTest(test_lib.BaseTestCase):
@@ -427,6 +428,9 @@ class VS2022SolutionFileReaderTest(test_lib.BaseTestCase):
         line = "VisualStudioVersion = BOGUS"
         result = file_reader._CheckVisualStudioVersion(line)
         self.assertFalse(result)
+
+
+# TODO: add tests for VS2026SolutionFileReaderTest
 
 
 if __name__ == "__main__":

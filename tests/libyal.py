@@ -124,7 +124,7 @@ class ReleasePythonDllVSProjectConfiguration(test_lib.BaseTestCase):
         self.assertEqual(
             configuration.linker_output_file, "$(OutDir)\\$(ProjectName).pyd"
         )
-        self.assertEqual(configuration.library_directories, ["C:\\Python27\\libs"])
+        self.assertEqual(configuration.library_directories, ["C:\\Python314\\libs"])
 
 
 class VSDebugVSProjectConfigurationTest(test_lib.BaseTestCase):
@@ -222,7 +222,7 @@ class VSDebugPythonDllVSProjectConfiguration(test_lib.BaseTestCase):
         self.assertEqual(
             configuration.linker_output_file, "$(OutDir)\\$(ProjectName).pyd"
         )
-        self.assertEqual(configuration.library_directories, ["C:\\Python27\\libs"])
+        self.assertEqual(configuration.library_directories, ["C:\\Python314\\libs"])
 
 
 class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
@@ -243,19 +243,15 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
             release_project_configuration,
             debug_project_configuration,
         )
-
         self.assertIn(
             "..\\..\\..\\bzip2", release_project_configuration.include_directories
         )
-
         self.assertTrue(
             release_project_configuration.preprocessor_definitions.endswith(";BZ_DLL")
         )
-
         self.assertIn(
             "..\\..\\..\\bzip2", debug_project_configuration.include_directories
         )
-
         self.assertTrue(
             debug_project_configuration.preprocessor_definitions.endswith(";BZ_DLL")
         )
@@ -273,19 +269,15 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
             release_project_configuration,
             debug_project_configuration,
         )
-
         self.assertIn(
             "..\\..\\..\\zlib", release_project_configuration.include_directories
         )
-
         self.assertTrue(
             release_project_configuration.preprocessor_definitions.endswith(";ZLIB_DLL")
         )
-
         self.assertIn(
             "..\\..\\..\\zlib", debug_project_configuration.include_directories
         )
-
         self.assertTrue(
             debug_project_configuration.preprocessor_definitions.endswith(";ZLIB_DLL")
         )
@@ -303,11 +295,9 @@ class LibyalSourceVSSolutionTest(test_lib.BaseTestCase):
             release_project_configuration,
             debug_project_configuration,
         )
-
         self.assertIn(
             "rpcrt4.lib", release_project_configuration.additional_dependencies
         )
-
         self.assertIn("rpcrt4.lib", debug_project_configuration.additional_dependencies)
 
     # TODO: add tests for _CreateThirdPartyDependencies

@@ -1972,7 +1972,8 @@ class VS2022ProjectFileWriter(VS2017ProjectFileWriter):
 
         self._WriteWarningLevel(project_configuration)
 
-        self.WriteLine("      <SDLCheck>true</SDLCheck>")
+        # Disable SDL for now given is break compilation for deprecated functions.
+        self.WriteLine("      <SDLCheck>false</SDLCheck>")
 
         self._WriteTreatWarningAsError(project_configuration)
         self._WriteDebugInformationFormat(project_configuration)
@@ -2072,7 +2073,8 @@ class VS2026ProjectFileWriter(VS2022ProjectFileWriter):
 
         self._WriteWarningLevel(project_configuration)
 
-        self.WriteLine("      <SDLCheck>true</SDLCheck>")
+        # Disable SDL for now given is break compilation for deprecated functions.
+        self.WriteLine("      <SDLCheck>false</SDLCheck>")
 
         self._WriteTreatWarningAsError(project_configuration)
         self._WriteDebugInformationFormat(project_configuration)

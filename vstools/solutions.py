@@ -180,8 +180,8 @@ class VSSolution:
                         )
 
         elif solution_project.name.startswith("py"):
-            include_path = "C:\\Python314\\include"
-            library_path = "C:\\Python314\\libs"
+            include_path = "C:\\Python27\\include"
+            library_path = "C:\\Python27\\libs"
 
             for project_configuration in project_information.configurations.GetSorted():
                 if include_path in project_configuration.include_directories:

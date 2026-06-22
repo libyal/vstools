@@ -180,21 +180,22 @@ class VSSolution:
                         )
 
         elif solution_project.name.startswith("py"):
-            include_path = "C:\\Python27\\include"
-            library_path = "C:\\Python27\\libs"
-
             for project_configuration in project_information.configurations.GetSorted():
-                if include_path in project_configuration.include_directories:
-                    project_configuration.include_directories.remove(include_path)
-                    project_configuration.include_directories.append(
-                        f"{self._python_path:s}\\include"
-                    )
+                for python_version in ("27", "310"):
+                    include_path = f"C:\\Python{python_version:s}\\include"
+                    library_path = f"C:\\Python{python_version:s}\\libs"
 
-                if library_path in project_configuration.library_directories:
-                    project_configuration.library_directories.remove(library_path)
-                    project_configuration.library_directories.append(
-                        f"{self._python_path:s}\\libs"
-                    )
+                    if include_path in project_configuration.include_directories:
+                        project_configuration.include_directories.remove(include_path)
+                        project_configuration.include_directories.append(
+                            f"{self._python_path:s}\\include"
+                        )
+
+                    if library_path in project_configuration.library_directories:
+                        project_configuration.library_directories.remove(library_path)
+                        project_configuration.library_directories.append(
+                            f"{self._python_path:s}\\libs"
+                        )
 
         if self._extend_with_x64:
             # Add x64 as a platform.
